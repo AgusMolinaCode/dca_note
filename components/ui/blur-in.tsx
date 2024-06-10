@@ -21,15 +21,15 @@ const BlurIn = ({ word, className, variant, duration = 1 }: BlurIntProps) => {
   return (
     <motion.h1
       initial="hidden"
-       whileInView="visible"
+      whileInView="visible"
       transition={{ duration }}
       variants={combinedVariants}
       className={cn(
         className,
-        "font-display text-center text-3xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-5xl md:leading-[5rem]",
+        "font-display text-center text-3xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-5xl md:leading-[5rem]"
       )}
     >
-      {word} <span className="text-indigo-500 dark:text-indigo-300">(DCA)</span> ?
+      {word}
     </motion.h1>
   );
 };

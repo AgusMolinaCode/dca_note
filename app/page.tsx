@@ -1,3 +1,4 @@
+import Calculator from "@/components/shared/Calculator";
 import { Hero } from "@/components/shared/Hero";
 import InfoSection from "@/components/shared/InfoSection";
 import Navbar from "@/components/shared/Navbar";
@@ -11,8 +12,9 @@ export default function Home() {
         <div className="relative z-20">
           <Navbar />
           <Hero />
+          <InfoSection />
           <div>
-            <InfoSection />
+            <Calculator />
           </div>
         </div>
       </div>
