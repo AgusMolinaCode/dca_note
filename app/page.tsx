@@ -1,4 +1,4 @@
-import Calculator from "@/components/shared/Calculator";
+import CryptoFetchBar from "@/components/shared/CryptoFetchBar";
 import { Hero } from "@/components/shared/Hero";
 import InfoSection from "@/components/shared/InfoSection";
 import Navbar from "@/components/shared/Navbar";
@@ -13,9 +13,6 @@ export default function Home() {
           <Navbar />
           <Hero />
           <InfoSection />
-          <div>
-            <Calculator />
-          </div>
         </div>
       </div>
     </div>

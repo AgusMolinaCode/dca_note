@@ -1,6 +1,8 @@
 import React from "react";
 import BlurIn from "../ui/blur-in";
 import { TracingBeamDemo } from "./TracingBeamDemo";
+import  InfiniteMovingCardsDemo  from "./MarqueeDemo"; 
+
 
 const InfoSection = () => {
   return (

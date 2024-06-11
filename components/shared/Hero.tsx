@@ -3,13 +3,15 @@ import React from "react";
 import { FlipWords } from "../ui/flip-words";
 import { VelocityScroll } from "../ui/scroll-based-velocity";
 import { TokenUSDT } from "@token-icons/react";
+import InfiniteMovingCardsDemo from "./MarqueeDemo";
 
 export function Hero() {
   const words = ["track", "analyze", "optimize", "grow"];
 
   return (
     <div className="h-screen flex flex-col ">
-      <div className="h-[40rem] flex flex-col justify-center items-center px-4 pt-28">
+      <InfiniteMovingCardsDemo />
+      <div className="h-[20rem] flex flex-col justify-center items-center px-4 pt-28">
         <div className="text-5xl max-w-4xl mx-auto text-center text-neutral-800 dark:text-neutral-300 font-semibold">
           Easily
           <FlipWords words={words} /> <br />
@@ -36,7 +38,7 @@ export function Hero() {
           </button>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-48">
         <VelocityScroll
           text="- Lower Your Risk - Decrease Your Threat"
           default_velocity={1}
