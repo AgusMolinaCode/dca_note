@@ -3,6 +3,8 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "./QueryProvider";
+import Footer from "@/components/shared/Footer";
+import Navbar from "@/components/shared/Navbar";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -26,7 +28,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <Navbar />
+            {children}
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

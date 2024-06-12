@@ -13,7 +13,7 @@ export default function InfiniteMovingCardsDemo() {
 
   if (isFetching) {
     return (
-      <div className="text-center text-white font-normal h-[7rem] mt-20">
+      <div className="text-center dark:text-white text-black font-normal h-[7rem] mt-20">
         Loading...
       </div>
     );

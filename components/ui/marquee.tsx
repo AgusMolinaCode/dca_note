@@ -88,7 +88,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="w-[150px] max-w-full relative rounded-2xl border flex justify-center border-slate-700 md:w-[150px] bg-black/70"
+            className="w-[150px] max-w-full relative rounded-2xl border flex justify-center dark:border-slate-700 border-slate-300 md:w-[150px] dark:bg-black/70 bg-gray-200"
             // style={{
             //   background:
             //     "linear-gradient(180deg, var(--slate-800), var(--slate-900)",
@@ -103,11 +103,11 @@ export const InfiniteMovingCards = ({
               <div className="relative z-20 flex justify-center gap-2 items-center">
                 <div>
                   <span className="flex gap-1">
-                    <span className=" text-sm leading-[1.6] text-gray-400 font-normal">
+                    <span className=" text-sm leading-[1.6] dark:text-gray-400 text-gray-800 font-normal">
                       {item.name}
                     </span>
                   </span>
-                  <span className=" relative z-20 text-md leading-[1.6] text-gray-100 font-semibold">
+                  <span className=" relative z-20 text-md leading-[1.6] dark:text-gray-100 text-gray-900 font-semibold">
                     {item.price.toFixed(2)}
                   </span>
                 </div>
