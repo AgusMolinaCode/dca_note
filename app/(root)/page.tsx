@@ -1,4 +1,3 @@
-
 import Footer from "@/components/shared/Footer";
 import { Hero } from "@/components/shared/Hero";
 import InfoSection from "@/components/shared/InfoSection";

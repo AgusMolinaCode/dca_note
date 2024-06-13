@@ -45,7 +45,7 @@ const Navbar = () => {
       <div className="flex items-center gap-2">
         <Link
           className="dark:hover:bg-gray-800 hover:bg-gray-200 px-2 py-1 duration-200 rounded-2xl"
-          href="/dca"
+          href="/dashboard"
         >
           Dashboard
         </Link>
