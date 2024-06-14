@@ -37,7 +37,7 @@ const Navbar = () => {
             variant="mono"
             className="dark:text-blue-300 text-blue-500"
           />
-          <h1 className="dark:text-white text-black font-semibold text-2xl">
+          <h1 className="dark:text-white text-black font-semibold text-xl md:text-2xl">
             DCA-Note
           </h1>
         </div>

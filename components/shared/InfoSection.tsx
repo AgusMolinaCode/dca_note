@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const InfoSection = () => {
   return (
-    <div>
+    <div className="mt-14">
       <BlurIn
         word="What is Dollar Cost Averaging ?"
         className="font-bold text-gray-800 dark:text-gray-300 pb-4"

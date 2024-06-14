@@ -29,7 +29,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             <Navbar />
-            {children}
+            <div className="">{children}</div>
           </QueryProvider>
         </ThemeProvider>
       </body>

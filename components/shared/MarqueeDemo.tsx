@@ -13,7 +13,7 @@ export default function InfiniteMovingCardsDemo() {
 
   if (isFetching) {
     return (
-      <div className="text-center dark:text-white text-black font-normal h-[7rem] mt-20">
+      <div className="text-center dark:text-white text-black font-normal h-[4rem] mt-12">
         Loading...
       </div>
     );
@@ -43,7 +43,7 @@ export default function InfiniteMovingCardsDemo() {
   }));
 
   return (
-    <div className="h-[12rem] rounded-md flex flex-col antialiased  items-center justify-center relative overflow-hidden">
+    <div className="rounded-md flex flex-col antialiased  items-center justify-center relative overflow-hidden h-[4rem] mt-12 sm:mt-0">
       <InfiniteMovingCards items={cryptoData} direction="right" speed="slow" />
     </div>
   );
