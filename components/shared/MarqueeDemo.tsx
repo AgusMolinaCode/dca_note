@@ -43,7 +43,7 @@ export default function InfiniteMovingCardsDemo() {
   }));
 
   return (
-    <div className="rounded-md flex flex-col antialiased  items-center justify-center relative overflow-hidden h-[4rem] mt-12 sm:mt-0">
+    <div className="rounded-md flex flex-col antialiased  items-center justify-center relative overflow-hidden h-[4rem] mt-10 sm:mt-0">
       <InfiniteMovingCards items={cryptoData} direction="right" speed="slow" />
     </div>
   );
