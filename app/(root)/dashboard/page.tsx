@@ -3,7 +3,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div className='pt-20'>
+    <div className='pt-[4.5rem]'>
         <AdvancedChart />
     </div>
   )
