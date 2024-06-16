@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ModeToggle } from "../theme/Theme-Button";
-import Image from "next/image";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { TokenDESO } from "@token-icons/react";
 import Link from "next/link";
 
@@ -33,11 +33,11 @@ const Navbar = () => {
       <Link href="/">
         <div className="flex items-center">
           <TokenDESO
-            size={50}
+            size={46}
             variant="mono"
             className="dark:text-blue-300 text-blue-500"
           />
-          <h1 className="dark:text-white text-black font-semibold text-xl md:text-2xl">
+          <h1 className="dark:text-white text-black font-semibold text-lg md:text-xl">
             DCA-Note
           </h1>
         </div>
@@ -49,6 +49,12 @@ const Navbar = () => {
         >
           Dashboard
         </Link>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
         <ModeToggle />
       </div>
     </div>

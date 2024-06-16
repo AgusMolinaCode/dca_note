@@ -25,13 +25,13 @@ export function ModeToggle() {
   return (
     <Button
       onClick={toggleTheme}
-      className="border rounded-full dark:border-white border-black transition-colors duration-300 hover:bg-yellow-200 dark:hover:bg-gray-800 p-1"
+      className="border rounded-full dark:border-white border-black transition-colors duration-300 hover:bg-yellow-200 dark:hover:bg-gray-800 w-7 h-7"
       size="icon"
     >
       {isDark ? (
-        <Moon className="h-[1.2rem] w-[1.2rem]" />
+        <Moon className="h-[1rem] w-[1rem]" />
       ) : (
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <Sun className="h-[1rem] w-[1rem]" />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>

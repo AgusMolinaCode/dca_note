@@ -3,7 +3,7 @@
 import { TokenDESO } from "@token-icons/react";
 import Link from "next/link";
 import React from "react";
-import { Linkedin,Github } from "lucide-react";
+import { Linkedin, Github } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -16,15 +16,28 @@ const Footer = () => {
               variant="mono"
               className="dark:text-blue-300 text-blue-500"
             />
-            <h1 className="text-neutral-600 dark:text-neutral-400 font-semibold text-2xl">
+            <h1 className="text-neutral-600 dark:text-neutral-400 font-semibold text-2xl ">
               DCA-Note
             </h1>
           </div>
         </Link>
       </div>
       <div className="flex gap-2">
-        <Linkedin size={32} className="text-neutral-600 dark:text-neutral-400" />
-        <Github size={32} className="text-neutral-600 dark:text-neutral-400" />
+        <Link
+          href="https://www.linkedin.com/in/agustin-molina-994635138/"
+          target="_blank"
+        >
+          <Linkedin
+            size={32}
+            className="text-neutral-600 dark:text-neutral-400 hover:text-blue-500 dark:hover:text-blue-500 duration-200"
+          />
+        </Link>
+        <Link href="https://github.com/AgusMolinaCode" target="_blank">
+          <Github
+            size={32}
+            className="text-neutral-600 dark:text-neutral-400 hover:text-blue-500 dark:hover:text-blue-500 duration-200"
+          />
+        </Link>
       </div>
     </div>
   );

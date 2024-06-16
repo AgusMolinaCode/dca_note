@@ -22,7 +22,7 @@ const InfoSection = () => {
         delete them if necessary.
       </p>
       <Link href="/dashboard">
-        <button className="group rounded-xl relative mt-10 flex h-12 mx-auto items-center justify-center overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-700 px-6 font-medium text-neutral-200 transition hover:scale-110">
+        <button className="group rounded-xl relative mt-10 flex h-9 mx-auto items-center justify-center overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-700 px-6 font-medium text-neutral-200 transition hover:scale-110">
           <span>Dashboard</span>
           <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
             <div className="relative h-full w-8 bg-white/20"></div>
