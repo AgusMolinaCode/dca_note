@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TradingViewWidgetNoSSR = dynamic(
   () =>
@@ -10,15 +11,7 @@ const TradingViewWidgetNoSSR = dynamic(
     ssr: false,
     loading: () => (
       <div className="h-[600px] flex justify-center items-center">
-        <p
-          className="
-          text-2xl
-          text-gray-400
-          dark:text-gray-500
-        "
-        >
-          Loading...
-        </p>
+        <Skeleton className="w-[600px] h-[600px] " />
       </div>
     ),
   }

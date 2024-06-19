@@ -2,23 +2,15 @@
 
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TickerTape = dynamic(
-  () =>
-    import("react-ts-tradingview-widgets").then((w) => w.TickerTape),
+  () => import("react-ts-tradingview-widgets").then((w) => w.TickerTape),
   {
     ssr: false,
     loading: () => (
       <div className="flex justify-center items-center">
-        <p
-          className="
-          text-2xl
-          text-gray-400
-          dark:text-gray-500
-        "
-        >
-          Loading...
-        </p>
+        <Skeleton className="w-full h-[20px]" />
       </div>
     ),
   }
