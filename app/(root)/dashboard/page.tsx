@@ -1,9 +1,8 @@
-import React, { Suspense } from "react";
+import React, {Suspense} from "react";
 import AdvancedChart from "@/components/shared/AdvanceChart";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import TickerTapeComponent from "@/components/shared/TickerTapeComponent";
-import Loading from "./loading";
 import { ButtonAsset } from "@/components/dashboard/ButtonAsset";
 
 export default async function Page() {
@@ -20,37 +19,36 @@ export default async function Page() {
     : "";
 
   return (
-    <div className=" w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative">
-      {/* Radial gradient for the container to give a faded look */}
+    <div className=" w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative min-h-screen">
       <div className="absolute dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+      <Suspense fallback={<div className="flex justify-center items-center min-h-screen text-2xl text-white">Loading...</div>}>
       <div className="relative z-20 ">
         <div className="pt-[4.5rem]">
-          <Suspense fallback={<Loading />}>
-            <TickerTapeComponent />
-            <div className="flex items-center justify-between gap-2 my-4 px-2 md:px-20">
-              <div className="flex gap-1 md:gap-3 items-center">
-                <Image
-                  src={user?.imageUrl || "/images/user.jpg"}
-                  alt="user image"
-                  width={60}
-                  height={60}
-                  className="rounded-full w-10 h-10 "
-                />
-                <div>
-                  <h1 className="text-xl md:text-2xl">{user?.fullName}</h1>
-                  <p className="text-sm text-gray-500">
-                    User created: {createdAtFormatted}
-                  </p>
-                </div>
-              </div>
+          <TickerTapeComponent />
+          <div className="flex items-center justify-between gap-2 my-4 px-2 md:px-20">
+            <div className="flex gap-1 md:gap-3 items-center">
+              <Image
+                src={user?.imageUrl || "/images/user.jpg"}
+                alt="user image"
+                width={60}
+                height={60}
+                className="rounded-full w-10 h-10 "
+              />
               <div>
-               <ButtonAsset />
+                <h1 className="text-xl md:text-2xl">{user?.fullName}</h1>
+                <p className="text-sm text-gray-500">
+                  User created: {createdAtFormatted}
+                </p>
               </div>
             </div>
-            <AdvancedChart />
-          </Suspense>
+            <div>
+              <ButtonAsset />
+            </div>
+          </div>
+          <AdvancedChart />
         </div>
       </div>
+      </Suspense>
     </div>
   );
 }

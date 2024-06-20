@@ -1,19 +1,59 @@
-/* eslint-disable react/no-unescaped-entities */
-import { Button } from "@/components/ui/button";
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SelectCrypto } from "./SelectCrypto";
+import { searchCryptos } from "@/app/api";
+import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+
+interface CryptoResult {
+  USD: {
+    PRICE: number;
+    IMAGEURL: string;
+  };
+}
+
+interface CryptoListResult {
+  RAW: Record<string, CryptoResult>;
+}
+
+function useDebouncedQuery(query: string) {
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
+
+  return useQuery({
+    queryKey: ["searchCryptos", debouncedQuery],
+    queryFn: () => searchCryptos(debouncedQuery),
+    enabled: !!debouncedQuery,
+  });
+}
 
 export function ButtonAsset() {
+  const [query, setQuery] = useState("");
+  const {
+    data: searchResults,
+    error,
+    isLoading,
+    isSuccess,
+  } = useDebouncedQuery(query);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -27,27 +67,58 @@ export function ButtonAsset() {
       <DialogContent className="sm:max-w-[425px] bg-gray-800">
         <DialogHeader>
           <DialogTitle className="text-white">Add Asset</DialogTitle>
-          {/* <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription> */}
         </DialogHeader>
-        <div className="grid ">
+        <div className="grid">
           <div className="">
-            <Label htmlFor="searchCrypto" className="text-right">
+            <Label htmlFor="searchCrypto" className="text-right text-white">
               Search for a crypto
             </Label>
-            <SelectCrypto />
           </div>
-          {/* <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div> */}
+          <div className="pt-2">
+            <Input
+              id="searchCrypto"
+              placeholder="Example: BTC, ETH, SOL, etc."
+              className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500"
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <div>
+              <ul>
+                {isLoading && <li>Loading...</li>}
+                {isSuccess &&
+                  searchResults?.DISPLAY &&
+                  Object.entries(searchResults.DISPLAY).map(
+                    ([crypto, cryptoData]) => {
+                      const { MKTCAP, IMAGEURL, PRICE } = cryptoData.USD;
+                      if (MKTCAP === "$ NaN" || PRICE === "0") {
+                        return (
+                          <li key={crypto}>
+                            Error: {crypto} no tiene información de precio
+                            válida.
+                          </li>
+                        );
+                      }
+                      return (
+                        <li key={crypto}>
+                          <span>{crypto}</span>
+                          <span>{PRICE}</span>
+                          <Image
+                            src={`https://cryptocompare.com/${IMAGEURL}`}
+                            alt={crypto}
+                            width={20}
+                            height={20}
+                          />
+                        </li>
+                      );
+                    }
+                  )}
+              </ul>
+              {error && <li>Error: {error.message}</li>}
+            </div>
+          </div>
         </div>
-        {/* <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );
