@@ -40,7 +40,7 @@ const AdvancedChart = () => {
           <div className="flex-1 flex justify-center items-center bg-blue-800 w-full">
             {/* Contenido del segundo div */}
           </div>
-          <div className="hidden sm:flex md:w-[280px]  justify-end lg:justify-center items-center bg-white dark:bg-gray-500">
+          {/* <div className="hidden sm:flex md:w-[280px]  justify-end lg:justify-center items-center bg-white dark:bg-gray-500">
             <TechnicalAnalysisWidgetNoSSR
               symbol="BINANCE:BTCUSDT"
               colorTheme={
@@ -51,13 +51,13 @@ const AdvancedChart = () => {
               locale="en"
               interval="1D"
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="w-full lg:w-3/4 h-[550px] md:h-[740px]">
         <TradingViewWidgetNoSSR
-          symbol="BINANCE:BTCUSDT"
+          symbol="BINANCE:BCHUSDT"
           theme={useTheme().resolvedTheme === "dark" ? "dark" : "light"}
           interval="D"
           timezone="America/Argentina/Buenos_Aires"

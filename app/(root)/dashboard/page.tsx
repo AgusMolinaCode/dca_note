@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import AdvancedChart from "@/components/shared/AdvanceChart";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
@@ -21,7 +21,7 @@ export default async function Page() {
   return (
     <div className=" w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative min-h-screen">
       <div className="absolute dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-      <Suspense fallback={<div className="flex justify-center items-center min-h-screen text-2xl text-white">Loading...</div>}>
+
       <div className="relative z-20 ">
         <div className="pt-[4.5rem]">
           <TickerTapeComponent />
@@ -45,10 +45,9 @@ export default async function Page() {
               <ButtonAsset />
             </div>
           </div>
-          <AdvancedChart />
+          {/* <AdvancedChart /> */}
         </div>
       </div>
-      </Suspense>
     </div>
   );
 }
