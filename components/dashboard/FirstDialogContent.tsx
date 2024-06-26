@@ -9,7 +9,7 @@ interface FirstDialogContentProps {
   searchResults: CryptoListResult;
   isLoading: boolean;
   isSuccess: boolean;
-  handleSelect: (crypto: string, price: string, imageUrl: string) => void;
+  handleSelect: (crypto: string, price: number, imageUrl: string) => void;
 }
 
 const FirstDialogContent = ({
@@ -46,36 +46,27 @@ const FirstDialogContent = ({
               </li>
             )}
             {isSuccess &&
-              searchResults?.DISPLAY &&
-              Object.entries(searchResults.DISPLAY).map(
-                ([crypto, cryptoData]) => {
-                  const { MKTCAP, IMAGEURL, PRICE } = cryptoData.USD;
-                  if (MKTCAP === "$ NaN" || PRICE === "0") {
-                    return (
-                      <li key={crypto}>
-                        Error: {crypto} no tiene información de precio válida.
-                      </li>
-                    );
-                  }
-                  return (
-                    <li key={crypto}>
-                      <button
-                        className="flex justify-center my-2 py-1 rounded-xl items-center mx-auto w-full gap-2 hover:bg-gray-300/20 cursor-pointer duration-300"
-                        onClick={() => handleSelect(crypto, PRICE, IMAGEURL)}
-                      >
-                        <Image
-                          src={`https://cryptocompare.com/${IMAGEURL}`}
-                          alt={crypto}
-                          width={30}
-                          height={30}
-                        />
-                        <p className="font-bold text-white">{crypto}</p>
-                        <p className="font-semibold text-white">{PRICE}</p>
-                      </button>
-                    </li>
-                  );
-                }
-              )}
+              searchResults?.RAW &&
+              Object.entries(searchResults.RAW).map(([crypto, cryptoData]) => {
+                const { MKTCAP, IMAGEURL, PRICE } = cryptoData.USD;
+                return (
+                  <li key={crypto}>
+                    <button
+                      className="flex justify-center my-2 py-1 rounded-xl items-center mx-auto w-full gap-2 hover:bg-gray-300/20 cursor-pointer duration-300"
+                      onClick={() => handleSelect(crypto, PRICE, IMAGEURL)}
+                    >
+                      <Image
+                        src={`https://cryptocompare.com/${IMAGEURL}`}
+                        alt={crypto}
+                        width={30}
+                        height={30}
+                      />
+                      <p className="font-bold text-white">{crypto}</p>
+                      <p className="font-semibold text-white">$ {PRICE.toFixed(2)}</p>
+                    </button>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </div>

@@ -1,12 +1,22 @@
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  .tradingview-widget-copyright {
-    display: none;
-  }
+.tradingview-widget-copyright {
+  display: none;
+}
 
-  .speedometerTitle-F6VayVuW {
-    display: none;
-  }
- 
+.speedometerTitle-F6VayVuW {
+  display: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

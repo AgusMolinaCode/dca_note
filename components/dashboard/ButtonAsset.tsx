@@ -12,6 +12,7 @@ import { searchCryptos } from "@/app/api";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import FirstDialogContent from "./FirstDialogContent";
+import SecondDialogContent from "./SecondDialogContent";
 
 function useDebouncedQuery(query: string) {
   const [debouncedQuery, setDebouncedQuery] = useState(query);
@@ -36,7 +37,7 @@ function useDebouncedQuery(query: string) {
 export function ButtonAsset() {
   const [selectedCrypto, setSelectedCrypto] = useState<{
     crypto: string;
-    price: string;
+    price: number;
     imageUrl: string;
   } | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -48,7 +49,7 @@ export function ButtonAsset() {
     isSuccess,
   } = useDebouncedQuery(query);
 
-  const handleSelect = (crypto: string, price: string, imageUrl: string) => {
+  const handleSelect = (crypto: string, price: number, imageUrl: string) => {
     setSelectedCrypto({ crypto, price, imageUrl });
     setIsDialogOpen(true); // Abre el segundo diálogo
     setIsMainDialogOpen(false); // Cierra el primer diálogo
@@ -80,23 +81,14 @@ export function ButtonAsset() {
         </DialogContent>
       </Dialog>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <button className="hidden">Abrir</button>
-        </DialogTrigger>
-        <DialogContent>
-          {selectedCrypto && (
-            <>
-              <p>Criptomoneda: {selectedCrypto.crypto}</p>
-              <p>Precio: {selectedCrypto.price}</p>
-              <Image
-                src={`https://cryptocompare.com/${selectedCrypto.imageUrl}`}
-                alt={selectedCrypto.crypto}
-                width={60}
-                height={60}
-              />
-              {/* Aquí puedes agregar los campos para ingresar cantidades y fechas */}
-            </>
-          )}
+        <DialogContent className="sm:max-w-[425px] bg-gray-800">
+          <SecondDialogContent
+            selectedCrypto={selectedCrypto}
+            onAddTransaction={() => {
+              setIsDialogOpen(false);
+              setIsMainDialogOpen(false);
+            }}
+          />
         </DialogContent>
       </Dialog>
     </div>
