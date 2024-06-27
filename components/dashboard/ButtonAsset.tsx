@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { searchCryptos } from "@/app/api";
-import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import FirstDialogContent from "./FirstDialogContent";
 import SecondDialogContent from "./SecondDialogContent";
