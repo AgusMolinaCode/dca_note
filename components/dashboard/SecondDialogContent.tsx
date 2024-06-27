@@ -40,7 +40,11 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   });
 
   function onSubmit(values: z.infer<typeof transactionSchema>) {
-    console.log(selectedCrypto?.crypto, selectedCrypto?.price, selectedCrypto?.imageUrl);
+    console.log(
+      selectedCrypto?.crypto,
+      selectedCrypto?.price,
+      selectedCrypto?.imageUrl
+    );
     console.log("Amount:", values.amount);
     console.log("Price:", values.price);
     console.log("Total:", values.total);
@@ -107,7 +111,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
                       />
                     </div>
                   </FormControl>
-                  <FormMessage className="text-white"/>
+                  <FormMessage className="text-white" />
                 </FormItem>
               )}
             />
@@ -131,7 +135,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
                       />
                     </div>
                   </FormControl>
-                  <FormMessage className="text-white"/>
+                  <FormMessage className="text-white" />
                 </FormItem>
               )}
             />
@@ -155,7 +159,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
                       />
                     </div>
                   </FormControl>
-                  <FormMessage className="text-white"/>
+                  <FormMessage className="text-white" />
                 </FormItem>
               )}
             />
