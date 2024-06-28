@@ -1,9 +1,10 @@
-import React, { Suspense } from "react";
+import React from "react";
 import AdvancedChart from "@/components/shared/AdvanceChart";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import TickerTapeComponent from "@/components/shared/TickerTapeComponent";
 import { ButtonAsset } from "@/components/dashboard/ButtonAsset";
+
 
 export default async function Page() {
   const user = await currentUser();
@@ -22,7 +23,7 @@ export default async function Page() {
     <div className=" w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative min-h-screen">
       <div className="absolute dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
 
-      <div className="relative z-20 ">
+      <div className="relative z-20">
         <div className="pt-[4.5rem]">
           <TickerTapeComponent />
           <div className="flex items-center justify-between gap-2 my-4 px-2 md:px-20">
@@ -45,7 +46,7 @@ export default async function Page() {
               <ButtonAsset />
             </div>
           </div>
-          {/* <AdvancedChart /> */}
+          <AdvancedChart />
         </div>
       </div>
     </div>

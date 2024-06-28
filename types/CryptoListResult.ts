@@ -109,3 +109,12 @@ interface CryptoListResult {
     [key: string]: DisplayCryptoCurrency;
   };
 }
+
+interface Transaction {
+  id: number;
+  crypto: string;
+  amount: number;
+  price: number;
+  total: number;
+  imageUrl: string;
+}

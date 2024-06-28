@@ -16,11 +16,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { transactionSchema } from "@/lib/validator";
+import {useRouter} from "next/navigation";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
   onAddTransaction: () => void;
 }
+
+const ADD_TRANSACTION_URL = `http://localhost:3000/api/transactions`;
 
 const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   selectedCrypto,
@@ -39,16 +42,35 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof transactionSchema>) {
-    console.log(
-      selectedCrypto?.crypto,
-      selectedCrypto?.price,
-      selectedCrypto?.imageUrl
-    );
-    console.log("Amount:", values.amount);
-    console.log("Price:", values.price);
-    console.log("Total:", values.total);
-    //onAddTransaction();
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof transactionSchema>) {
+    const transactionData = {
+      crypto: selectedCrypto?.crypto,
+      amount: values.amount,
+      price: values.price,
+      total: values.total,
+      imageUrl: selectedCrypto?.imageUrl,
+    };
+
+    try {
+      const response = await fetch(ADD_TRANSACTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+      console.log("Transaction added successfully");
+      router.refresh();
+      //onAddTransaction();
+    } catch (error) {
+      console.error("Failed to add transaction", error);
+    }
   }
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {

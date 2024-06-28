@@ -50,8 +50,8 @@ export function ButtonAsset() {
 
   const handleSelect = (crypto: string, price: number, imageUrl: string) => {
     setSelectedCrypto({ crypto, price, imageUrl });
-    setIsDialogOpen(true); // Abre el segundo diálogo
-    setIsMainDialogOpen(false); // Cierra el primer diálogo
+    setIsDialogOpen(true); 
+    setIsMainDialogOpen(false); 
   };
 
   return (
