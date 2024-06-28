@@ -16,7 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { transactionSchema } from "@/lib/validator";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
@@ -44,34 +45,31 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
 
   const router = useRouter();
 
-  async function onSubmit(values: z.infer<typeof transactionSchema>) {
-    const transactionData = {
-      crypto: selectedCrypto?.crypto,
-      amount: values.amount,
-      price: values.price,
-      total: values.total,
-      imageUrl: selectedCrypto?.imageUrl,
-    };
-
-    try {
+  const addTransactionMutation = useMutation({
+    mutationFn: async (transaction: any) => {
       const response = await fetch(ADD_TRANSACTION_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(transactionData),
+        body: JSON.stringify(transaction),
       });
-
       if (!response.ok) {
-        throw new Error("Something went wrong");
+        throw new Error("Network response was not ok");
       }
-      console.log("Transaction added successfully");
-      router.refresh();
-      //onAddTransaction();
+      return response.json();
+    },
+  });
+
+  const onSubmit = async (data: any) => {
+    try {
+      await addTransactionMutation.mutateAsync(data);
+      onAddTransaction();
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Failed to add transaction", error);
+      console.error("An error occurred while adding transaction", error);
     }
-  }
+  };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
