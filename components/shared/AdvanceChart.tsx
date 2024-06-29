@@ -4,10 +4,9 @@
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
-import { loadTransactions } from "@/app/api"; // Asume deleteTransaction es una nueva función API
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getQueryClient } from "@/app/QueryProvider";
-import { ButtonAsset } from "../dashboard/ButtonAsset";
+import { loadTransactions } from "@/app/api";
+import { useQuery } from "@tanstack/react-query";
+import DataTransaction from "../dashboard/DataTransaction";
 
 const TradingViewWidgetNoSSR = dynamic(
   () =>
@@ -23,7 +22,6 @@ const TradingViewWidgetNoSSR = dynamic(
 );
 
 const AdvancedChart = () => {
-
   const { data } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
@@ -34,16 +32,7 @@ const AdvancedChart = () => {
       <div className="flex flex-col lg:flex-row px-2 xl:px-10 gap-4">
         <div className="flex flex-col h-[600px] md:h-[740px] w-full lg:w-3/4">
           <div className="flex justify-center items-center bg-white dark:bg-gray-500 h-1/2 w-full">
-            {data?.map((transaction: Transaction) => (
-              <div
-                key={transaction.id}
-                className="flex flex-col p-2 m-2 border gap-4"
-              >
-                <p>{transaction.crypto}</p>
-                <p>amount: {transaction.amount}</p>
-                <p>precio: {transaction.price}</p>
-              </div>
-            ))}
+            <DataTransaction data={data} />
           </div>
           <div className="flex-1 flex w-full">
             <div className="flex-1 flex justify-center items-center bg-blue-800 w-full">
@@ -52,7 +41,7 @@ const AdvancedChart = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-3/4 h-[550px] md:h-[740px]">
+        {/* <div className="w-full lg:w-3/4 h-[550px] md:h-[740px]">
           <TradingViewWidgetNoSSR
             symbol="BINANCE:BCHUSDT"
             theme={useTheme().resolvedTheme === "dark" ? "dark" : "light"}
@@ -64,7 +53,7 @@ const AdvancedChart = () => {
             hide_side_toolbar
             disabled_features={["create_volume_indicator_by_default"]}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
