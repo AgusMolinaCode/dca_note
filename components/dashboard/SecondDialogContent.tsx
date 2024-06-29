@@ -16,8 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { transactionSchema } from "@/lib/validator";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
@@ -30,6 +29,8 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   selectedCrypto,
   onAddTransaction,
 }) => {
+  const queryClient = useQueryClient();
+
   const [criptoPrice, setCriptoPrice] = useState<number | null>(
     selectedCrypto ? parseFloat(selectedCrypto.price.toFixed(2)) : null
   );
@@ -43,33 +44,42 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
     },
   });
 
-  const router = useRouter();
 
-  const addTransactionMutation = useMutation({
-    mutationFn: async (transaction: any) => {
+  const addTransaction = async (values: z.infer<typeof transactionSchema>) => {
+    const transactionData = {
+      crypto: selectedCrypto?.crypto,
+      amount: values.amount,
+      price: values.price,
+      total: values.total,
+      imageUrl: selectedCrypto?.imageUrl,
+    };
+
+    try {
       const response = await fetch(ADD_TRANSACTION_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(transaction),
+        body: JSON.stringify(transactionData),
       });
+
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Something went wrong");
       }
-      return response.json();
+      onAddTransaction();
+    } catch (error) {
+      console.error("Failed to add transaction", error);
+    }
+  }
+
+  
+
+  const mutation = useMutation({
+    mutationFn: addTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] });
     },
   });
-
-  const onSubmit = async (data: any) => {
-    try {
-      await addTransactionMutation.mutateAsync(data);
-      onAddTransaction();
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("An error occurred while adding transaction", error);
-    }
-  };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -107,7 +117,9 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
           </p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(
+            (values) => mutation.mutate(values)
+          )}>
             <FormField
               control={form.control}
               name="amount"

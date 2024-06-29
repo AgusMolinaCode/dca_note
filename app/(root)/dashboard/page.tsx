@@ -5,7 +5,6 @@ import Image from "next/image";
 import TickerTapeComponent from "@/components/shared/TickerTapeComponent";
 import { ButtonAsset } from "@/components/dashboard/ButtonAsset";
 
-
 export default async function Page() {
   const user = await currentUser();
 
