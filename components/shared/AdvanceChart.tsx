@@ -23,14 +23,10 @@ const TradingViewWidgetNoSSR = dynamic(
 );
 
 const AdvancedChart = () => {
-  const fetchItems = async () => {
-    const response = await fetch("http://localhost:3000/api/transactions");
-    return response.json();
-  };
 
   const { data } = useQuery({
     queryKey: ["items"],
-    queryFn: fetchItems,
+    queryFn: loadTransactions,
   });
 
   return (

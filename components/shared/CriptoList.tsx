@@ -11,10 +11,6 @@ export default function CriptoList() {
     queryFn: getCryptos,
   });
 
-  const onRefresh = () => {
-    getQueryClient().invalidateQueries({ queryKey: ["crypto"] });
-  };
-
   if (isFetching) {
     return <div>Loading...</div>;
   }
