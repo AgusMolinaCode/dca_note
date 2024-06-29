@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { loadTransactions } from "@/app/api"; // Asume deleteTransaction es una nueva función API
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/QueryProvider";
+import { ButtonAsset } from "../dashboard/ButtonAsset";
 
 const TradingViewWidgetNoSSR = dynamic(
   () =>
@@ -22,21 +23,22 @@ const TradingViewWidgetNoSSR = dynamic(
 );
 
 const AdvancedChart = () => {
-  const { data, isFetching } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: loadTransactions,
-  });
+  const fetchItems = async () => {
+    const response = await fetch("http://localhost:3000/api/transactions");
+    return response.json();
+  };
 
-  if (isFetching) {
-    return <div>Loading...</div>;
-  }
+  const { data } = useQuery({
+    queryKey: ["items"],
+    queryFn: fetchItems,
+  });
 
   return (
     <div className="flex flex-col lg:flex-row px-2 xl:px-10 gap-4">
       <div className="flex flex-col lg:flex-row px-2 xl:px-10 gap-4">
         <div className="flex flex-col h-[600px] md:h-[740px] w-full lg:w-3/4">
           <div className="flex justify-center items-center bg-white dark:bg-gray-500 h-1/2 w-full">
-            {data?.map((transaction) => (
+            {data?.map((transaction: Transaction) => (
               <div
                 key={transaction.id}
                 className="flex flex-col p-2 m-2 border gap-4"

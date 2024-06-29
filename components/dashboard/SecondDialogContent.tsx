@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { transactionSchema } from "@/lib/validator";
-import {useRouter} from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
@@ -29,6 +29,8 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   selectedCrypto,
   onAddTransaction,
 }) => {
+  const queryClient = useQueryClient();
+
   const [criptoPrice, setCriptoPrice] = useState<number | null>(
     selectedCrypto ? parseFloat(selectedCrypto.price.toFixed(2)) : null
   );
@@ -42,9 +44,8 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
     },
   });
 
-  const router = useRouter();
 
-  async function onSubmit(values: z.infer<typeof transactionSchema>) {
+  const addTransaction = async (values: z.infer<typeof transactionSchema>) => {
     const transactionData = {
       crypto: selectedCrypto?.crypto,
       amount: values.amount,
@@ -65,13 +66,20 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
-      console.log("Transaction added successfully");
-      router.refresh();
-      //onAddTransaction();
+      onAddTransaction();
     } catch (error) {
       console.error("Failed to add transaction", error);
     }
   }
+
+  
+
+  const mutation = useMutation({
+    mutationFn: addTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] });
+    },
+  });
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -109,7 +117,9 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
           </p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(
+            (values) => mutation.mutate(values)
+          )}>
             <FormField
               control={form.control}
               name="amount"
