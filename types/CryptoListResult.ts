@@ -118,3 +118,14 @@ interface Transaction {
   total: number;
   imageUrl: string;
 }
+
+type TransactionProps = {
+  transaction: {
+    id: number;
+    crypto: string;
+    amount: number;
+    price: number;
+    total: number;
+    imageUrl: string;
+  };
+};
