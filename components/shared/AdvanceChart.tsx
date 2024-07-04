@@ -8,6 +8,7 @@ import { loadTransactions } from "@/app/api";
 import { useQuery } from "@tanstack/react-query";
 import DataTransaction from "../dashboard/DataTransaction";
 import CurrentBalance from "../dashboard/CurrentBalance";
+import CurrentHoldings from "../dashboard/CurrentHoldings";
 
 const TradingViewWidgetNoSSR = dynamic(
   () =>
@@ -36,11 +37,10 @@ const AdvancedChart = () => {
             {/* <DataTransaction data={data} /> */}
             <CurrentBalance />
           </div>
-          {/* <div className="flex-1 flex w-full">
-            <div className="flex-1 flex justify-center items-center bg-blue-800 w-full">
-             
-            </div>
-          </div> */}
+
+          <div className=" dark:bg-gray-800 bg-gray-600 w-[320px] px-2 rounded-3xl p-4 mt-4">
+            <CurrentHoldings />
+          </div>
         </div>
 
         {/* <div className="w-full lg:w-3/4 h-[550px] md:h-[740px]">
