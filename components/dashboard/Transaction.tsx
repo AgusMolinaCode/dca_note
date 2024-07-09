@@ -18,7 +18,6 @@ const Transaction: React.FC<TransactionProps> = ({ transaction }) => {
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
-      console.log("Transaction deleted");
     } catch (error) {
       console.error("Failed to delete transaction", error);
     }
