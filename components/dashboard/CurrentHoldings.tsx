@@ -2,19 +2,21 @@
 "use client";
 
 import * as React from "react";
-import { Label, Pie, PieChart, Sector } from "recharts";
+import { Label, Pie, PieChart, Scatter, Sector, Tooltip } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
   ChartStyle,
   ChartTooltip,
   ChartTooltipContent,
@@ -29,6 +31,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { loadTransactions } from "@/app/api";
 import Image from "next/image";
+import Link from "next/link";
 
 export function CurrentHoldings() {
   const { data } = useQuery({
@@ -36,39 +39,44 @@ export function CurrentHoldings() {
     queryFn: loadTransactions,
   });
 
+  const totals = data?.map((item) => item.amount) ?? [];
+  const totalSum = (totals ?? []).reduce((acc, curr) => acc + curr, 0);
+
+  const percentages = data?.map((item) => {
+    const percentage = ((item.amount / totalSum) * 100).toFixed(2);
+    return {
+      name: item.crypto,
+      percentage: percentage + "%",
+    };
+  });
+
   const desktopData = data?.map((item) => ({
-    month: item.crypto,
+    crypto: item.crypto,
     amount: item.amount,
-    fill: "yellow",
+    percentages: ((item.amount / totalSum) * 100).toFixed(2),
   }));
 
-  const chartConfig = {
-    january: {
-      color: "yellow",
-    },
-    february: {
-      color: "var(--color-february)",
-    },
-    march: {
-      color: "var(--color-march)",
-    },
-    april: {
-      color: "var(--color-april)",
-    },
-    may: {
-      color: "var(--color-may)",
-    },
-  } satisfies ChartConfig;
+  const chartConfig = {} satisfies ChartConfig;
 
   const id = "pie-interactive";
-  const [activeMonth, setActiveMonth] = React.useState(desktopData?.[0]?.month);
+
+  const [activeMonth, setActiveMonth] = React.useState("");
+
+  React.useEffect(() => {
+    if (data) {
+      const highestAmountItem = data.reduce((prev, current) => {
+        return prev.amount > current.amount ? prev : current;
+      }, data[0]);
+      setActiveMonth(highestAmountItem.crypto);
+    }
+  }, [data]);
 
   const activeIndex = React.useMemo(
-    () => desktopData?.findIndex((item) => item.month === activeMonth),
+    () => desktopData?.findIndex((item) => item.crypto === activeMonth),
     [activeMonth]
   );
 
-  const colors = ["#FF6633", "#FFB399", "#FF33FF", "#FFFF99", "#00B3E6"];
+  const colors = ["#C6B4D8", "#F5C0BF", "#FBE7AB", "#315098", "#FBD0E0"];
 
   return (
     <Card data-chart={id} className="flex flex-col">
@@ -79,10 +87,7 @@ export function CurrentHoldings() {
             Holdings
           </CardTitle>
         </div>
-        <Select
-          value={activeMonth}
-          onValueChange={setActiveMonth}
-        >
+        <Select value={activeMonth} onValueChange={setActiveMonth}>
           <SelectTrigger
             className="ml-auto h-7 w-[130px] rounded-xl border-gray-400 pl-2.5"
             aria-label="Select a value"
@@ -91,9 +96,11 @@ export function CurrentHoldings() {
           </SelectTrigger>
           <SelectContent align="end" className="rounded-xl">
             {data?.map((item) => (
-              <SelectItem key={item.id} value={item.crypto} defaultValue={
-                data?.[3]?.crypto
-              }>
+              <SelectItem
+                key={item.id}
+                value={item.crypto}
+                defaultValue={data?.[3]?.crypto}
+              >
                 <div className="flex items-center gap-2">
                   <Image
                     src={`https://cryptocompare.com/${item?.imageUrl}`}
@@ -124,7 +131,6 @@ export function CurrentHoldings() {
               data={data?.map((item, index) => ({
                 month: item.crypto,
                 desktop: item.amount,
-
                 fill: colors[index % colors.length],
               }))}
               dataKey="desktop"
@@ -137,11 +143,11 @@ export function CurrentHoldings() {
                 ...props
               }: PieSectorDataItem) => (
                 <g>
-                  <Sector {...props} outerRadius={outerRadius + 10} />
+                  <Sector {...props} outerRadius={outerRadius + 4} />
                   <Sector
                     {...props}
-                    outerRadius={outerRadius + 6}
-                    innerRadius={outerRadius + 2}
+                    outerRadius={outerRadius + 10}
+                    innerRadius={outerRadius + 8}
                   />
                 </g>
               )}
@@ -150,27 +156,36 @@ export function CurrentHoldings() {
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
+                      <>
+                        <text
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
                         >
-                          {data?.[activeIndex ?? 0]?.crypto}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Visitors
-                        </tspan>
-                      </text>
+                          <tspan
+                            x={viewBox.cx}
+                            y={100}
+                            className="fill-foreground text-lg font-semibold"
+                          >
+                            {data?.[activeIndex ?? 0]?.crypto}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={125}
+                            className="fill-foreground text-lg font-semibold"
+                          >
+                            $ {data?.[activeIndex ?? 0]?.total.toFixed(1)}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={150}
+                            className="fill-gray-400 text-[1rem]"
+                          >
+                            {percentages?.[activeIndex ?? 0]?.percentage}
+                          </tspan>
+                        </text>
+                      </>
                     );
                   }
                 }}
@@ -179,6 +194,77 @@ export function CurrentHoldings() {
           </PieChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex flex-col">
+        <div className="grid grid-cols-2 items-center mx-auto justify-center object-center gap-4">
+          {data
+            ?.sort(
+              (a, b) =>
+                (b.amount / totalSum) * 100 - (a.amount / totalSum) * 100
+            )
+            .slice(0, 4)
+            .map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
+                onClick={() => setActiveMonth(item.crypto)}
+              >
+                <Image
+                  src={`https://cryptocompare.com/${item?.imageUrl}`}
+                  alt={item.crypto}
+                  width={18}
+                  height={18}
+                  className="rounded-full"
+                />
+                <p className="text-gray-300">{item.crypto}</p>
+                <p className="text-md font-semibold text-white">
+                  {((item.amount / totalSum) * 100).toFixed(2)}%
+                </p>
+              </div>
+            ))}
+        </div>
+        <div>
+          {(data?.length ?? 0) > 4 && (
+            <div className="mt-2">
+              <Select onValueChange={setActiveMonth}>
+                <SelectTrigger
+                  className="ml-auto h-7 rounded-xl border-gray-400 pl-2.5"
+                  aria-label="Select a value"
+                >
+                  <SelectValue placeholder="More Assets" />
+                </SelectTrigger>
+                <SelectContent align="end" className="rounded-xl w-full">
+                  {data
+                    ?.sort(
+                      (a, b) =>
+                        (b.amount / totalSum) * 100 -
+                        (a.amount / totalSum) * 100
+                    )
+                    .slice(4)
+                    .map((item) => (
+                      <SelectItem
+                        key={item.id}
+                        value={item.crypto}
+                        className="flex items-center gap-2"
+                      >
+                        <div className="flex justify-center items-center gap-2">
+                          <Image
+                            src={`https://cryptocompare.com/${item?.imageUrl}`}
+                            alt={item.crypto}
+                            width={24}
+                            height={24}
+                            className="rounded-full"
+                          />
+                          <p>{item.crypto} - </p>
+                          <p>{((item.amount / totalSum) * 100).toFixed(2)}%</p>
+                        </div>
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </div>
+      </CardFooter>
     </Card>
   );
 }

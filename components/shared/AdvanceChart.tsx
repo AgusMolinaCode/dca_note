@@ -8,7 +8,9 @@ import { loadTransactions } from "@/app/api";
 import { useQuery } from "@tanstack/react-query";
 import DataTransaction from "../dashboard/DataTransaction";
 import CurrentBalance from "../dashboard/CurrentBalance";
-import {CurrentHoldings} from "../dashboard/CurrentHoldings";
+import { CurrentHoldings } from "../dashboard/CurrentHoldings";
+import { MainChart } from "./MainChart";
+
 
 const TradingViewWidgetNoSSR = dynamic(
   () =>
@@ -30,10 +32,10 @@ const AdvancedChart = () => {
   });
 
   return (
-    <div className="flex flex-col lg:flex-row px-2 xl:px-10 gap-4">
-      <div className="flex flex-col lg:flex-row px-2 xl:px-10 gap-4">
-        <div className="flex flex-col w-full lg:w-3/4">
-          <div className="dark:bg-gray-800 bg-gray-600  w-[320px] px-2 rounded-3xl p-4">
+    <div className="flex px-2 xl:px-10 gap-4">
+      <div className="flex w-full px-2 xl:px-10 gap-4">
+        <div className="flex flex-col justify-center  w-1/4 gap-4">
+          <div className="dark:bg-gray-800 bg-gray-600 w-[320px] px-2 rounded-3xl p-4">
             {/* <DataTransaction data={data} /> */}
             <CurrentBalance />
           </div>
@@ -43,19 +45,9 @@ const AdvancedChart = () => {
           </div>
         </div>
 
-        {/* <div className="w-full lg:w-3/4 h-[550px] md:h-[740px]">
-          <TradingViewWidgetNoSSR
-            symbol="BINANCE:BCHUSDT"
-            theme={useTheme().resolvedTheme === "dark" ? "dark" : "light"}
-            interval="D"
-            timezone="America/Argentina/Buenos_Aires"
-            style="3"
-            locale="es"
-            autosize
-            hide_side_toolbar
-            disabled_features={["create_volume_indicator_by_default"]}
-          />
-        </div> */}
+        <div className="w-full">
+          <MainChart />
+        </div>
       </div>
     </div>
   );
