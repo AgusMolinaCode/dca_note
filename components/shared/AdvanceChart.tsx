@@ -32,15 +32,15 @@ const AdvancedChart = () => {
   });
 
   return (
-    <div className="flex px-2 xl:px-10 gap-4">
-      <div className="flex w-full px-2 xl:px-10 gap-4">
-        <div className="flex flex-col justify-center  w-1/4 gap-4">
-          <div className="dark:bg-gray-800 bg-gray-600 w-[320px] px-2 rounded-3xl p-4">
+    <div className="flex px-1 lg:px-4 gap-1 lg:gap-4">
+      <div className="block md:flex w-full px-1 lg:px-4 gap-1 lg:gap-4">
+        <div className="block sm:flex md:block justify-center gap-4">
+          <div className="dark:bg-gray-800 bg-gray-600 w-[320px] flex justify-center mx-auto px-2 rounded-3xl p-4 mt-4">
             {/* <DataTransaction data={data} /> */}
             <CurrentBalance />
           </div>
 
-          <div className=" dark:bg-gray-800 bg-gray-600 w-[320px] px-2 rounded-3xl p-4 mt-4">
+          <div className=" dark:bg-gray-800 bg-gray-600 w-[320px] flex justify-center mx-auto px-2 rounded-3xl p-4 mt-4">
             <CurrentHoldings />
           </div>
         </div>

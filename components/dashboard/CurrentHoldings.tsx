@@ -67,7 +67,7 @@ export function CurrentHoldings() {
       const highestAmountItem = data.reduce((prev, current) => {
         return prev.amount > current.amount ? prev : current;
       }, data[0]);
-      setActiveMonth(highestAmountItem.crypto);
+      setActiveMonth(highestAmountItem?.crypto);
     }
   }, [data]);
 
