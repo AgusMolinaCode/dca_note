@@ -1,12 +1,7 @@
 import React, { use, useEffect, useState } from "react";
-import { InfoIcon } from "lucide-react";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { useQuery } from "@tanstack/react-query";
 import { loadTransactions, getMultipleCryptos } from "@/app/api";
+import CurrentBalanceItem from "./CurrentBalanceItem";
 
 type CryptoPrices = {
   [key: string]: {
@@ -68,12 +63,12 @@ const CurrentBalance = () => {
   }, [cryptoPrices, data]);
 
   useEffect(() => {
-      let sum = 0;
-      data?.forEach((item) => {
-        sum += item?.total;
-      });
-      setTotalSum(sum);
-    }, [data]);
+    let sum = 0;
+    data?.forEach((item) => {
+      sum += item?.total;
+    });
+    setTotalSum(sum);
+  }, [data]);
 
   const formattedTotalSum = totalSum.toLocaleString("en-US", {
     style: "currency",
@@ -85,45 +80,51 @@ const CurrentBalance = () => {
     currency: "USD",
   });
 
+  const formattedProfitUnrealizedValue = totalValue - totalSum;
+  const formattedProfitUnrealized =
+    formattedProfitUnrealizedValue.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+
   return (
     <div className="">
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold text-gray-500">Current Balance</h1>
+        <p className="text-gray-500 text-md font-semibold">24h</p>
       </div>
       <div>
         <p className="text-4xl font-semibold pt-4">{formattedTotalValue}</p>
         <div className="pt-2 flex justify-start gap-2">
           <p>
-            <span className="text-green-500 text-lg font-medium bg-green-500/20 px-3 py-1 rounded-[0.45rem]">
+            <span className="text-green-500 text-md font-medium bg-green-500/20 px-3 py-1 rounded-[0.45rem]">
               0.11%
             </span>
           </p>
-          <p className="text-green-500 text-lg font-medium">$ 100.00</p>
+         
         </div>
       </div>
       <div className="pt-4">
-        <div
-          className={` dark:border-gray-700 border-gray-400 flex justify-between items-center gap-2`}
-        >
-          <div className="flex gap-2 items-center">
-            <p className="font-semibold text-gray-500 text-[18px] py-2">
-              Total Invested
-            </p>
-            <HoverCard openDelay={200}>
-              <HoverCardTrigger>
-                <InfoIcon className="text-gray-500" size={12} />
-              </HoverCardTrigger>
-              <HoverCardContent className="text-gray-400">
-                The total amount of money you have invested in your account.
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-          <div>
-            <p className={`font-semibold text-[18px] py-2`}>
-              {formattedTotalSum}
-            </p>
-          </div>
-        </div>
+        <CurrentBalanceItem
+          title="Today's Profit"
+          description="The profit you have made today from selling assets."
+          value={formattedTotalSum.toString()}
+        />
+        <CurrentBalanceItem
+          title="Total Profit"
+          description="The profit you have made from selling assets."
+          value={formattedTotalSum.toString()}
+        />
+        <CurrentBalanceItem
+          title="Unrealized Profit"
+          description="The profit you would make if you sold all your assets at the current market price."
+          value={formattedProfitUnrealized.toString()}
+        />
+        <CurrentBalanceItem
+          title="Total Invested"
+          description="The total amount of money you have invested in your account."
+          value={formattedTotalSum.toString()}
+        />
       </div>
     </div>
   );
