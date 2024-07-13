@@ -7,17 +7,19 @@ export async function GET() {
     return NextResponse.json(transaction);
   } catch (error) {
     if (error instanceof Error) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
-      }
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const { amount, price, total, crypto, imageUrl } = await request.json();
+    const { amount, price, total, crypto, imageUrl, userId } =
+      await request.json();
 
     const newTransaction = await prisma.transaction.create({
       data: {
+        userId,
         amount,
         price,
         total,
