@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { transactionSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useUser } from "@clerk/clerk-react";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
@@ -30,23 +31,26 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   onAddTransaction,
 }) => {
   const queryClient = useQueryClient();
+  
+  const { user } = useUser();
 
   const [criptoPrice, setCriptoPrice] = useState<number | null>(
     selectedCrypto ? parseFloat(selectedCrypto.price.toFixed(2)) : null
   );
   const [totalPrice, setTotalPrice] = useState<number>(0);
-
+  
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
+      userId: user?.id || "",
       price: criptoPrice !== null ? criptoPrice : undefined,
       total: 0,
     },
   });
-
-
+  
   const addTransaction = async (values: z.infer<typeof transactionSchema>) => {
     const transactionData = {
+      userId: values.userId,
       crypto: selectedCrypto?.crypto,
       amount: values.amount,
       price: values.price,
@@ -70,14 +74,12 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
     } catch (error) {
       console.error("Failed to add transaction", error);
     }
-  }
-
-  
+  };
 
   const mutation = useMutation({
     mutationFn: addTransaction,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['items'] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
@@ -117,9 +119,9 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
           </p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(
-            (values) => mutation.mutate(values)
-          )}>
+          <form
+            onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+          >
             <FormField
               control={form.control}
               name="amount"

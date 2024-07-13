@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export async function GET() {
   try {
@@ -30,6 +31,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newTransaction);
   } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === "P2003") {
+        return NextResponse.json({ message: "The specified user ID does not exist." }, { status: 400 });
+      }
+    }
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });
     }

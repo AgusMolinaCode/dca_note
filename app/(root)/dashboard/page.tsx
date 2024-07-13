@@ -7,7 +7,6 @@ import { ButtonAsset } from "@/components/dashboard/ButtonAsset";
 
 export default async function Page() {
   const user = await currentUser();
-
   const createdAtFormatted = user?.createdAt
     ? new Date(
         parseInt(user.createdAt as unknown as string)

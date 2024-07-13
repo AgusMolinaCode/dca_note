@@ -1,3 +1,4 @@
+import { use } from "react";
 import * as z from "zod";
 
 export const transactionSchema = z.object({
@@ -10,4 +11,5 @@ export const transactionSchema = z.object({
   total: z
     .number()
     .min(0),
+  userId: z.string(),
 });

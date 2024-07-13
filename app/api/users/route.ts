@@ -27,7 +27,6 @@ export async function POST(request: Request) {
     return NextResponse.json(newUser);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
-      // Verifica si el error es una violación de la restricción de unicidad para `nickname`
       if (error.code === 'P2002') {
         return NextResponse.json({ message: 'El nickname ya está en uso.' }, { status: 400 });
       }
