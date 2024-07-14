@@ -234,7 +234,7 @@ export function MainChart() {
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
-            <XAxis
+            {/* <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
@@ -247,7 +247,7 @@ export function MainChart() {
                   day: "numeric",
                 });
               }}
-            />
+            /> */}
             <ChartTooltip
               cursor={false}
               content={

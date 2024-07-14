@@ -13,3 +13,10 @@ export const transactionSchema = z.object({
     .min(0),
   userId: z.string(),
 });
+
+export const nicknameSchema = z.object({
+  nickname: z.string().min(5, {
+    message: "Username must be at least 5 characters.",
+  }),
+  clerkId: z.string(),
+});

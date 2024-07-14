@@ -112,6 +112,7 @@ interface CryptoListResult {
 
 interface Transaction {
   id: number;
+  userId: string;
   crypto: string;
   amount: number;
   price: number;
@@ -122,6 +123,7 @@ interface Transaction {
 type TransactionProps = {
   transaction: {
     id: number;
+    userId: string;
     crypto: string;
     amount: number;
     price: number;
@@ -129,3 +131,9 @@ type TransactionProps = {
     imageUrl: string;
   };
 };
+
+interface User {
+  id: number;
+  clerkId: string;
+  nickname: string;
+}

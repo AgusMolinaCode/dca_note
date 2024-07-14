@@ -153,7 +153,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
               control={form.control}
               name="price"
               render={({ field }) => (
-                <FormItem className=" space-y-0 relative">
+                <FormItem className="space-y-0 relative">
                   <FormControl>
                     <div className="pt-4 flex flex-col gap-2">
                       <Label htmlFor="price" className="text-white text-[1rem]">

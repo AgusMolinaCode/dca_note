@@ -6,6 +6,8 @@ const MULTIPLE_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemulti`;
 
 const LOAD_TRANSACTIONS = `http://localhost:3000/api/transactions`;
 
+const LOAD_USERS = `http://localhost:3000/api/users`;
+
 export const getCryptos = async (): Promise<CryptoListResult> => {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
@@ -38,5 +40,9 @@ export const searchCryptos = async (query: string): Promise<CryptoListResult> =>
 
 export const loadTransactions = async (): Promise<Transaction[]> => {
   return fetch(`${LOAD_TRANSACTIONS}`).then((res) => res.json());
+};
+
+export const loadUsers = async (): Promise<User[]> => {
+  return fetch(`${LOAD_USERS}`).then((res) => res.json());
 };
 

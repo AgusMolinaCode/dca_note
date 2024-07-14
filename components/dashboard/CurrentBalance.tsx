@@ -1,7 +1,10 @@
-import React, { use, useEffect, useState } from "react";
+'use client';
+
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { loadTransactions, getMultipleCryptos } from "@/app/api";
 import CurrentBalanceItem from "./CurrentBalanceItem";
+import { useUser } from "@clerk/clerk-react";
 
 type CryptoPrices = {
   [key: string]: {
@@ -15,6 +18,8 @@ const CurrentBalance = () => {
   const [totalValue, setTotalValue] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
 
+  const { user } = useUser();
+  
   const { data } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
@@ -22,6 +27,8 @@ const CurrentBalance = () => {
       return 36000000;
     },
   });
+  
+  const dataUserId = data?.filter((item) => item.userId === user?.id);
 
   useEffect(() => {
     if (data) {
@@ -53,22 +60,22 @@ const CurrentBalance = () => {
 
   useEffect(() => {
     let sum = 0;
-    data?.forEach((item) => {
+    dataUserId?.forEach((item) => {
       if (cryptoPrices[item.crypto]) {
         const value = item.amount * cryptoPrices[item.crypto]?.USD || 0;
         sum += value;
       }
     });
     setTotalValue(sum);
-  }, [cryptoPrices, data]);
+  }, [cryptoPrices, dataUserId]);
 
   useEffect(() => {
     let sum = 0;
-    data?.forEach((item) => {
+    dataUserId?.forEach((item) => {
       sum += item?.total;
     });
     setTotalSum(sum);
-  }, [data]);
+  }, [dataUserId]);
 
   const formattedTotalSum = totalSum.toLocaleString("en-US", {
     style: "currency",

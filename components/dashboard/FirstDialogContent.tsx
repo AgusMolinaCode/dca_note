@@ -48,7 +48,7 @@ const FirstDialogContent = ({
             {isSuccess &&
               searchResults?.RAW &&
               Object.entries(searchResults.RAW).map(([crypto, cryptoData]) => {
-                const { MKTCAP, IMAGEURL, PRICE } = cryptoData.USD;
+                const { IMAGEURL, PRICE } = cryptoData.USD;
                 return (
                   <li key={crypto}>
                     <button
