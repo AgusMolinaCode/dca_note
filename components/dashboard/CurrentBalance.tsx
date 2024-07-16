@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -17,9 +17,10 @@ const CurrentBalance = () => {
   const [cryptoAmounts, setCryptoAmounts] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
+  const [totalProfitValue, setTotalProfitValue] = useState(0);
 
   const { user } = useUser();
-  
+
   const { data } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
@@ -27,7 +28,7 @@ const CurrentBalance = () => {
       return 36000000;
     },
   });
-  
+
   const dataUserId = data?.filter((item) => item.userId === user?.id);
 
   useEffect(() => {
@@ -77,6 +78,12 @@ const CurrentBalance = () => {
     setTotalSum(sum);
   }, [dataUserId]);
 
+  useEffect(() => {
+      setTotalProfitValue(totalValue);
+  }, [totalValue]);
+
+  console.log(totalProfitValue);
+
   const formattedTotalSum = totalSum.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -108,19 +115,18 @@ const CurrentBalance = () => {
               0.11%
             </span>
           </p>
-         
         </div>
       </div>
       <div className="pt-4">
         <CurrentBalanceItem
           title="Today's Profit"
           description="The profit you have made today from selling assets."
-          value={formattedTotalSum.toString()}
+          value={"$0"}
         />
         <CurrentBalanceItem
           title="Total Profit"
           description="The profit you have made from selling assets."
-          value={formattedTotalSum.toString()}
+          value={"$0"}
         />
         <CurrentBalanceItem
           title="Unrealized Profit"
