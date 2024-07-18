@@ -6,15 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { loadTransactions, getMultipleCryptos } from "@/app/api";
 import CurrentBalanceItem from "./CurrentBalanceItem";
 import { useUser } from "@clerk/clerk-react";
-import { Button } from "../ui/button";
+import CurrentTodayProfitItem from "./CurrentTodayProfitItem";
 
 type CryptoPrices = {
   [key: string]: {
     USD: number;
   };
 };
-
-const ADD_VALUES_URL = `http://localhost:3000/api/values`;
 
 const CurrentBalance = () => {
   const [cryptoPrices, setCryptoPrices] = useState<CryptoPrices>({});
@@ -32,6 +30,7 @@ const CurrentBalance = () => {
   });
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
+  const allCryptos = dataUserId?.map((item) => item) || [];
 
   useEffect(() => {
     if (data) {
@@ -80,40 +79,6 @@ const CurrentBalance = () => {
     setTotalSum(sum);
   }, [dataUserId]);
 
-  const postData = async () => {
-    const valueData = {
-      userId: user?.id,
-      total: totalValue,
-    };
-
-    try {
-      const response = await fetch(ADD_VALUES_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(valueData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Respuesta del servidor:", data);
-    } catch (error) {
-      console.error("Error al realizar la solicitud POST:", error);
-    }
-  };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      postData();
-    }, 1800000); // 60000 ms = 1 minuto
-
-    return () => clearInterval(timer); 
-  }, [postData]);
-
   const formattedTotalSum = totalSum.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -131,13 +96,11 @@ const CurrentBalance = () => {
       currency: "USD",
     });
 
-
   return (
-    <div className="">
+    <div>
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold text-gray-500">Current Balance</h1>
         <p className="text-gray-500 text-md font-semibold">24h</p>
-       
       </div>
       <div>
         <p className="text-4xl font-semibold pt-4">{formattedTotalValue}</p>
@@ -150,11 +113,8 @@ const CurrentBalance = () => {
         </div>
       </div>
       <div className="pt-4">
-        <CurrentBalanceItem
-          title="Today's Profit"
-          description="The profit you have made today from selling assets."
-          value={"$0"}
-        />
+        <CurrentTodayProfitItem allCryptos={allCryptos} />
+
         <CurrentBalanceItem
           title="Total Profit"
           description="The profit you have made from selling assets."
