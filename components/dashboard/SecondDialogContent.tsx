@@ -97,7 +97,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = parseFloat(event.target.value);
+    const newAmount = (event.target.value as unknown) as number;
     form.setValue("amount", newAmount);
     const newTotal = newAmount * (criptoPrice || 0);
     setTotalPrice(newTotal || 0);
