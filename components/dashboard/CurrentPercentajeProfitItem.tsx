@@ -23,12 +23,11 @@ interface CryptoListResult {
   };
 }
 
-const CurrentTodayProfitItem = ({
+const CurrentPercentajeProfitItem = ({
   allCryptos,
-  totalValue,
 }: {
   allCryptos: Transaction[];
-  totalValue: number;
+  formattedTotalValue: string;
 }) => {
   const [cryptoPrices, setCryptoPrices] = useState<CryptoListResult | null>(
     null
@@ -36,6 +35,7 @@ const CurrentTodayProfitItem = ({
   const [cryptoAmountsFetch, setCryptoAmountsFetch] = useState<number | null>(
     null
   );
+  const [open24HourValue, setOpen24HourValue] = useState<number | null>(null);
 
   const cryptoJoin = allCryptos.map((item) => item.crypto).join(",");
 
@@ -57,47 +57,58 @@ const CurrentTodayProfitItem = ({
 
       cryptoAmountsAndCrypto.forEach((item) => {
         const open24HourValue =
-          data?.RAW[item.crypto as unknown as number].USD.HIGH24HOUR;
-        const amount = item.amount;
-        const product = open24HourValue * amount;
+          data?.RAW[item.crypto as any].USD.CHANGEPCT24HOUR;
+        const amountOfCrypto = item.amount;
+        const product = open24HourValue * amountOfCrypto;
         totalSum += product;
       });
 
       setCryptoAmountsFetch(totalSum);
+      let totalOpen24HourValue = 0;
+
+      cryptoAmountsAndCrypto.forEach((item) => {
+        const open24HourValue =
+          data?.RAW[item.crypto as unknown as number].USD.CHANGE24HOUR;
+        const amount = item.amount;
+        const product = open24HourValue * amount;
+        totalOpen24HourValue += product;
+      });
+
+      setOpen24HourValue(totalOpen24HourValue);
       setCryptoPrices(data);
     }
   };
-
-  const totalValueFormatted = cryptoAmountsFetch! - totalValue;
-
-  console.log(totalValueFormatted);
 
   useEffect(() => {
     fetchFullCryptosData();
   }, [cryptoJoin]);
 
   return (
-    <div>
-      <>
-        <CurrentBalanceItem
-          title="24h High Profit"
-          description="the maximum unrealized profit in the last 24 hours"
-          value={
-            totalValueFormatted?.toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            }) || "$0.00"
+    <div className="flex justify-start gap-2 items-center">
+      <p>
+        <span
+          className={`${
+            (cryptoAmountsFetch ?? 0) < 0 ? `text-red-500` : `text-green-500`
+          } text-sm font-medium bg-green-500/20 px-3 py-1 rounded-[0.45rem]`}
+        >
+          {(cryptoAmountsFetch ?? 0).toFixed(2)}%
+        </span>
+      </p>
+      <p>
+        <span
+          className={` ${
+            (open24HourValue ?? 0) < 0 ? `text-red-500` : `text-green-500`
           }
-        />
-        {/* {Object.entries(cryptoPrices?.RAW || {}).map(([crypto, info]) => (
-          <div key={crypto}>
-            <h3>{crypto}</h3>
-            <p>Precio: {info.USD.CHANGEPCT24HOUR}</p>
-          </div>
-        ))} */}
-      </>
+           text-lg font-medium bg-green-500/20 px-3 py-1 rounded-[0.45rem]`}
+        >
+          {open24HourValue?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          }) || "$0.00"}
+        </span>
+      </p>
     </div>
   );
 };
 
-export default CurrentTodayProfitItem;
+export default CurrentPercentajeProfitItem;
