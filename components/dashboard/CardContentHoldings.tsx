@@ -48,6 +48,7 @@ const CardContentHoldings = ({
 
   const totalForActiveCrypto =
     totalsByCrypto[activeCryptoName]?.toFixed(3) ?? "0.0";
+    
   return (
     <div>
       <CardContent className="flex flex-1 justify-center pb-0">
@@ -115,9 +116,9 @@ const CardContentHoldings = ({
                             <tspan
                               x={viewBox.cx}
                               y={150}
-                              className="fill-gray-400 text-[1rem]"
+                              className="fill-gray-400 text-[0.7rem]"
                             >
-                              {percentages?.[activeIndex ?? 0]?.percentage}
+                              buy at {data?.[activeIndex ?? 0]?.price}
                             </tspan>
                           </text>
                         </>

@@ -15,6 +15,7 @@ export function CurrentHoldings() {
   const { data = [] } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
+    refetchInterval: 60000,
   });
 
   const totals = data?.map((item) => item.amount) ?? [];
