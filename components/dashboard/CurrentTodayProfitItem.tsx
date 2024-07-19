@@ -70,8 +70,6 @@ const CurrentTodayProfitItem = ({
 
   const totalValueFormatted = cryptoAmountsFetch! - totalValue;
 
-  console.log(totalValueFormatted);
-
   useEffect(() => {
     fetchFullCryptosData();
   }, [cryptoJoin]);

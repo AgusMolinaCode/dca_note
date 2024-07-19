@@ -20,14 +20,13 @@ const CurrentBalance = () => {
   const [cryptoAmounts, setCryptoAmounts] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
-  const [totalProfitValue, setTotalProfitValue] = useState(0);
 
   const { user } = useUser();
 
   const { data, isLoading } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
-    refetchInterval: 1800000,
+    refetchInterval: 900000,
   });
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
