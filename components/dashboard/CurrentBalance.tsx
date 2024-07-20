@@ -141,6 +141,11 @@ const CurrentBalance = () => {
             title="Unrealized Profit"
             description="The profit you would make if you sold all your assets at the current market price."
             value={formattedProfitUnrealized.toString()}
+            classNameValue={
+              formattedProfitUnrealizedValue > 0
+                ? "text-green-500"
+                : "text-red-500"
+            }
           />
           <CurrentBalanceItem
             title="Total Invested"

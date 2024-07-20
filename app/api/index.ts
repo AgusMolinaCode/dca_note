@@ -8,6 +8,8 @@ const MULTIPLE_FULL_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemu
 
 const LOAD_TRANSACTIONS = `http://localhost:3000/api/transactions`;
 
+const LOAD_VALUES = `http://localhost:3000/api/values`;
+
 const LOAD_USERS = `http://localhost:3000/api/users`;
 
 export const getCryptos = async (): Promise<CryptoListResult> => {
@@ -58,4 +60,8 @@ export const loadTransactions = async (): Promise<Transaction[]> => {
 export const loadUsers = async (): Promise<User[]> => {
   return fetch(`${LOAD_USERS}`).then((res) => res.json());
 };
+
+export const loadValues = async (): Promise<Value[]> => {
+  return fetch(`${LOAD_VALUES}`).then((res) => res.json());
+}
 

@@ -137,3 +137,11 @@ interface User {
   clerkId: string;
   nickname: string;
 }
+
+interface Value {
+  id: number;
+  userId: string;
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+}

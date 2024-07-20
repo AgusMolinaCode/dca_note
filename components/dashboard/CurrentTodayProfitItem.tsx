@@ -57,7 +57,7 @@ const CurrentTodayProfitItem = ({
 
       cryptoAmountsAndCrypto.forEach((item) => {
         const open24HourValue =
-          data?.RAW[item.crypto as unknown as number].USD.HIGH24HOUR;
+          data?.RAW[item.crypto as unknown as number].USD.CHANGEHOUR;
         const amount = item.amount;
         const product = open24HourValue * amount;
         totalSum += product;
@@ -78,21 +78,18 @@ const CurrentTodayProfitItem = ({
     <div>
       <>
         <CurrentBalanceItem
-          title="24h High Profit"
-          description="the maximum unrealized profit in the last 24 hours"
+          title="1H High Profit"
+          description="the maximum unrealized profit in the last hour"
           value={
-            totalValueFormatted?.toLocaleString("en-US", {
+            cryptoAmountsFetch?.toLocaleString("en-US", {
               style: "currency",
               currency: "USD",
             }) || "$0.00"
           }
+          classNameValue={
+            totalValueFormatted >= 0 ? "text-red-500" : "text-green-500"
+          }
         />
-        {/* {Object.entries(cryptoPrices?.RAW || {}).map(([crypto, info]) => (
-          <div key={crypto}>
-            <h3>{crypto}</h3>
-            <p>Precio: {info.USD.CHANGEPCT24HOUR}</p>
-          </div>
-        ))} */}
       </>
     </div>
   );

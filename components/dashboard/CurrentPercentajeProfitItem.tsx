@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import CurrentBalanceItem from "./CurrentBalanceItem";
+import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
+import { InfoIcon } from "lucide-react";
+import { HoverCardContent } from "../ui/hover-card";
 
 interface CryptoCurrency {
   PRICE: number;
@@ -88,18 +91,28 @@ const CurrentPercentajeProfitItem = ({
       <p>
         <span
           className={`${
-            (cryptoAmountsFetch ?? 0) < 0 ? `text-red-500` : `text-green-500`
-          } text-sm font-medium bg-green-500/20 px-3 py-1 rounded-[0.45rem]`}
+            (cryptoAmountsFetch ?? 0) < 0
+              ? `text-red-500 bg-red-500/20`
+              : `text-green-500 bg-green-500/20`
+          } text-sm font-medium  px-3 py-1 rounded-[0.45rem]`}
         >
           {(cryptoAmountsFetch ?? 0).toFixed(2)}%
         </span>
       </p>
+      <HoverCard>
+        <HoverCardTrigger>
+          <InfoIcon className="text-gray-500" size={12} />
+        </HoverCardTrigger>
+        <HoverCardContent className="text-gray-400">
+          the 24hs change percentage of your assets
+        </HoverCardContent>
+      </HoverCard>
       <p>
         <span
           className={` ${
             (open24HourValue ?? 0) < 0 ? `text-red-500` : `text-green-500`
           }
-           text-lg font-medium bg-green-500/20 px-3 py-1 rounded-[0.45rem]`}
+           text-lg font-medium py-1`}
         >
           {open24HourValue?.toLocaleString("en-US", {
             style: "currency",
@@ -107,6 +120,14 @@ const CurrentPercentajeProfitItem = ({
           }) || "$0.00"}
         </span>
       </p>
+      <HoverCard>
+        <HoverCardTrigger>
+          <InfoIcon className="text-gray-500" size={12} />
+        </HoverCardTrigger>
+        <HoverCardContent className="text-gray-400">
+          the 24hs change value of your assets
+        </HoverCardContent>
+      </HoverCard>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 "use client"
 
-import { Bar, BarChart, XAxis } from "recharts"
+import * as React from "react"
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
@@ -12,81 +13,151 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { date: "2024-07-15", running: 450, swimming: 300 },
-  { date: "2024-07-16", running: 380, swimming: 420 },
-  // { date: "2024-07-17", running: 520, swimming: 120 },
-  // { date: "2024-07-18", running: 140, swimming: 550 },
-  // { date: "2024-07-19", running: 600, swimming: 350 },
-  // { date: "2024-07-20", running: 480, swimming: 400 },
-  // { date: "2024-07-21", running: 320, swimming: 240 },
-  // { date: "2024-07-22", running: 400, swimming: 320 },
-  // { date: "2024-07-23", running: 250, swimming: 500 },
-  // { date: "2024-07-24", running: 320, swimming: 420 },
-  // { date: "2024-07-25", running: 200, swimming: 200 },
-  // { date: "2024-07-26", running: 400, swimming: 300 },
-  // { date: "2024-07-27", running: 200, swimming: 200 },
-  // { date: "2024-07-28", running: 500, swimming: 400 },
-  // { date: "2024-07-29", running: 400, swimming: 200 },
-  // { date: "2024-07-30", running: 200, swimming: 500 },
-  // { date: "2024-07-31", running: 200, swimming: 200 },
-  // { date: "2024-08-01", running: 400, swimming: 300 },
-  // { date: "2024-08-02", running: 200, swimming: 200 },
-]
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useQuery } from "@tanstack/react-query"
+import { loadValues } from "@/app/api"
+
 
 const chartConfig = {
-  running: {
-    label: "Running",
+  visitors: {
+    label: "Visitors",
+  },
+  desktop: {
+    label: "Desktop",
     color: "hsl(var(--chart-1))",
   },
-  swimming: {
-    label: "Swimming",
+  mobile: {
+    label: "Mobile",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
 export function MainChart() {
+  const [timeRange, setTimeRange] = React.useState("90d")
+
+  const { data } = useQuery({
+    queryKey: ["values"],
+    queryFn: loadValues,
+  });
+
+  console.log(data)
+
+  const chartData = [
+    { date: "2021-01-01", desktop: 100, mobile: 50 },
+  ]
+
+  const filteredData = chartData.filter((item) => {
+    const date = new Date(item.date)
+    const now = new Date()
+    let daysToSubtract = 90
+    if (timeRange === "30d") {
+      daysToSubtract = 30
+    } else if (timeRange === "7d") {
+      daysToSubtract = 7
+    }
+    now.setDate(now.getDate() - daysToSubtract)
+    return date >= now
+  })
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Tooltip - Line Indicator</CardTitle>
-        <CardDescription>Tooltip with line indicator.</CardDescription>
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle>Area Chart - Interactive</CardTitle>
+          <CardDescription>
+            Showing total visitors for the last 3 months
+          </CardDescription>
+        </div>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger
+            className="w-[160px] rounded-lg sm:ml-auto"
+            aria-label="Select a value"
+          >
+            <SelectValue placeholder="Last 3 months" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="90d" className="rounded-lg">
+              Last 3 months
+            </SelectItem>
+            <SelectItem value="30d" className="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7d" className="rounded-lg">
+              Last 7 days
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
-      <CardContent>
-        <ChartContainer className="h-[350px] w-[700px]" config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            {/* <XAxis
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
+          <AreaChart data={filteredData}>
+            <defs>
+              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-desktop)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} />
+            <XAxis
               dataKey="date"
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
               tickFormatter={(value) => {
-                return new Date(value).toLocaleDateString("en-US", {
-                  weekday: "short",
+                const date = new Date(value)
+                return date.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
                 })
               }}
-            /> */}
-            <Bar
-              dataKey="running"
-              stackId="a"
-              fill="var(--color-running)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="swimming"
-              stackId="a"
-              fill="var(--color-swimming)"
-              radius={[4, 4, 0, 0]}
             />
             <ChartTooltip
-              content={<ChartTooltipContent indicator="line" />}
               cursor={false}
-              defaultIndex={1}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })
+                  }}
+                  indicator="dot"
+                />
+              }
             />
-          </BarChart>
+            
+            <Area
+              dataKey="desktop"
+              type="natural"
+              fill="url(#fillDesktop)"
+              stroke="var(--color-desktop)"
+              stackId="a"
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>

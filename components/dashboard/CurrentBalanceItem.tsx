@@ -6,7 +6,7 @@ import {
 } from "../ui/hover-card";
 import { InfoIcon } from "lucide-react";
 
-const CurrentBalanceItem = ({ title = "", description = "", value = "" }) => {
+const CurrentBalanceItem = ({ title = "", description = "", value = "", classNameValue ="" }) => {
   return (
     <div>
       <div
@@ -26,7 +26,7 @@ const CurrentBalanceItem = ({ title = "", description = "", value = "" }) => {
           </HoverCard>
         </div>
         <div>
-          <p className={`font-semibold text-[16px] py-2`}>{value}</p>
+          <p className={`font-semibold text-[16px] py-2 ${classNameValue}`}>{value}</p>
         </div>
       </div>
     </div>

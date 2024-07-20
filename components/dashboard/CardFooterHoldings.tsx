@@ -19,18 +19,40 @@ const CardFooterHoldings = ({
   setActiveMonth: (value: string) => void;
 }) => {
   // Función para agrupar los datos por item.crypto y sumar sus montos
-  const aggregateData = (data: { crypto: string | number; amount: number; imageUrl: string; }[]) => {
-    const aggregatedItems: { [key: string]: {
-      id: Key | null | undefined;
-      imageUrl: string ; crypto: string | number; amount: any; 
-} } = {};
-    data.forEach((item: { crypto: string | number; amount: any; imageUrl:string}) => {
-      if (aggregatedItems[item.crypto]) {
-        aggregatedItems[item.crypto].amount += item.amount;
-      } else {
-        aggregatedItems[item.crypto] = { ...item, id: null, imageUrl: item.imageUrl };
+  const aggregateData = (
+    data: {
+      crypto: string | number;
+      amount: number;
+      imageUrl: string;
+      id: number;
+    }[]
+  ) => {
+    const aggregatedItems: {
+      [key: string]: {
+        id: number | undefined;
+        imageUrl: string;
+        crypto: string | number;
+        amount: any;
+      };
+    } = {};
+    data.forEach(
+      (item: {
+        crypto: string | number;
+        amount: any;
+        imageUrl: string;
+        id: number;
+      }) => {
+        if (aggregatedItems[item.crypto]) {
+          aggregatedItems[item.crypto].amount += item.amount;
+        } else {
+          aggregatedItems[item.crypto] = {
+            ...item,
+            id: item.id,
+            imageUrl: item.imageUrl,
+          };
+        }
       }
-    });
+    );
     return Object.values(aggregatedItems);
   };
 
