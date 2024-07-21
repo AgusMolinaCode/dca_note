@@ -97,7 +97,7 @@ const CurrentBalance = () => {
     });
 
   return (
-    <div>
+    <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-semibold text-gray-500">Current Balance</h1>
         <p className="text-gray-500 text-md font-semibold">24h</p>

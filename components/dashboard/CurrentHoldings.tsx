@@ -18,7 +18,7 @@ export function CurrentHoldings() {
     refetchInterval: 60000,
   });
 
-  const totals = data?.map((item) => item.amount) ?? [];
+  const totals = data?.map((item) => item.total) ?? [];
   const totalSum = (totals ?? []).reduce((acc, curr) => acc + curr, 0);
 
   const percentages = data?.map((item) => {
@@ -32,6 +32,7 @@ export function CurrentHoldings() {
   const desktopData = data?.map((item) => ({
     crypto: item.crypto,
     amount: item.amount,
+    total: item.total,
     percentages: ((item.amount / totalSum) * 100).toFixed(2),
   }));
 
@@ -44,7 +45,7 @@ export function CurrentHoldings() {
   React.useEffect(() => {
     if (data) {
       const highestAmountItem = data.reduce((prev, current) => {
-        return prev.amount > current.amount ? prev : current;
+        return prev.total > current.total ? prev : current;
       }, data[0]);
       setActiveMonth(highestAmountItem?.crypto);
     }
@@ -55,7 +56,11 @@ export function CurrentHoldings() {
     [activeMonth]
   );
 
-  const colors = ["#C6B4D8", "#F5C0BF", "#FBE7AB", "#315098", "#FBD0E0"];
+  const colors = [
+    "#C6B4D8", "#F5C0BF", "#FBE7AB", "#315098", "#FBD0E0",
+    "#A7BEE8", "#EFCFE3", "#B8E2F2", "#F6C6EA", "#D9E5D6",
+    "#F9D8B7", "#BFD4F2", "#F7EFA8", "#AED9E0", "#FAD9D5"
+  ];
 
   return (
     <Card data-chart={id} className="flex flex-col">

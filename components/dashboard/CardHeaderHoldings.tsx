@@ -31,7 +31,7 @@ const CardHeaderHoldings = ({
       <CardHeader className="flex-row items-start space-y-0 pb-3">
         <div className="grid gap-1">
           <CardTitle className="text-lg font-semibold text-gray-500">
-            Holdings
+            Current Holdings
           </CardTitle>
         </div>
         <Select value={activeMonth} onValueChange={setActiveMonth}>

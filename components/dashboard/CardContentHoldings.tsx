@@ -22,15 +22,24 @@ const CardContentHoldings = ({
 }) => {
   const id = "pie-interactive";
 
-  const groupedData: { [key: string]: { crypto: string; amount: number } } =
-    data.reduce((acc, item) => {
-      const { crypto, amount } = item;
+  const groupedData: {
+    [key: string]: { crypto: string; total: number };
+  } = data.reduce(
+    (acc, item) => {
+      const { crypto,total } = item;
       if (!acc[crypto]) {
-        acc[crypto] = { crypto, amount: 0 };
+        acc[crypto] = { crypto, total: 0 };
       }
-      acc[crypto].amount += amount;
+      acc[crypto].total += total;
       return acc;
-    }, {} as { [key: string]: { crypto: string; amount: number } });
+    },
+    {} as {
+      [key: string]: {
+        crypto: string;
+        total: number;
+      };
+    }
+  );
 
   const aggregatedData = Object.values(groupedData);
 
@@ -47,8 +56,8 @@ const CardContentHoldings = ({
   const activeCryptoName = data?.[activeIndex ?? 0]?.crypto;
 
   const totalForActiveCrypto =
-    totalsByCrypto[activeCryptoName]?.toFixed(3) ?? "0.0";
-    
+    totalsByCrypto[activeCryptoName]?.toFixed(2) ?? "0.0";
+
   return (
     <div>
       <CardContent className="flex flex-1 justify-center pb-0">
@@ -66,7 +75,7 @@ const CardContentHoldings = ({
               <Pie
                 data={aggregatedData.map((item, index) => ({
                   month: item.crypto,
-                  desktop: item.amount,
+                  desktop: item.total,
                   fill: colors[index % colors.length],
                 }))}
                 dataKey="desktop"
@@ -108,17 +117,17 @@ const CardContentHoldings = ({
                             </tspan>
                             <tspan
                               x={viewBox.cx}
-                              y={125}
-                              className="fill-foreground text-lg font-semibold"
+                              y={118}
+                              className="fill-gray-400 text-[0.7rem]"
                             >
-                              ${totalForActiveCrypto}
+                              total
                             </tspan>
                             <tspan
                               x={viewBox.cx}
-                              y={150}
-                              className="fill-gray-400 text-[0.7rem]"
+                              y={140}
+                              className="fill-foreground text-lg font-semibold"
                             >
-                              buy at {data?.[activeIndex ?? 0]?.price}
+                              ${totalForActiveCrypto}
                             </tspan>
                           </text>
                         </>

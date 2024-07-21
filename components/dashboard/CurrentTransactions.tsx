@@ -29,8 +29,6 @@ const CurrentTransactions = () => {
   });
   return (
     <div>
-      {/* <DataTransaction data={data} /> */}
-
       <TradingViewWidgetNoSSR
         symbol="BINANCE:BTCUSDT"
         theme="dark"
@@ -46,6 +44,9 @@ const CurrentTransactions = () => {
         hide_side_toolbar={true}
         hide_top_toolbar={true}
       />
+      <div className="dark:bg-gray-800 bg-gray-600 px-2 rounded-xl">
+        <DataTransaction data={data} />
+      </div>
     </div>
   );
 };

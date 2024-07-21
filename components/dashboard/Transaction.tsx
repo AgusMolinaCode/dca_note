@@ -31,21 +31,16 @@ const Transaction: React.FC<TransactionProps> = ({ transaction }) => {
   });
 
   return (
-    <div className="flex flex-col p-2 m-2 border gap-4">
-      <p>{transaction.crypto}</p>
-      <p>amount: {transaction.amount}</p>
-      <p>precio: {transaction.price}</p>
-      <p>precio: {transaction.id}</p>
-
-      <div>
-        <button
-          type="submit"
-          className="bg-red-500 text-white rounded p-1"
-          onClick={() => mutation.mutate(transaction)}
-        >
-          Delete
-        </button>
-      </div>
+    <div className="w-full">
+      <tbody>
+        <tr key={transaction.id} className="border-b">
+          <td className="px-4 py-2">{transaction.id}</td>
+          <td className="px-4 py-2">{transaction.amount}</td>
+          <td className="px-4 py-2">{transaction.crypto}</td>
+          <td className="px-4 py-2">{transaction.price}</td>
+        </tr>
+      </tbody>
+      
     </div>
   );
 };

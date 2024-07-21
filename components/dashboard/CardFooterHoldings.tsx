@@ -23,6 +23,7 @@ const CardFooterHoldings = ({
     data: {
       crypto: string | number;
       amount: number;
+      total: number;
       imageUrl: string;
       id: number;
     }[]
@@ -32,18 +33,20 @@ const CardFooterHoldings = ({
         id: number | undefined;
         imageUrl: string;
         crypto: string | number;
-        amount: any;
+        amount: number;
+        total: number;
       };
     } = {};
     data.forEach(
       (item: {
         crypto: string | number;
-        amount: any;
+        amount: number;
         imageUrl: string;
         id: number;
+        total: number
       }) => {
         if (aggregatedItems[item.crypto]) {
-          aggregatedItems[item.crypto].amount += item.amount;
+          aggregatedItems[item.crypto].total += item.total;
         } else {
           aggregatedItems[item.crypto] = {
             ...item,
@@ -65,7 +68,7 @@ const CardFooterHoldings = ({
           {processedData
             ?.sort(
               (a, b) =>
-                (b.amount / totalSum) * 100 - (a.amount / totalSum) * 100
+                (b.total / totalSum) * 100 - (a.total / totalSum) * 100
             )
             .slice(0, 4)
             .map((item) => (
@@ -83,7 +86,7 @@ const CardFooterHoldings = ({
                 />
                 <p className="text-gray-300">{item.crypto}</p>
                 <p className="text-md font-semibold text-white">
-                  {((item.amount / totalSum) * 100).toFixed(2)}%
+                  {((item.total / totalSum) * 100).toFixed(2)}%
                 </p>
               </div>
             ))}
@@ -102,8 +105,8 @@ const CardFooterHoldings = ({
                   {processedData
                     ?.sort(
                       (a, b) =>
-                        (b.amount / totalSum) * 100 -
-                        (a.amount / totalSum) * 100
+                        (b.total / totalSum) * 100 -
+                        (a.total / totalSum) * 100
                     )
                     .slice(4)
                     .map((item) => (
@@ -121,7 +124,7 @@ const CardFooterHoldings = ({
                             className="rounded-full"
                           />
                           <p>{item.crypto} - </p>
-                          <p>{((item.amount / totalSum) * 100).toFixed(2)}%</p>
+                          <p>{((item.total / totalSum) * 100).toFixed(2)}%</p>
                         </div>
                       </SelectItem>
                     ))}

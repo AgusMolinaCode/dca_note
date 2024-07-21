@@ -78,7 +78,7 @@ const CurrentTodayProfitItem = ({
     <div>
       <>
         <CurrentBalanceItem
-          title="1H High Profit"
+          title="1H Unrealized High Profit"
           description="the maximum unrealized profit in the last hour"
           value={
             cryptoAmountsFetch?.toLocaleString("en-US", {
