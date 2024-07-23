@@ -68,8 +68,6 @@ const CurrentTodayProfitItem = ({
     }
   };
 
-  const totalValueFormatted = cryptoAmountsFetch! - totalValue;
-
   useEffect(() => {
     fetchFullCryptosData();
   }, [cryptoJoin]);
@@ -87,7 +85,7 @@ const CurrentTodayProfitItem = ({
             }) || "$0.00"
           }
           classNameValue={
-            totalValueFormatted >= 0 ? "text-red-500" : "text-green-500"
+            cryptoAmountsFetch! <= 0 ? "text-red-500" : "text-green-500"
           }
         />
       </>

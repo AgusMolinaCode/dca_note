@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import CurrentBalanceItem from "./CurrentBalanceItem";
 import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
 import { InfoIcon } from "lucide-react";
 import { HoverCardContent } from "../ui/hover-card";
@@ -91,7 +90,7 @@ const CurrentPercentajeProfitItem = ({
       <p>
         <span
           className={`${
-            (cryptoAmountsFetch ?? 0) < 0
+            (cryptoAmountsFetch ?? 0) <= 0
               ? `text-red-500 bg-red-500/20`
               : `text-green-500 bg-green-500/20`
           } text-sm font-medium  px-3 py-1 rounded-[0.45rem]`}
@@ -110,7 +109,7 @@ const CurrentPercentajeProfitItem = ({
       <p>
         <span
           className={` ${
-            (open24HourValue ?? 0) < 0 ? `text-red-500` : `text-green-500`
+            (open24HourValue ?? 0) <= 0 ? `text-red-500` : `text-green-500`
           }
            text-lg font-medium py-1`}
         >

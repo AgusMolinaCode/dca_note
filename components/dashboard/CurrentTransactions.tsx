@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,15 +22,16 @@ const TradingViewWidgetNoSSR = dynamic(
 );
 
 const CurrentTransactions = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
   });
+
   return (
     <div>
-      <TradingViewWidgetNoSSR
+      {/* <TradingViewWidgetNoSSR
         symbol="BINANCE:BTCUSDT"
-        theme="dark"
+        theme={useTheme().resolvedTheme === "dark" ? "dark" : "light"}
         locale="en"
         interval="5"
         range="5D"
@@ -43,7 +43,14 @@ const CurrentTransactions = () => {
         hide_legend={true}
         hide_side_toolbar={true}
         hide_top_toolbar={true}
-      />
+      /> */}
+      {isLoading && (
+        <div className="h-[600px] flex justify-center items-center">
+          <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto">
+            Loading...
+          </span>
+        </div>
+      )}
       <div className="dark:bg-gray-800 bg-gray-600 px-2 rounded-xl">
         <DataTransaction data={data} />
       </div>

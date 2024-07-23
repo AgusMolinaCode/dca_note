@@ -140,7 +140,7 @@ const CardContentHoldings = ({
           </ChartContainer>
         ) : (
           <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
-            <p className="text-center text-gray-500">No assets loaded yet.</p>
+            <p className="text-center text-gray-500">No current holdings loaded yet.</p>
           </div>
         )}
       </CardContent>

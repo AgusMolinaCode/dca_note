@@ -97,61 +97,86 @@ const CurrentBalance = () => {
     });
 
   return (
-    <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold text-gray-500">Current Balance</h1>
-        <p className="text-gray-500 text-md font-semibold">24h</p>
-      </div>
-      <div>
-        <p className="text-4xl font-semibold pt-4">{formattedTotalValue}</p>
-        {isLoading ? (
-          <p>
-            <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto">
-              Loading...
-            </span>
-          </p>
-        ) : (
-          <div className="pt-2 flex justify-start gap-2">
-            <CurrentPercentajeProfitItem
-              formattedTotalValue={formattedTotalValue}
-              allCryptos={allCryptos}
-            />
-          </div>
-        )}
-      </div>
-      {isLoading ? (
-        <p>
-          <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto h-44">
-            Loading...
-          </span>
-        </p>
-      ) : (
-        <div className="pt-4">
-          <CurrentTodayProfitItem
-            totalValue={totalValue}
-            allCryptos={allCryptos}
-          />
+    <div className="">
+      {dataUserId && dataUserId.length > 0 ? (
+        <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
+          <div className="">
+            <div
+              className="
+            flex 
+            justify-between 
+            items-center 
+            
+          "
+            >
+              <h1 className="text-lg font-semibold text-gray-500">
+                Current Balance
+              </h1>
+              <p className="text-gray-500 text-md font-semibold">24h</p>
+            </div>
+            <div>
+              <p className="text-4xl font-semibold pt-4">
+                {formattedTotalValue}
+              </p>
+              {isLoading ? (
+                <p>
+                  <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto">
+                    Loading...
+                  </span>
+                </p>
+              ) : (
+                <div className="pt-2 flex justify-start gap-2">
+                  <CurrentPercentajeProfitItem
+                    formattedTotalValue={formattedTotalValue}
+                    allCryptos={allCryptos}
+                  />
+                </div>
+              )}
+            </div>
+            <div>
+              {isLoading ? (
+                <p>
+                  <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto h-44">
+                    Loading...
+                  </span>
+                </p>
+              ) : (
+                <div className="pt-4">
+                  <CurrentTodayProfitItem
+                    totalValue={totalValue}
+                    allCryptos={allCryptos}
+                  />
 
-          <CurrentBalanceItem
-            title="Total Profit"
-            description="The profit you have made from selling assets."
-            value={"$0.00"}
-          />
-          <CurrentBalanceItem
-            title="Unrealized Profit"
-            description="The profit you would make if you sold all your assets at the current market price."
-            value={formattedProfitUnrealized.toString()}
-            classNameValue={
-              formattedProfitUnrealizedValue > 0
-                ? "text-green-500"
-                : "text-red-500"
-            }
-          />
-          <CurrentBalanceItem
-            title="Total Invested"
-            description="The total amount of money you have invested in your account."
-            value={formattedTotalSum.toString()}
-          />
+                  <CurrentBalanceItem
+                    title="Total Profit"
+                    description="The profit you have made from selling assets."
+                    value={"$0.00"}
+                  />
+                  <CurrentBalanceItem
+                    title="Unrealized Profit"
+                    description="The profit you would make if you sold all your assets at the current market price."
+                    value={formattedProfitUnrealized.toString()}
+                    classNameValue={
+                      formattedProfitUnrealizedValue > 0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }
+                  />
+                  <CurrentBalanceItem
+                    title="Total Invested"
+                    description="The total amount of money you have invested in your account."
+                    value={formattedTotalSum.toString()}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
+          <p className="text-center text-gray-500">
+            No current balance loaded yet.
+          </p>
         </div>
       )}
     </div>

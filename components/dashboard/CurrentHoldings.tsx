@@ -10,18 +10,23 @@ import { loadTransactions } from "@/app/api";
 import CardHeaderHoldings from "./CardHeaderHoldings";
 import CardContentHoldings from "./CardContentHoldings";
 import CardFooterHoldings from "./CardFooterHoldings";
+import { useUser } from "@clerk/clerk-react";
 
 export function CurrentHoldings() {
+  const { user } = useUser();
+
   const { data = [] } = useQuery({
     queryKey: ["items"],
     queryFn: loadTransactions,
     refetchInterval: 60000,
   });
 
-  const totals = data?.map((item) => item.total) ?? [];
+  const dataUserId = data?.filter((item) => item.userId === user?.id);
+
+  const totals = dataUserId?.map((item) => item.total) ?? [];
   const totalSum = (totals ?? []).reduce((acc, curr) => acc + curr, 0);
 
-  const percentages = data?.map((item) => {
+  const percentages = dataUserId?.map((item) => {
     const percentage = ((item.amount / totalSum) * 100).toFixed(2);
     return {
       name: item.crypto,
@@ -29,7 +34,7 @@ export function CurrentHoldings() {
     };
   });
 
-  const desktopData = data?.map((item) => ({
+  const desktopData = dataUserId?.map((item) => ({
     crypto: item.crypto,
     amount: item.amount,
     total: item.total,
@@ -43,13 +48,13 @@ export function CurrentHoldings() {
   const [activeMonth, setActiveMonth] = React.useState("");
 
   React.useEffect(() => {
-    if (data) {
-      const highestAmountItem = data.reduce((prev, current) => {
+    if (dataUserId) {
+      const highestAmountItem = dataUserId.reduce((prev, current) => {
         return prev.total > current.total ? prev : current;
-      }, data[0]);
+      }, dataUserId[0]);
       setActiveMonth(highestAmountItem?.crypto);
     }
-  }, [data]);
+  }, [dataUserId]);
 
   const activeIndex = React.useMemo(
     () => desktopData?.findIndex((item) => item.crypto === activeMonth),
@@ -57,28 +62,40 @@ export function CurrentHoldings() {
   );
 
   const colors = [
-    "#C6B4D8", "#F5C0BF", "#FBE7AB", "#315098", "#FBD0E0",
-    "#A7BEE8", "#EFCFE3", "#B8E2F2", "#F6C6EA", "#D9E5D6",
-    "#F9D8B7", "#BFD4F2", "#F7EFA8", "#AED9E0", "#FAD9D5"
+    "#C6B4D8",
+    "#F5C0BF",
+    "#FBE7AB",
+    "#315098",
+    "#FBD0E0",
+    "#A7BEE8",
+    "#EFCFE3",
+    "#B8E2F2",
+    "#F6C6EA",
+    "#D9E5D6",
+    "#F9D8B7",
+    "#BFD4F2",
+    "#F7EFA8",
+    "#AED9E0",
+    "#FAD9D5",
   ];
 
   return (
     <Card data-chart={id} className="flex flex-col">
       <ChartStyle id={id} config={chartConfig} />
       <CardHeaderHoldings
-        data={data}
+        data={dataUserId}
         activeMonth={activeMonth}
         setActiveMonth={setActiveMonth}
       />
       <CardContentHoldings
-        data={data}
+        data={dataUserId}
         activeIndex={activeIndex}
         chartConfig={chartConfig}
         percentages={percentages}
         colors={colors}
       />
       <CardFooterHoldings
-        data={data}
+        data={dataUserId}
         totalSum={totalSum}
         setActiveMonth={setActiveMonth}
       />

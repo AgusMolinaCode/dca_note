@@ -1,4 +1,5 @@
 interface CryptoCurrency {
+  PRICE: ReactNode;
   USD: {
     TYPE: string;
     MARKET: string;

@@ -6,7 +6,7 @@ const MULTIPLE_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemulti`;
 
 const MULTIPLE_FULL_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemultifull`;
 
-const LOAD_TRANSACTIONS = `http://localhost:3000/api/transactions`;
+export const LOAD_TRANSACTIONS = `http://localhost:3000/api/transactions`;
 
 const LOAD_VALUES = `http://localhost:3000/api/values`;
 
