@@ -37,11 +37,14 @@ interface CryptoListResult {
 const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
   const { user } = useUser();
 
-  const [value, setValue] = useState<number | null>(null);
+  const [value, setValue] = useState<{ [key: string]: number } | null>(null);
+  const [profitValue, setProfitValue] = useState<{
+    [key: string]: number;
+  } | null>(null);
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
-  const currentCrypto = dataUserId?.map((item) => item.crypto);
-  const cryptoJoin = currentCrypto?.join(",");
+  const cryptoJoin = dataUserId?.map((item) => item.crypto).join(",");
+  const myCriptoPrice = dataUserId?.map((item) => item.price);
 
   const fetchFullCryptosData = async () => {
     if (cryptoJoin) {
@@ -50,50 +53,59 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
       );
       const data: CryptoListResult = await response.json();
 
-      let getCurrentPricePerCrypto = 0;
+      // Extraer los precios de cada criptomoneda
+      const prices: { [key: string]: number } = Object.keys(data.RAW).reduce(
+        (acc, crypto) => {
+          acc[crypto] = data.RAW[crypto as any].USD.PRICE;
+          return acc;
+        },
+        {} as { [key: string]: number }
+      );
 
-      data?.RAW &&
-        Object.values(data.RAW).forEach((item) => {
-          getCurrentPricePerCrypto += item.USD.PRICE;
-        });
+      // Extraer 24hs profit de cada criptomoneda
+      const profit: { [key: string]: number } = Object.keys(data.RAW).reduce(
+        (acc, crypto) => {
+          acc[crypto] = data.RAW[crypto as any].USD.CHANGE24HOUR;
+          return acc;
+        },
+        {} as { [key: string]: number }
+      );
 
-      setValue(getCurrentPricePerCrypto);
+      setProfitValue(profit);
+      setValue(prices);
     }
   };
 
   useEffect(() => {
     fetchFullCryptosData();
-  }, [currentCrypto]);
+  }, [cryptoJoin]);
 
   return (
     <div>
       {dataUserId && dataUserId.length > 0 ? (
-        <div className="w-full overflow-x-auto mt-4">
+        <div className="w-full overflow-x-auto mt-4 px-2 pb-2">
           <table className="w-full table-auto">
-            <thead className="dark:bg-gray-800 bg-gray-600 rounded-2xl pb-2 border-b border-gray-600">
+            <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
               <tr className="text-left">
                 <th className="px-4 py-2 text-sm text-gray-400">Asset</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Price</th>
-                <th className="px-4 py-2 text-sm text-gray-400">24Hs Profit</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Invested</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Avg. Price</th>
-                <th className="px-4 py-2 text-sm text-gray-400">
-                  Current Profit
-                </th>
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Current Price
                 </th>
+                <th className="px-4 py-2 text-sm text-gray-400">Buy Price</th>
+                <th className="px-4 py-2 text-sm text-gray-400">24Hs Change</th>
+                <th className="px-4 py-2 text-sm text-gray-400">Invested</th>
+                <th className="px-4 py-2 text-sm text-gray-400">Current Profit</th>
                 <th className="px-4 py-2 text-sm text-gray-400 text-center">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="dark:bg-gray-800 bg-gray-600 rounded-2xl">
+            <tbody className="dark:bg-gray-800 bg-gray-400">
               {dataUserId?.map((transaction) => (
                 <>
                   <tr
                     key={transaction?.id}
-                    className="border-t border-gray-600"
+                    className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
                   >
                     <td className="flex gap-1 items-center my-2">
                       <Image
@@ -107,20 +119,45 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
                         {transaction?.crypto}
                       </p>
                     </td>
-                    <td className="px-4 py-2 font-semibold">
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        value?.[transaction?.crypto] &&
+                        value?.[transaction?.crypto] < transaction?.price
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }`}
+                    >
+                      {value?.[transaction?.crypto] !== undefined
+                        ? `$ ${value[transaction.crypto].toFixed(2)}`
+                        : "$ 0.00"}
+                    </td>
+                    <td className={`px-4 py-2 font-semibold`}>
                       $ {transaction?.price}
                     </td>
-                    <td className="px-4 py-2">{transaction?.amount}</td>
-                    <td className="px-4 py-2 font-semibold">
-                      $ {transaction?.total.toFixed(2)}
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        profitValue?.[transaction?.crypto] !== undefined &&
+                        profitValue?.[transaction?.crypto] < 0
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }`}
+                    >
+                      {profitValue?.[transaction?.crypto] !== undefined
+                        ? profitValue[transaction.crypto].toFixed(2)
+                        : "0.00"}
                     </td>
                     <td className="px-4 py-2 font-semibold">
                       $ {transaction?.total.toFixed(2)}
                     </td>
-                    <td className="px-4 py-2 font-semibold">
-                      $ {value?.toFixed(2)}
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        ((value?.[transaction?.crypto] ?? 0) - (transaction?.price ?? 0)) < 0 ? 'text-red-500' : 'text-green-500'
+                      }`}
+                    >
+                      ${" "}
+                      {((value?.[transaction?.crypto] ?? 0) - (transaction?.price ?? 0)).toFixed(2)}
                     </td>
-                    <td className="px-4 py-2 font-semibold">$</td>
+
                     <td className="flex gap-2 py-2 items-center justify-center">
                       <DeleteAssetModal transaction={transaction} />
                       <Edit size={24} />
@@ -130,9 +167,6 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
               ))}
             </tbody>
           </table>
-          <div>
-            <p className="text-3xl text-white">Total: $ {value?.toFixed(2)}</p>
-          </div>
         </div>
       ) : (
         <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center mt-4">

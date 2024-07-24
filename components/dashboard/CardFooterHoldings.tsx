@@ -18,7 +18,6 @@ const CardFooterHoldings = ({
   totalSum: number;
   setActiveMonth: (value: string) => void;
 }) => {
-  // Función para agrupar los datos por item.crypto y sumar sus montos
   const aggregateData = (
     data: {
       crypto: string | number;

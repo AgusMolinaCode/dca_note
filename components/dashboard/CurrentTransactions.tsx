@@ -51,7 +51,7 @@ const CurrentTransactions = () => {
           </span>
         </div>
       )}
-      <div className="dark:bg-gray-800 bg-gray-600 px-2 rounded-xl">
+      <div className="dark:bg-gray-800 bg-gray-600 rounded-xl">
         <DataTransaction data={data} />
       </div>
     </div>
