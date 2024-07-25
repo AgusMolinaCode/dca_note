@@ -3,30 +3,30 @@ import { CardContent } from "../ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { useUser } from "@clerk/nextjs";
 
 const CardContentHoldings = ({
   data,
   activeIndex,
-  percentages,
   colors,
   chartConfig,
+  totalSum,
 }: {
   data: Transaction[];
   activeIndex: number;
-  percentages: {
-    name: string;
-    percentage: string;
-  }[];
   colors: string[];
   chartConfig: {};
+  totalSum: number;
 }) => {
+  const { user } = useUser();
+  const dataUserId = data?.filter((item) => item.userId === user?.id);
   const id = "pie-interactive";
 
-  const groupedData: {
+  const groupedDataContent: {
     [key: string]: { crypto: string; total: number };
-  } = data.reduce(
+  } = dataUserId.reduce(
     (acc, item) => {
-      const { crypto,total } = item;
+      const { crypto, total } = item;
       if (!acc[crypto]) {
         acc[crypto] = { crypto, total: 0 };
       }
@@ -41,11 +41,11 @@ const CardContentHoldings = ({
     }
   );
 
-  const aggregatedData = Object.values(groupedData);
+  const aggregatedData = Object.values(groupedDataContent);
 
   const totalsByCrypto: { [key: string]: number } = {};
 
-  data?.forEach((item) => {
+  dataUserId?.forEach((item) => {
     if (totalsByCrypto[item.crypto]) {
       totalsByCrypto[item.crypto] += item.total;
     } else {
@@ -53,7 +53,7 @@ const CardContentHoldings = ({
     }
   });
 
-  const activeCryptoName = data?.[activeIndex ?? 0]?.crypto;
+  const activeCryptoName = dataUserId?.[activeIndex ?? 0]?.crypto;
 
   const totalForActiveCrypto =
     totalsByCrypto[activeCryptoName]?.toFixed(2) ?? "0.0";
@@ -61,7 +61,7 @@ const CardContentHoldings = ({
   return (
     <div>
       <CardContent className="flex flex-1 justify-center pb-0">
-        {data && data.length > 0 ? (
+        {dataUserId && dataUserId.length > 0 ? (
           <ChartContainer
             id={id}
             config={chartConfig}
@@ -80,7 +80,7 @@ const CardContentHoldings = ({
                 }))}
                 dataKey="desktop"
                 nameKey="month"
-                innerRadius={60}
+                innerRadius={90}
                 strokeWidth={5}
                 activeIndex={activeIndex}
                 activeShape={({
@@ -110,21 +110,21 @@ const CardContentHoldings = ({
                           >
                             <tspan
                               x={viewBox.cx}
-                              y={100}
+                              y={130}
                               className="fill-foreground text-lg font-semibold"
                             >
                               {data?.[activeIndex ?? 0]?.crypto}
                             </tspan>
                             <tspan
                               x={viewBox.cx}
-                              y={118}
+                              y={145}
                               className="fill-gray-400 text-[0.7rem]"
                             >
                               total
                             </tspan>
                             <tspan
                               x={viewBox.cx}
-                              y={140}
+                              y={165}
                               className="fill-foreground text-lg font-semibold"
                             >
                               ${totalForActiveCrypto}
@@ -140,7 +140,9 @@ const CardContentHoldings = ({
           </ChartContainer>
         ) : (
           <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
-            <p className="text-center text-gray-500">No current holdings loaded yet.</p>
+            <p className="text-center text-gray-500">
+              No current holdings loaded yet.
+            </p>
           </div>
         )}
       </CardContent>

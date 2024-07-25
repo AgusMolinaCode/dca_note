@@ -97,7 +97,7 @@ const CurrentBalance = () => {
     });
 
   return (
-    <div className="">
+    <div className="w-full">
       {dataUserId && dataUserId.length > 0 ? (
         <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
           <div className="">

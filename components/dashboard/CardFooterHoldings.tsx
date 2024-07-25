@@ -1,13 +1,7 @@
 import React, { Key } from "react";
 import Image from "next/image";
 import { CardFooter } from "../ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { useUser } from "@clerk/nextjs";
 
 const CardFooterHoldings = ({
   data,
@@ -18,119 +12,76 @@ const CardFooterHoldings = ({
   totalSum: number;
   setActiveMonth: (value: string) => void;
 }) => {
-  const aggregateData = (
-    data: {
-      crypto: string | number;
-      amount: number;
-      total: number;
-      imageUrl: string;
-      id: number;
-    }[]
-  ) => {
-    const aggregatedItems: {
-      [key: string]: {
-        id: number | undefined;
-        imageUrl: string;
-        crypto: string | number;
-        amount: number;
-        total: number;
-      };
-    } = {};
-    data.forEach(
-      (item: {
-        crypto: string | number;
-        amount: number;
-        imageUrl: string;
-        id: number;
-        total: number
-      }) => {
-        if (aggregatedItems[item.crypto]) {
-          aggregatedItems[item.crypto].total += item.total;
-        } else {
-          aggregatedItems[item.crypto] = {
-            ...item,
-            id: item.id,
-            imageUrl: item.imageUrl,
-          };
-        }
-      }
-    );
-    return Object.values(aggregatedItems);
-  };
+  const { user } = useUser();
 
-  const processedData = aggregateData(data);
+  const dataUserId = data?.filter((item) => item.userId === user?.id);
+
+  const groupedData = dataUserId
+    .map((item) => ({
+      ...item,
+      percentage: (item.total / totalSum) * 100,
+    }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  // Agrupar por crypto
+  const cryptoMap: { [key: string]: any } = groupedData.reduce((acc: { [key: string]: any }, item) => {
+    if (!acc[item.crypto]) {
+      acc[item.crypto] = { ...item };
+    } else {
+      acc[item.crypto].total += item.total;
+      acc[item.crypto].percentage += item.percentage;
+    }
+    return acc;
+  }, {});
+
+  const aggregatedData = Object.values(cryptoMap);
+
+  const lessThanSixPercent = aggregatedData.filter((item) => item.percentage < 6);
+  const moreThanSixPercent = aggregatedData.filter((item) => item.percentage >= 6);
+
+  const finalData = [
+    ...moreThanSixPercent,
+    {
+      crypto: "Others",
+      total: lessThanSixPercent.reduce((sum, item) => sum + item.total, 0),
+      percentage: lessThanSixPercent.reduce(
+        (sum, item) => sum + item.percentage,
+        0
+      ),
+      fill: "var(--color-others)",
+      imageUrl: "",
+    },
+  ];
 
   return (
     <div>
       <CardFooter className="flex flex-col">
         <div className="grid grid-cols-2 items-center mx-auto justify-center object-center gap-4">
-          {processedData
+          {finalData
             ?.sort(
-              (a, b) =>
-                (b.total / totalSum) * 100 - (a.total / totalSum) * 100
+              (a, b) => (b.total / totalSum) * 100 - (a.total / totalSum) * 100
             )
-            .slice(0, 4)
             .map((item) => (
               <div
-                key={item.id}
+                key={item.crypto}
                 className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
                 onClick={() => setActiveMonth(item.crypto.toString())}
               >
-                <Image
-                  src={`https://cryptocompare.com/${item?.imageUrl}`}
-                  alt={item.crypto.toString()}
-                  width={18}
-                  height={18}
-                  className="rounded-full"
-                />
+                {item?.imageUrl ? (
+                  <Image
+                    src={`https://cryptocompare.com/${item.imageUrl}`}
+                    alt={item.crypto.toString()}
+                    width={18}
+                    height={18}
+                    className="rounded-full"
+                  />
+                ) : null}
                 <p className="text-gray-300">{item.crypto}</p>
                 <p className="text-md font-semibold text-white">
                   {((item.total / totalSum) * 100).toFixed(2)}%
                 </p>
               </div>
             ))}
-        </div>
-        <div>
-          {(processedData?.length ?? 0) > 4 && (
-            <div className="mt-2">
-              <Select onValueChange={setActiveMonth}>
-                <SelectTrigger
-                  className="ml-auto h-7 rounded-xl border-gray-400 pl-2.5"
-                  aria-label="Select a value"
-                >
-                  <SelectValue placeholder="More Assets" />
-                </SelectTrigger>
-                <SelectContent align="end" className="rounded-xl w-full">
-                  {processedData
-                    ?.sort(
-                      (a, b) =>
-                        (b.total / totalSum) * 100 -
-                        (a.total / totalSum) * 100
-                    )
-                    .slice(4)
-                    .map((item) => (
-                      <SelectItem
-                        key={item.id}
-                        value={item.crypto.toString()}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex justify-center items-center gap-2">
-                          <Image
-                            src={`https://cryptocompare.com/${item?.imageUrl}`}
-                            alt={item.crypto.toString()}
-                            width={24}
-                            height={24}
-                            className="rounded-full"
-                          />
-                          <p>{item.crypto} - </p>
-                          <p>{((item.total / totalSum) * 100).toFixed(2)}%</p>
-                        </div>
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
         </div>
       </CardFooter>
     </div>

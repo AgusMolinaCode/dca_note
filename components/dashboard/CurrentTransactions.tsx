@@ -52,7 +52,7 @@ const CurrentTransactions = () => {
         </div>
       )}
       <div className="dark:bg-gray-800 bg-gray-600 rounded-xl">
-        <DataTransaction data={data} />
+        <DataTransaction data={data}  />
       </div>
     </div>
   );

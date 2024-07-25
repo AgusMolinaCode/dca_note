@@ -10,13 +10,13 @@ const AdvancedChart = () => {
       <div className="block md:flex w-full px-1 lg:px-4 gap-1 lg:gap-4">
         <div className="block xs:flex md:block justify-center gap-4">
           <div className="dark:bg-gray-800 bg-gray-600 w-[320px] flex justify-center mx-auto px-2 rounded-xl p-4 mt-4">
-            {/* <CurrentBalance /> */}
+            <CurrentBalance />
           </div>
 
           <div className=" dark:bg-gray-800 bg-gray-600 w-[320px] flex justify-center mx-auto px-2 rounded-xl p-4 mt-4">
             <CurrentPerformance />
           </div>
-          <div className=" dark:bg-gray-800 bg-gray-600 w-[320px] flex justify-center mx-auto px-2 rounded-xl p-4 mt-4">
+          <div className=" dark:bg-gray-800 bg-gray-600 w-[320px]  px-2 rounded-xl p-4 mt-4">
             <CurrentHoldings />
           </div>
 
@@ -28,7 +28,7 @@ const AdvancedChart = () => {
 
         <div className="w-full">
           <div className="mt-4">
-            {/* <CurrentTransactions /> */}
+            <CurrentTransactions />
           </div>
         </div>
       </div>
