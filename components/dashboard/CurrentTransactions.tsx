@@ -52,6 +52,9 @@ const CurrentTransactions = () => {
         </div>
       )}
       <div className="dark:bg-gray-800 bg-gray-600 rounded-xl">
+        <div className="flex justify-between items-center px-2 pt-4">
+          <h2 className="text-lg font-semibold text-gray-500">My Assets</h2>
+        </div>
         <DataTransaction data={data}  />
       </div>
     </div>

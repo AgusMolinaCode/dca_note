@@ -85,10 +85,10 @@ export function CurrentHoldings() {
   const aggregatedData = Object.values(cryptoMap);
 
   const lessThanSixPercent = aggregatedData.filter(
-    (item) => item.percentage < 4
+    (item) => item.percentage < 2
   );
   const moreThanSixPercent = aggregatedData.filter(
-    (item) => item.percentage >= 4
+    (item) => item.percentage >= 2
   );
 
   const finalData = [
@@ -118,13 +118,12 @@ export function CurrentHoldings() {
   const activeIndex = React.useMemo(() => {
     return finalData.findIndex((item) => item.crypto === activeMonth);
   }, [activeMonth, finalData]);
-  console.log(activeIndex);
-  console.log(finalData);
 
   const activeCryptoName = finalData?.[activeIndex ?? 0]?.crypto;
 
   const totalForActiveCrypto =
     totalsByCrypto[activeCryptoName]?.toFixed(2) ?? "0.0";
+
 
   return (
     <Card data-chart={id} className="flex flex-col">
@@ -220,33 +219,35 @@ export function CurrentHoldings() {
         )}
       </CardContent>
       <CardFooter className="flex flex-col">
-        <div className="grid grid-cols-2 items-center mx-auto justify-center object-center gap-4">
-          {finalData
-            ?.sort(
-              (a, b) => (b.total / totalSum) * 100 - (a.total / totalSum) * 100
-            )
-            .map((item) => (
-              <div
-                key={item.crypto}
-                className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
-                onClick={() => setActiveMonth(item.crypto.toString())}
-              >
-                {item?.imageUrl ? (
-                  <Image
-                    src={`https://cryptocompare.com/${item.imageUrl}`}
-                    alt={item.crypto.toString()}
-                    width={18}
-                    height={18}
-                    className="rounded-full"
-                  />
-                ) : null}
-                <p className="text-gray-300">{item.crypto}</p>
-                <p className="text-md font-semibold text-white">
-                  {((item.total / totalSum) * 100).toFixed(2)}%
-                </p>
-              </div>
-            ))}
-        </div>
+        {finalData && finalData.length > 1 && !isNaN(finalData.find(item => item.crypto === "Others")?.total) && (
+          <div className="grid grid-cols-2 items-center mx-auto justify-center object-center gap-4">
+            {finalData
+              ?.sort(
+                (a, b) => (b.total / totalSum) * 100 - (a.total / totalSum) * 100
+              )
+              .map((item) => (
+                <div
+                  key={item.crypto}
+                  className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
+                  onClick={() => setActiveMonth(item.crypto.toString())}
+                >
+                  {item?.imageUrl ? (
+                    <Image
+                      src={`https://cryptocompare.com/${item.imageUrl}`}
+                      alt={item.crypto.toString()}
+                      width={18}
+                      height={18}
+                      className="rounded-full"
+                    />
+                  ) : null}
+                  <p className="text-gray-300">{item.crypto}</p>
+                  <p className="text-md font-semibold text-white">
+                    {((item.total / totalSum) * 100).toFixed(2)}%
+                  </p>
+                </div>
+              ))}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

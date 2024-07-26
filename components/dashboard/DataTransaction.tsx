@@ -41,10 +41,37 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
   const [profitValue, setProfitValue] = useState<{
     [key: string]: number;
   } | null>(null);
+  const [percentageValue, setPercentageValue] = useState<{
+    [key: string]: number;
+  } | null>(null);
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
+
+  const groupedTotals = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = 0;
+    }
+    acc[transaction.crypto] += transaction.total;
+    return acc;
+  }, {} as { [key: string]: number });
+
+  const averagePrices = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = { total: 0, count: 0 };
+    }
+    acc[transaction.crypto].total += transaction.price;
+    acc[transaction.crypto].count += 1;
+    return acc;
+  }, {} as { [key: string]: { total: number; count: number } });
+
+  const averagePricesResult = averagePrices
+    ? Object.keys(averagePrices).reduce((acc, crypto) => {
+        acc[crypto] = averagePrices[crypto].total / averagePrices[crypto].count;
+        return acc;
+      }, {} as { [key: string]: number })
+    : null;
+
   const cryptoJoin = dataUserId?.map((item) => item.crypto).join(",");
-  const myCriptoPrice = dataUserId?.map((item) => item.price);
 
   const fetchFullCryptosData = async () => {
     if (cryptoJoin) {
@@ -71,6 +98,14 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
         {} as { [key: string]: number }
       );
 
+      const percentage: { [key: string]: number } = Object.keys(
+        data.RAW
+      ).reduce((acc, crypto) => {
+        acc[crypto] = data.RAW[crypto as any].USD.CHANGEPCT24HOUR;
+        return acc;
+      }, {} as { [key: string]: number });
+
+      setPercentageValue(percentage);
       setProfitValue(profit);
       setValue(prices);
     }
@@ -80,10 +115,23 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
     fetchFullCryptosData();
   }, [cryptoJoin]);
 
+  // Agrupar transacciones por criptomoneda y sumar los totales
+  const groupedTransactions = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = { ...transaction, total: 0 };
+    }
+    acc[transaction.crypto].total += transaction.price;
+    return acc;
+  }, {} as { [key: string]: Transaction & { total: number } });
+
+  const groupedTransactionsArray = groupedTransactions
+    ? Object.values(groupedTransactions)
+    : [];
+
   return (
     <div>
-      {dataUserId && dataUserId.length > 0 ? (
-        <div className="w-full overflow-x-auto mt-4 px-2 pb-2">
+      {groupedTransactionsArray.length > 0 ? (
+        <div className="w-full overflow-x-auto px-2 pb-2">
           <table className="w-full table-auto">
             <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
               <tr className="text-left">
@@ -91,79 +139,111 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Current Price
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">Buy Price</th>
-                <th className="px-4 py-2 text-sm text-gray-400">24Hs Change</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Invested</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Current Profit</th>
-                <th className="px-4 py-2 text-sm text-gray-400 text-center">
-                  Actions
+                <th className="px-4 py-2 text-sm text-gray-400">
+                  Avg. Buy Price
                 </th>
+                <th className="px-4 py-2 text-sm text-gray-400">
+                  24Hs Price Change
+                </th>
+                <th className="px-4 py-2 text-sm text-gray-400">
+                  24Hs % Change
+                </th>
+                <th className="px-4 py-2 text-sm text-gray-400">
+                  Total Invested
+                </th>
+                <th className="px-4 py-2 text-sm text-gray-400">
+                  Current Profit
+                </th>
+                {/* <th className="px-4 py-2 text-sm text-gray-400 text-center">
+                  Actions
+                </th> */}
               </tr>
             </thead>
             <tbody className="dark:bg-gray-800 bg-gray-400">
-              {dataUserId?.map((transaction) => (
-                <>
-                  <tr
-                    key={transaction?.id}
-                    className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
+              {groupedTransactionsArray.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
+                >
+                  <td className="flex gap-1 items-center my-2">
+                    <Image
+                      src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                      alt={transaction.crypto}
+                      width={24}
+                      height={24}
+                      className="rounded-full"
+                    />
+                    <p className="px-4 py-2 text-md font-semibold">
+                      {transaction.crypto}
+                    </p>
+                  </td>
+                  <td className={`px-4 py-2 font-semibold`}>
+                    {value?.[transaction.crypto] !== undefined
+                      ? `$ ${value[transaction.crypto].toFixed(2)}`
+                      : "$ 0.00"}
+                  </td>
+                  <td
+                    className={`px-4 py-2 font-semibold  ${
+                      (value?.[transaction.crypto] ?? 0) <
+                      (averagePricesResult?.[transaction.crypto] ?? 0)
+                        ? "text-red-400"
+                        : "text-green-400"
+                    }`}
                   >
-                    <td className="flex gap-1 items-center my-2">
-                      <Image
-                        src={`https://cryptocompare.com/${transaction?.imageUrl}`}
-                        alt={transaction.crypto}
-                        width={24}
-                        height={24}
-                        className="rounded-full"
-                      />
-                      <p className="px-4 py-2 text-md font-semibold">
-                        {transaction?.crypto}
-                      </p>
-                    </td>
-                    <td
-                      className={`px-4 py-2 font-semibold ${
-                        value?.[transaction?.crypto] &&
-                        value?.[transaction?.crypto] < transaction?.price
-                          ? "text-red-400"
-                          : "text-green-400"
-                      }`}
-                    >
-                      {value?.[transaction?.crypto] !== undefined
-                        ? `$ ${value[transaction.crypto].toFixed(2)}`
-                        : "$ 0.00"}
-                    </td>
-                    <td className={`px-4 py-2 font-semibold`}>
-                      $ {transaction?.price}
-                    </td>
-                    <td
-                      className={`px-4 py-2 font-semibold ${
-                        profitValue?.[transaction?.crypto] !== undefined &&
-                        profitValue?.[transaction?.crypto] < 0
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {profitValue?.[transaction?.crypto] !== undefined
-                        ? profitValue[transaction.crypto].toFixed(2)
-                        : "0.00"}
-                    </td>
-                    <td className="px-4 py-2 font-semibold">
-                      $ {transaction?.total.toFixed(2)}
-                    </td>
-                    <td
-                      className={`px-4 py-2 font-semibold ${
-                        ((value?.[transaction?.crypto] ?? 0) - (transaction?.price ?? 0)) < 0 ? 'text-red-500' : 'text-green-500'
-                      }`}
-                    >
-                      ${" "}
-                      {((value?.[transaction?.crypto] ?? 0) - (transaction?.price ?? 0)).toFixed(2)}
-                    </td>
-
-                    <td className="flex gap-2 py-2 items-center justify-center">
-                      <DeleteAssetModal transaction={transaction} />
-                      <Edit size={24} />
-                    </td>
-                  </tr>
-                </>
+                    ${" "}
+                    {averagePricesResult?.[transaction.crypto]?.toFixed(2) ??
+                      "0.00"}
+                  </td>
+                  <td
+                    className={`px-4 py-2 font-semibold ${
+                      profitValue?.[transaction.crypto] !== undefined &&
+                      profitValue?.[transaction.crypto] < 0
+                        ? "text-red-400"
+                        : "text-green-400"
+                    }`}
+                  >
+                    ${" "}
+                    {profitValue?.[transaction.crypto] !== undefined
+                      ? profitValue[transaction.crypto].toFixed(2)
+                      : "0.00"}
+                  </td>
+                  <td
+                    className={`px-4 py-2 font-semibold ${
+                      percentageValue?.[transaction.crypto] !== undefined &&
+                      percentageValue?.[transaction.crypto] < 0
+                        ? "text-red-400"
+                        : "text-green-400"
+                    }`}
+                  >
+                    %{" "}
+                    {percentageValue?.[transaction.crypto] !== undefined
+                      ? percentageValue[transaction.crypto].toFixed(2)
+                      : "0.00"}
+                  </td>
+                  <td className="px-4 py-2 font-semibold">
+                    ${" "}
+                    {groupedTotals?.[transaction.crypto]?.toFixed(2) ?? "0.00"}
+                  </td>
+                  <td
+                    className={`px-4 py-2 font-semibold ${
+                      (value?.[transaction.crypto] ?? 0) -
+                        (averagePricesResult?.[transaction.crypto] ?? 0) <
+                      0
+                        ? "text-red-400"
+                        : "text-green-400"
+                    }`}
+                  >
+                    ${" "}
+                    {(
+                      (value?.[transaction.crypto] ?? 0) -
+                      (averagePricesResult?.[transaction.crypto] ?? 0)
+                    ).toFixed(2)}
+                  </td>
+                  {/* <td className="flex gap-2 py-2 items-center justify-center">
+                    <DeleteAssetModal transaction={transaction} />
+                    <Edit size={24} />
+                  </td> */}
+                </tr>
               ))}
             </tbody>
           </table>

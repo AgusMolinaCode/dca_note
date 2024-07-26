@@ -51,8 +51,6 @@ export function MainChart() {
     queryFn: loadValues,
   });
 
-  console.log(data)
-
   const chartData = [
     { date: "2021-01-01", desktop: 100, mobile: 50 },
   ]
