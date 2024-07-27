@@ -95,6 +95,7 @@ export function ButtonAsset() {
             </Dialog>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogContent className="sm:max-w-[425px] bg-gray-800">
+                <DialogTitle hidden />
                 <SecondDialogContent
                   selectedCrypto={selectedCrypto}
                   onAddTransaction={() => {

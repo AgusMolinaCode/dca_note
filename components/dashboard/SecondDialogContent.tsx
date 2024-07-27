@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -31,14 +31,14 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   onAddTransaction,
 }) => {
   const queryClient = useQueryClient();
-  
+
   const { user } = useUser();
 
   const [criptoPrice, setCriptoPrice] = useState<number | null>(
     selectedCrypto ? parseFloat(selectedCrypto.price.toFixed(2)) : null
   );
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  
+
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
@@ -47,7 +47,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
       total: 0,
     },
   });
-  
+
   const addTransaction = async (values: z.infer<typeof transactionSchema>) => {
     const transactionData = {
       userId: values.userId,
@@ -97,7 +97,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = (event.target.value as unknown) as number;
+    const newAmount = event.target.value as unknown as number;
     form.setValue("amount", newAmount);
     const newTotal = newAmount * (criptoPrice || 0);
     setTotalPrice(newTotal || 0);
@@ -157,13 +157,13 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
                   <FormControl>
                     <div className="pt-4 flex flex-col gap-2">
                       <Label htmlFor="price" className="text-white text-[1rem]">
-                        Crypto Price
+                        Price
                       </Label>
                       <Input
                         {...field}
                         id="price"
                         type="number"
-                        value={criptoPrice === null ? "" : criptoPrice}
+                        value={criptoPrice !== null ? criptoPrice : ""}
                         onChange={handlePriceChange}
                         className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                       />
@@ -177,7 +177,7 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
               control={form.control}
               name="total"
               render={({ field }) => (
-                <FormItem className=" space-y-0 relative">
+                <FormItem className="space-y-0 relative">
                   <FormControl>
                     <div className="pt-4 flex flex-col gap-2">
                       <Label htmlFor="total" className="text-white text-[1rem]">
@@ -187,13 +187,14 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
                         {...field}
                         id="total"
                         type="text"
-                        value={totalPrice.toFixed(2)}
+                        value={
+                          totalPrice !== null ? totalPrice.toFixed(2) : "0.00"
+                        }
                         readOnly
                         className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                       />
                     </div>
                   </FormControl>
-                  <FormMessage className="text-white" />
                 </FormItem>
               )}
             />
