@@ -23,7 +23,6 @@ const CardFooterHoldings = ({
     }))
     .sort((a, b) => b.percentage - a.percentage);
 
-  // Agrupar por crypto
   const cryptoMap: { [key: string]: any } = groupedData.reduce((acc: { [key: string]: any }, item) => {
     if (!acc[item.crypto]) {
       acc[item.crypto] = { ...item };

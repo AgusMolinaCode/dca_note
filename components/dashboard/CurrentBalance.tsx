@@ -100,14 +100,8 @@ const CurrentBalance = () => {
     <div className="w-full">
       {dataUserId && dataUserId.length > 0 ? (
         <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
-          <div className="">
-            <div
-              className="
-            flex 
-            justify-between 
-            items-center 
-            
-          "
+          <div>
+            <div className="flex justify-between items-center"
             >
               <h1 className="text-lg font-semibold text-gray-500">
                 Current Balance

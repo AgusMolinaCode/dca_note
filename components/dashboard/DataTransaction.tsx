@@ -61,6 +61,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
   const [percentageValue, setPercentageValue] = useState<{
     [key: string]: number;
   } | null>(null);
+  const [selectedSymbol, setSelectedSymbol] = useState<string>("");
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
 
@@ -72,7 +73,6 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
     return acc;
   }, {} as { [key: string]: number });
 
-  // (Opcional) Convertir el array ordenado de nuevo en un objeto
   const sortedGroupedTotals = Object.keys(groupedTotals ?? {})
     .sort((a, b) => (groupedTotals?.[b] ?? 0) - (groupedTotals?.[a] ?? 0))
     .reduce((acc, key) => {
@@ -130,6 +130,9 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
         return acc;
       }, {} as { [key: string]: number });
 
+
+      selectedSymbol === "" && setSelectedSymbol(`BINANCE:${Object.keys(data.RAW)[0]}USDT`);
+     
       setPercentageValue(percentage);
       setProfitValue(profit);
       setValue(prices);
@@ -156,13 +159,9 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
       )
     : [];
 
-  const [selectedSymbol, setSelectedSymbol] = useState<string>(
-    `BINANCE:${groupedTransactionsArray[0]?.crypto}USDT`
-  );
-  console.log(selectedSymbol);
   const handleRowClick = (crypto: string) => {
     setSelectedSymbol(`BINANCE:${crypto}USDT`);
-  };
+  }
 
   return (
     <div>
@@ -177,7 +176,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
           timezone="Etc/UTC"
           height="400"
           width="100%"
-          hide_legend={true}
+          hide_legend={false}
           hide_side_toolbar={true}
           hide_top_toolbar={true}
         />

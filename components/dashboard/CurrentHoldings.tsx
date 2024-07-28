@@ -8,7 +8,6 @@ import { ChartConfig, ChartStyle } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
 import { loadTransactions } from "@/app/api";
 import CardHeaderHoldings from "./CardHeaderHoldings";
-import CardContentHoldings from "./CardContentHoldings";
 import Image from "next/image";
 import { useUser } from "@clerk/clerk-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";

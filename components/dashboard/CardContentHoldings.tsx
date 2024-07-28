@@ -10,13 +10,11 @@ const CardContentHoldings = ({
   activeIndex,
   colors,
   chartConfig,
-  totalSum,
 }: {
   data: Transaction[];
   activeIndex: number;
   colors: string[];
   chartConfig: {};
-  totalSum: number;
 }) => {
   const { user } = useUser();
   const dataUserId = data?.filter((item) => item.userId === user?.id);

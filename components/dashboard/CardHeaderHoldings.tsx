@@ -1,14 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { CardHeader, CardTitle } from "../ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { useUser } from "@clerk/nextjs";
+
 
 const CardHeaderHoldings = () => {
   return (
