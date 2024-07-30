@@ -69,14 +69,19 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                 <td className="text-center">{transaction.amount.toFixed(2)}</td>
                 <td className="text-center">{transaction.price.toFixed(2)}</td>
                 <td className="text-center">
-                  {value[transaction.crypto]} USD
+                  $
+                  {value[transaction.crypto]
+                    ? value[transaction.crypto].toFixed(2)
+                    : "0.00"}
                 </td>
                 <td className="text-center">
-                  {(
-                    value[transaction.crypto] * transaction.amount -
-                    transaction.price * transaction.amount
-                  ).toFixed(2)}{" "}
-                  USD
+                  $
+                  {value[transaction.crypto]
+                    ? (
+                        value[transaction.crypto] * transaction.amount -
+                        transaction.price * transaction.amount
+                      ).toFixed(2)
+                    : "0.00"}
                 </td>
                 <td className="flex gap-2 py-2 items-center text-center justify-center">
                   <DeleteAssetModal transaction={transaction} />
