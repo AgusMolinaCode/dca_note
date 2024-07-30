@@ -77,11 +77,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
     return acc;
   }, {} as { [key: string]: number });
 
-  const key = Object.keys(groupedAmounts ?? {})[0];
-
-  // Accede al valor numérico usando la clave
-  const amount = groupedAmounts?.[key] ?? 0;
-
+ 
 
   const sortedGroupedTotals = Object.keys(groupedTotals ?? {})
     .sort((a, b) => (groupedTotals?.[b] ?? 0) - (groupedTotals?.[a] ?? 0))
@@ -176,7 +172,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
     <div>
       <div className="h-[368px] w-full">
         <TradingViewWidgetNoSSR
-          symbol={selectedSymbol || "BINANCE:undefinedUSDT"}
+          symbol={selectedSymbol || "BINANCE:BTCUSDT"}
           theme={useTheme().resolvedTheme === "dark" ? "dark" : "light"}
           locale="en"
           interval="60"
@@ -192,7 +188,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
       </div>
       <div>
         <DataTransactionTable
-          amount={amount}
+          groupedAmounts={groupedAmounts || {}}
           groupedTransactionsArray={groupedTransactionsArray}
           value={value}
           averagePricesResult={averagePricesResult}

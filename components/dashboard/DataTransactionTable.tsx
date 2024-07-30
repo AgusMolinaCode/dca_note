@@ -9,7 +9,7 @@ const DataTransactionTable = ({
   percentageValue,
   sortedGroupedTotals,
   handleRowClick,
-  amount
+  groupedAmounts,
 }: {
   groupedTransactionsArray: (Transaction & { total: number })[];
   value: { [key: string]: number };
@@ -17,10 +17,9 @@ const DataTransactionTable = ({
   profitValue: { [key: string]: number };
   percentageValue: { [key: string]: number };
   sortedGroupedTotals: { [key: string]: number };
-  amount: number;
+  groupedAmounts: { [key: string]: number };
   handleRowClick: (crypto: string) => void;
 }) => {
-  console.log(amount);
   return (
     <div>
       {groupedTransactionsArray.length > 0 ? (
@@ -56,87 +55,89 @@ const DataTransactionTable = ({
               </tr>
             </thead>
             <tbody className="dark:bg-gray-800 bg-gray-400">
-              {groupedTransactionsArray.map((transaction: any) => (
-                <tr
-                  key={transaction.id}
-                  className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
-                  onClick={() => handleRowClick(transaction.crypto)}
-                >
-                  <td className="flex gap-1 items-center my-2">
-                    <Image
-                      src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                      alt={transaction.crypto}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
-                    />
-                    <p className="px-4 py-2 text-md font-semibold">
-                      {transaction.crypto}
-                    </p>
-                  </td>
-                  <td className={`px-4 py-2 font-semibold`}>
-                    {value?.[transaction.crypto] !== undefined
-                      ? `$ ${value[transaction.crypto].toFixed(2)}`
-                      : "$ 0.00"}
-                  </td>
-                  <td
-                    className={`px-4 py-2 font-semibold  ${
-                      (value?.[transaction.crypto] ?? 0) <
-                      (averagePricesResult?.[transaction.crypto] ?? 0)
-                        ? "text-red-400"
-                        : "text-green-400"
-                    }`}
+              {groupedTransactionsArray.map((transaction: any) => {
+                const amount = groupedAmounts[transaction.crypto];
+                const currentValue = value?.[transaction.crypto];
+                const currentProfit = amount * currentValue;
+                const finalProfit =
+                  currentProfit - sortedGroupedTotals?.[transaction.crypto];
+
+                return (
+                  <tr
+                    key={transaction.id}
+                    className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
+                    onClick={() => handleRowClick(transaction.crypto)}
                   >
-                    ${" "}
-                    {averagePricesResult?.[transaction.crypto]?.toFixed(2) ??
-                      "0.00"}
-                  </td>
-                  <td
-                    className={`px-4 py-2 font-semibold ${
-                      profitValue?.[transaction.crypto] !== undefined &&
-                      profitValue?.[transaction.crypto] < 0
-                        ? "text-red-400"
-                        : "text-green-400"
-                    }`}
-                  >
-                    ${" "}
-                    {profitValue?.[transaction.crypto] !== undefined
-                      ? profitValue[transaction.crypto].toFixed(2)
-                      : "0.00"}
-                  </td>
-                  <td
-                    className={`px-4 py-2 font-semibold ${
-                      percentageValue?.[transaction.crypto] !== undefined &&
-                      percentageValue?.[transaction.crypto] < 0
-                        ? "text-red-400"
-                        : "text-green-400"
-                    }`}
-                  >
-                    {percentageValue?.[transaction.crypto] !== undefined
-                      ? percentageValue[transaction.crypto].toFixed(2)
-                      : "0.00"}{" "}
-                    %
-                  </td>
-                  <td className="px-4 py-2 font-semibold">
-                    ${" "}
-                    {sortedGroupedTotals?.[transaction.crypto]?.toFixed(2) ??
-                      "0.00"}
-                  </td>
-                  <td
-                    className={`px-4 py-2 font-semibold ${
-                      (value?.[transaction.crypto] ?? 0) -
-                        (averagePricesResult?.[transaction.crypto] ?? 0) <
-                      0
-                        ? "text-red-400"
-                        : "text-green-400"
-                    }`}
-                  >
-                    ${" "}
-                    {((amount * value?.[transaction.crypto]) -
-                      sortedGroupedTotals?.[transaction.crypto]).toFixed(2)}
-                  </td>
-                </tr>
-              ))}
+                    <td className="flex gap-1 items-center my-2">
+                      <Image
+                        src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                        alt={transaction.crypto}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
+                      <p className="px-4 py-2 text-md font-semibold">
+                        {transaction.crypto}
+                      </p>
+                    </td>
+                    <td className={`px-4 py-2 font-semibold`}>
+                      {currentValue !== undefined
+                        ? `$ ${currentValue.toFixed(2)}`
+                        : "$ 0.00"}
+                    </td>
+                    <td
+                      className={`px-4 py-2 font-semibold  ${
+                        (currentValue ?? 0) <
+                        (averagePricesResult?.[transaction.crypto] ?? 0)
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }`}
+                    >
+                      ${" "}
+                      {averagePricesResult?.[transaction.crypto]?.toFixed(2) ??
+                        "0.00"}
+                    </td>
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        profitValue?.[transaction.crypto] !== undefined &&
+                        profitValue?.[transaction.crypto] < 0
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }`}
+                    >
+                      ${" "}
+                      {profitValue?.[transaction.crypto] !== undefined
+                        ? profitValue[transaction.crypto].toFixed(2)
+                        : "0.00"}
+                    </td>
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        percentageValue?.[transaction.crypto] !== undefined &&
+                        percentageValue?.[transaction.crypto] < 0
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }`}
+                    >
+                      {percentageValue?.[transaction.crypto] !== undefined
+                        ? percentageValue[transaction.crypto].toFixed(2)
+                        : "0.00"}{" "}
+                      %
+                    </td>
+                    <td className="px-4 py-2 font-semibold">
+                      ${" "}
+                      {sortedGroupedTotals?.[transaction.crypto]?.toFixed(2) ??
+                        "0.00"}
+                    </td>
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        finalProfit < 0 ? "text-red-400" : "text-green-400"
+                      }`}
+                    >
+                      ${finalProfit.toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
