@@ -118,6 +118,7 @@ interface Transaction {
   price: number;
   total: number;
   imageUrl: string;
+  createdAt: string;
 }
 
 type TransactionProps = {

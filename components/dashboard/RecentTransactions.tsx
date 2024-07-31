@@ -4,15 +4,36 @@ import { useUser } from "@clerk/clerk-react";
 import { Edit } from "lucide-react";
 import DeleteAssetModal from "./DeleteAssetModal";
 import Image from "next/image";
-import { TokenUSDT } from "@token-icons/react";
-import { CircleDollarSignIcon } from "lucide-react";
+import { CircleDollarSignIcon, DollarSign } from "lucide-react";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
 };
 
+const groupByDate = (transactions: any) => {
+  return transactions.reduce(
+    (
+      acc: { [x: string]: any[] },
+      transaction: { createdAt: string | number | Date }
+    ) => {
+      const date = new Date(transaction.createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(transaction);
+      return acc;
+    },
+    {}
+  );
+};
+
 const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
   const { user } = useUser();
+
   const dataUserId = data?.filter((item) => item.userId === user?.id);
 
   const cryptoJoin = dataUserId?.map((item) => item.crypto).join(",");
@@ -43,6 +64,8 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
     fetchFullCryptosData();
   }, [cryptoJoin]);
 
+  const groupedTransactions = groupByDate(dataUserId);
+
   return (
     <div>
       <div className="overflow-x-auto px-2 pb-2">
@@ -51,58 +74,102 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
             Recent Transactions
           </h2>
         </div>
-        <table className="table-auto w-full">
-          <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
-            <tr className="text-left">
-              <th className="px-4 py-2 text-sm text-gray-400">Name</th>
-              <th className="px-4 py-2 text-sm text-gray-400">Amount</th>
-              <th className="px-4 py-2 text-sm text-gray-400">Buy Price</th>
-              <th className="px-4 py-2 text-sm text-gray-400">Current Price</th>
-              <th className="px-4 py-2 text-sm text-gray-400">Gain/Loss</th>
-              <th className="px-4 py-2 text-sm text-gray-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataUserId?.map((transaction) => (
-              <tr key={transaction.id}>
-                <td className="flex gap-1 items-center my-2 relative">
-                  <Image
-                    src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                    alt={transaction.crypto}
-                    width={28}
-                    height={28}
-                    className="rounded-full z-10 bg-black/90 p-[3px]"
-                  />
-                  <CircleDollarSignIcon className="text-green-400 absolute bottom-[-5px] right-[14.5rem]" />
-                  <p className="px-4 py-2 text-md font-semibold">
-                    {transaction.crypto}
-                  </p>
-                </td>
-                <td className="px-4 py-2">{transaction.amount.toFixed(2)}</td>
-                <td className="px-4 py-2">{transaction.price.toFixed(2)}</td>
-                <td className="px-4 py-2">
-                  $
-                  {value[transaction.crypto]
-                    ? value[transaction.crypto].toFixed(2)
-                    : "0.00"}
-                </td>
-                <td className="px-4 py-2">
-                  $
-                  {value[transaction.crypto]
-                    ? (
-                        value[transaction.crypto] * transaction.amount -
-                        transaction.price * transaction.amount
-                      ).toFixed(2)
-                    : "0.00"}
-                </td>
-                <td className="flex gap-2 items-center py-2 justify-start">
-                  <DeleteAssetModal transaction={transaction} />
-                  <Edit size={24} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {Object.keys(groupedTransactions).map((date) => (
+          <div key={date}>
+            <table className="table-auto w-full">
+              <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
+                <tr className="text-left">
+                  <th className="px-4 py-2 text-sm text-gray-400">Name</th>
+                  <th className="px-4 py-2 text-sm text-gray-400">Amount</th>
+                  <th className="px-4 py-2 text-sm text-gray-400">Buy Price</th>
+                  <th className="px-4 py-2 text-sm text-gray-400">
+                    Current Price
+                  </th>
+                  <th className="px-4 py-2 text-sm text-gray-400">Gain/Loss</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 text-center">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+
+              <h3 className="text-lg font-semibold pt-2 text-gray-100">
+                {date}
+              </h3>
+              <tbody>
+                {groupedTransactions[date].map((transaction: Transaction) => (
+                  <tr key={transaction.id}>
+                    <td className="flex gap-1 items-center my-2">
+                      <div className="relative">
+                        <Image
+                          src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                          alt={transaction.crypto}
+                          width={32}
+                          height={32}
+                          className="rounded-full bg-zinc-900 p-[3px]"
+                        />
+                        <CircleDollarSignIcon
+                          size={24}
+                          className="text-green-400 bg-zinc-900 rounded-full  absolute bottom-[-11px] left-3 p-[3px]"
+                        />
+                      </div>
+                      <p className="px-4 py-2 text-md font-semibold text-gray-200">
+                        {transaction.crypto}
+                      </p>
+                    </td>
+                    <td className="px-4 py-2 font-semibold">
+                      {transaction.amount.toFixed(2)}
+                    </td>
+                    <td
+                      className={`px-4 py-2 font-semibold
+                    ${
+                      value[transaction.crypto]
+                        ? value[transaction.crypto] >= transaction.price
+                          ? "text-green-400"
+                          : "text-red-400"
+                        : ""
+                    }
+                      `}
+                    >
+                      $ {transaction.price.toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2 font-semibold">
+                      $
+                      {value[transaction.crypto]
+                        ? value[transaction.crypto].toFixed(2)
+                        : "0.00"}
+                    </td>
+                    <td
+                      className={`px-4 py-2 font-semibold
+                    ${
+                      value[transaction.crypto]
+                        ? value[transaction.crypto] * transaction.amount -
+                            transaction.price * transaction.amount >=
+                          0
+                          ? "text-green-400"
+                          : "text-red-400"
+                        : ""
+                    }
+                      `}
+                    >
+                      $
+                      {value[transaction.crypto]
+                        ? (
+                            value[transaction.crypto] * transaction.amount -
+                            transaction.price * transaction.amount
+                          ).toFixed(2)
+                        : "0.00"}
+                    </td>
+                    <td className="flex gap-2 items-center py-2 justify-center">
+                      <DollarSign size={24} />
+                      <DeleteAssetModal transaction={transaction} />
+                      <Edit size={24} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
     </div>
   );
