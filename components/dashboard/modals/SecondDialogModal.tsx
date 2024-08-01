@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,7 +26,7 @@ interface SecondDialogContentProps {
 
 const ADD_TRANSACTION_URL = `http://localhost:3000/api/transactions`;
 
-const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
+const SecondDialogModal: React.FC<SecondDialogContentProps> = ({
   selectedCrypto,
   onAddTransaction,
 }) => {
@@ -214,4 +214,4 @@ const SecondDialogContent: React.FC<SecondDialogContentProps> = ({
   );
 };
 
-export default SecondDialogContent;
+export default SecondDialogModal;

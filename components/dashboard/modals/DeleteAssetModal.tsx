@@ -10,6 +10,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+  DialogClose
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -44,33 +54,33 @@ const DeleteAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
   });
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button>
           <Trash2 size={24} className="hover:text-red-400 duration-300" />
         </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent className="">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="dark:text-white text-black">
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] bg-gray-800">
+        <DialogHeader>
+          <DialogTitle className="dark:text-white text-black">
             Delete {transaction.crypto} transaction
-          </AlertDialogTitle>
-          <AlertDialogDescription className="dark:text-white text-black">
+          </DialogTitle>
+          <DialogDescription className="dark:text-white text-black">
             Are you sure you want to delete this transaction?
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className=" dark:border-white border-black">Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          {/* <AlertDialogCancel className=" dark:border-white border-black">Cancel</AlertDialogCancel> */}
+          <button
             type="submit"
-            className="border dark:border-white border-black hover:bg-red-400 duration-300"
+            className="border dark:border-white border-black py-1 px-3 rounded-xl hover:bg-red-400 duration-300"
             onClick={() => mutation.mutate(transaction)}
           >
             Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { loadUsers, searchCryptos } from "@/app/api";
 import { useQuery } from "@tanstack/react-query";
-import FirstDialogContent from "./FirstDialogContent";
-import SecondDialogContent from "./SecondDialogContent";
+import FirstDialogModal from "./modals/FirstDialogModal";
+import SecondDialogModal from "./modals/SecondDialogModal";
 import { useUser } from "@clerk/clerk-react";
-import NicknameDialogContent from "./NicknameDialogContent";
+import NicknameDialogModal from "./modals/NicknameDialogModal";
 
 function useDebouncedQuery(query: string) {
   const [debouncedQuery, setDebouncedQuery] = useState(query);
@@ -83,7 +83,7 @@ export function ButtonAsset() {
                 <DialogHeader>
                   <DialogTitle className="text-white">Add Asset</DialogTitle>
                 </DialogHeader>
-                <FirstDialogContent
+                <FirstDialogModal
                   query={query}
                   setQuery={setQuery}
                   searchResults={searchResults as any}
@@ -96,7 +96,7 @@ export function ButtonAsset() {
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogContent className="sm:max-w-[425px] bg-gray-800">
                 <DialogTitle hidden />
-                <SecondDialogContent
+                <SecondDialogModal
                   selectedCrypto={selectedCrypto}
                   onAddTransaction={() => {
                     setIsDialogOpen(false);
@@ -120,7 +120,7 @@ export function ButtonAsset() {
               <DialogHeader>
                 <DialogTitle className="text-white">Add Nickname</DialogTitle>
               </DialogHeader>
-              <NicknameDialogContent />
+              <NicknameDialogModal />
             </DialogContent>
           </Dialog>
         )}

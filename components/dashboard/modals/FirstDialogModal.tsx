@@ -12,7 +12,7 @@ interface FirstDialogContentProps {
   handleSelect: (crypto: string, price: number, imageUrl: string) => void;
 }
 
-const FirstDialogContent = ({
+const FirstDialogModal = ({
   query,
   setQuery,
   searchResults,
@@ -74,4 +74,4 @@ const FirstDialogContent = ({
   );
 };
 
-export default FirstDialogContent;
+export default FirstDialogModal;

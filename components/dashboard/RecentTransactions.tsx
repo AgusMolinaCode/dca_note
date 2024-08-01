@@ -2,20 +2,33 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { Edit } from "lucide-react";
-import DeleteAssetModal from "./DeleteAssetModal";
+import DeleteAssetModal from "./modals/DeleteAssetModal";
 import Image from "next/image";
 import { CircleDollarSignIcon, DollarSign } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
+import EditAssetModal from "./modals/EditAssetModal";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
 };
 
-const groupByDate = (transactions: any) => {
+interface Transactions {
+  createdAt: string | number | Date;
+}
+
+const groupByDate = (
+  transactions: Transaction[]
+): { [key: string]: Transaction[] } => {
+  if (!Array.isArray(transactions)) {
+    return {};
+  }
+
   return transactions.reduce(
-    (
-      acc: { [x: string]: any[] },
-      transaction: { createdAt: string | number | Date }
-    ) => {
+    (acc: { [x: string]: Transaction[] }, transaction: Transaction) => {
       const date = new Date(transaction.createdAt).toLocaleDateString("en-US", {
         day: "numeric",
         month: "long",
@@ -47,7 +60,6 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
       );
       const data: CryptoListResult = await response.json();
 
-      // Extraer los precios de cada criptomoneda
       const prices: { [key: string]: number } = Object.keys(data.RAW).reduce(
         (acc, crypto) => {
           acc[crypto] = data.RAW[crypto as any].USD.PRICE;
@@ -64,12 +76,12 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
     fetchFullCryptosData();
   }, [cryptoJoin]);
 
-  const groupedTransactions = groupByDate(dataUserId);
+  const groupedTransactions = dataUserId ? groupByDate(dataUserId) : {};
 
   return (
     <div>
       <div className="overflow-x-auto px-2 pb-2">
-        <div className="flex justify-between items-center px-2 pt-4">
+        <div className="flex justify-between items-center px-2 p-4">
           <h2 className="text-lg font-semibold text-gray-500">
             Recent Transactions
           </h2>
@@ -77,7 +89,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
         {Object.keys(groupedTransactions).map((date) => (
           <div key={date}>
             <table className="table-auto w-full">
-              <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
+              <thead className="dark:bg-gray-800 bg-gray-600 border-b border-t border-gray-700">
                 <tr className="text-left">
                   <th className="px-4 py-2 text-sm text-gray-400">Name</th>
                   <th className="px-4 py-2 text-sm text-gray-400">Amount</th>
@@ -160,9 +172,31 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         : "0.00"}
                     </td>
                     <td className="flex gap-2 items-center py-2 justify-center">
-                      <DollarSign size={24} />
-                      <DeleteAssetModal transaction={transaction} />
-                      <Edit size={24} />
+                      <HoverCard>
+                        <HoverCardTrigger>
+                          <DollarSign size={24} />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                          Sell transaction
+                        </HoverCardContent>
+                      </HoverCard>
+                      <HoverCard>
+                        <HoverCardTrigger>
+                          <DeleteAssetModal transaction={transaction} />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                          Delete transaction
+                        </HoverCardContent>
+                      </HoverCard>
+                      <HoverCard>
+                        <HoverCardTrigger>
+                        <EditAssetModal transaction={transaction} />
+                          <Edit size={24} />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                          Edit transaction
+                        </HoverCardContent>
+                      </HoverCard>
                     </td>
                   </tr>
                 ))}
