@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import {
@@ -34,7 +34,6 @@ interface DeleteAssetModalProps {
 }
 
 const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
-
   const queryClient = useQueryClient();
 
   const deleteTransaction = async (transaction: Transaction) => {
@@ -69,18 +68,19 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
           <DialogHeader>
-          <DialogTitle className="dark:text-white text-black flex items-center gap-2">
-            Edit{"  "}
-            <Image
-              src={`https://cryptocompare.com/${transaction.imageUrl}`}
-              alt={transaction.crypto}
-              width={24}
-              height={24}
-              className="rounded-full bg-zinc-900 p-[3px]"
-            />
-            {"  "}
-            {transaction.crypto}{"  "}transaction
-          </DialogTitle>
+            <DialogTitle className="dark:text-white text-black flex items-center gap-2">
+              Edit{"  "}
+              <Image
+                src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                alt={transaction.crypto}
+                width={24}
+                height={24}
+                className="rounded-full bg-zinc-900 p-[3px]"
+              />
+              {"  "}
+              {transaction.crypto}
+              {"  "}transaction
+            </DialogTitle>
             <DialogDescription className="dark:text-white text-black">
               <Form {...form}>
                 <form>
@@ -101,6 +101,7 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               {...field}
                               id="amount"
                               type="number"
+                              defaultValue={transaction.amount.toString()}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
                           </div>
@@ -126,6 +127,7 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               id="price"
                               type="number"
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
+                              defaultValue={transaction.price.toString()}
                             />
                           </div>
                         </FormControl>
@@ -151,6 +153,7 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               type="text"
                               readOnly
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
+                              defaultValue={transaction.total.toString()}
                             />
                           </div>
                         </FormControl>
