@@ -171,7 +171,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                           ).toFixed(2)
                         : "0.00"}
                     </td>
-                    <td className="flex gap-2 items-center py-2 justify-center">
+                    <td className="flex items-center py-2 justify-center">
                       <HoverCard>
                         <HoverCardTrigger>
                           <DollarSign size={24} />
@@ -190,8 +190,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                       </HoverCard>
                       <HoverCard>
                         <HoverCardTrigger>
-                        <EditAssetModal transaction={transaction} />
-                          <Edit size={24} />
+                          <EditAssetModal transaction={transaction} />
                         </HoverCardTrigger>
                         <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
                           Edit transaction
