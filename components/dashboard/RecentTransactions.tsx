@@ -11,6 +11,7 @@ import {
   HoverCardTrigger,
 } from "../ui/hover-card";
 import EditAssetModal from "./modals/EditAssetModal";
+import { TokenUSDT } from "@token-icons/react";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
@@ -112,13 +113,17 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                   <tr key={transaction.id}>
                     <td className="flex gap-1 items-center my-2">
                       <div className="relative">
-                        <Image
-                          src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                          alt={transaction.crypto}
-                          width={32}
-                          height={32}
-                          className="rounded-full bg-zinc-900 p-[3px]"
-                        />
+                        {transaction.imageUrl ? (
+                          <Image
+                            src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                            alt={transaction.crypto}
+                            width={32}
+                            height={32}
+                            className="rounded-full bg-zinc-900 p-[3px]"
+                          />
+                        ) : (
+                          <TokenUSDT className="w-6 h-6" variant="branded" />
+                        )}
                         <CircleDollarSignIcon
                           size={24}
                           className="text-green-400 bg-zinc-900 rounded-full  absolute bottom-[-11px] left-3 p-[3px]"

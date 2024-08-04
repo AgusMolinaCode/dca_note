@@ -18,6 +18,7 @@ import {
 import { transactionSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
+import { TokenUSDT } from "@token-icons/react";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
@@ -108,12 +109,16 @@ const SecondDialogModal: React.FC<SecondDialogContentProps> = ({
     <div>
       <div>
         <div className="flex gap-2 justify-start items-center">
-          <Image
-            src={`https://cryptocompare.com/${selectedCrypto?.imageUrl}`}
-            alt={selectedCrypto?.crypto || ""}
-            width={50}
-            height={50}
-          />
+          {selectedCrypto?.imageUrl ? (
+            <Image
+              src={`https://cryptocompare.com/${selectedCrypto?.imageUrl}`}
+              alt={selectedCrypto?.crypto || ""}
+              width={50}
+              height={50}
+            />
+          ) : (
+            <TokenUSDT className="w-6 h-6" variant="branded" />
+          )}
           <p className="font-bold text-xl text-white">
             {selectedCrypto?.crypto}
           </p>

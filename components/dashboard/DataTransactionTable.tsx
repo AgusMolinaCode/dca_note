@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { TokenUSDT } from "@token-icons/react";
 
 const DataTransactionTable = ({
   groupedTransactionsArray,
@@ -69,13 +70,17 @@ const DataTransactionTable = ({
                     onClick={() => handleRowClick(transaction.crypto)}
                   >
                     <td className="flex gap-1 items-center my-2">
-                      <Image
-                        src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                        alt={transaction.crypto}
-                        width={32}
-                        height={32}
-                        className="rounded-full"
-                      />
+                      {transaction.imageUrl ? (
+                        <Image
+                          src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                          alt={transaction.crypto}
+                          width={32}
+                          height={32}
+                          className="rounded-full"
+                        />
+                      ) : (
+                        <TokenUSDT className="w-6 h-6" variant="branded" />
+                      )}
                       <p className="px-4 py-2 text-md font-semibold">
                         {transaction.crypto}
                       </p>

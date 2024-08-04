@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -25,9 +25,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { transactionSchema } from "@/lib/validator";
+import { editSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
+import { TokenUSDT } from "@token-icons/react";
+import { on } from "events";
 
 interface DeleteAssetModalProps {
   transaction: Transaction;
@@ -36,31 +38,86 @@ interface DeleteAssetModalProps {
 const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
   const queryClient = useQueryClient();
 
-  const deleteTransaction = async (transaction: Transaction) => {
+  const [criptoPrice, setCriptoPrice] = useState<number | null>(
+    transaction ? parseFloat(transaction.price.toFixed(2)) : null
+  );
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [open, setOpen] = React.useState(false);
+
+  const form = useForm<z.infer<typeof editSchema>>({
+    resolver: zodResolver(editSchema),
+    defaultValues: {
+      amount: transaction.amount,
+      price: criptoPrice !== null ? criptoPrice : undefined,
+      total: transaction.total,
+    },
+  });
+  const editTransaction = async (values: z.infer<typeof editSchema>) => {
+    const editData = {
+      amount: values.amount,
+      price: values.price,
+      total: values.total,
+    };
+
     try {
       const response = await fetch(`${LOAD_TRANSACTIONS}/${transaction.id}`, {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editData),
       });
 
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
+
     } catch (error) {
       console.error("Failed to edit transaction", error);
     }
   };
 
   const mutation = useMutation({
-    mutationFn: deleteTransaction,
+    mutationFn: editTransaction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
-  const form = useForm<z.infer<typeof transactionSchema>>({});
+  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const inputText = event.target.value;
+    let newValue = parseFloat(inputText);
+    newValue = parseFloat(newValue.toFixed(2));
+    setCriptoPrice(newValue);
+    form.setValue("price", newValue);
+    const amount = form.getValues("amount");
+    const newTotal = newValue * (amount || 0) || 0;
+    setTotalPrice(parseFloat(newTotal.toFixed(2)));
+    form.setValue("total", parseFloat(newTotal.toFixed(2)));
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newAmount = event.target.value as unknown as number;
+    form.setValue("amount", newAmount);
+    const newTotal = newAmount * (criptoPrice || 0);
+    setTotalPrice(newTotal || 0);
+    form.setValue("total", newTotal || 0);
+  };
+
+    const onSubmitMutation = (data: z.infer<typeof editSchema>) => {
+    mutation.mutate(data, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+  };
   return (
     <div>
-      <Dialog>
+      <Dialog 
+        open={open} 
+        onOpenChange={setOpen}
+      >
         <DialogTrigger asChild>
           <Button className="px-1">
             <Edit size={24} className="hover:text-blue-400 duration-300" />
@@ -70,20 +127,26 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
           <DialogHeader>
             <DialogTitle className="dark:text-white text-black flex items-center gap-2">
               Edit{"  "}
-              <Image
-                src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                alt={transaction.crypto}
-                width={24}
-                height={24}
-                className="rounded-full bg-zinc-900 p-[3px]"
-              />
+              {transaction.imageUrl ? (
+                <Image
+                  src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                  alt={transaction.crypto}
+                  width={24}
+                  height={24}
+                  className="rounded-full bg-zinc-900 p-[3px]"
+                />
+              ) : (
+                <TokenUSDT size={24} variant="branded" />
+              )}
               {"  "}
               {transaction.crypto}
               {"  "}transaction
             </DialogTitle>
             <DialogDescription className="dark:text-white text-black">
               <Form {...form}>
-                <form>
+                <form
+                  onSubmit={form.handleSubmit(onSubmitMutation)}
+                >
                   <FormField
                     control={form.control}
                     name="amount"
@@ -101,6 +164,7 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               {...field}
                               id="amount"
                               type="number"
+                              onChange={handleAmountChange}
                               defaultValue={transaction.amount.toString()}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
@@ -126,6 +190,8 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               {...field}
                               id="price"
                               type="number"
+                              value={criptoPrice !== null ? criptoPrice : ""}
+                              onChange={handlePriceChange}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                               defaultValue={transaction.price.toString()}
                             />
@@ -152,6 +218,11 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               id="total"
                               type="text"
                               readOnly
+                              value={
+                                totalPrice !== null
+                                  ? totalPrice.toFixed(2)
+                                  : "0.00"
+                              }
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                               defaultValue={transaction.total.toString()}
                             />
@@ -165,24 +236,16 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                     <Button
                       type="submit"
                       className="bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white"
+                      // onClick={() => mutation.mutate(transaction)}
                     >
-                      Add Transaction
+                      Edit Transaction
                     </Button>
                   </div>
                 </form>
               </Form>
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            {/* <AlertDialogCancel className=" dark:border-white border-black">Cancel</AlertDialogCancel> */}
-            {/* <button
-            type="submit"
-            className="border dark:border-white border-black py-1 px-3 rounded-xl hover:bg-red-400 duration-300"
-            onClick={() => mutation.mutate(transaction)}
-          >
-            Delete
-          </button> */}
-          </DialogFooter>
+          
         </DialogContent>
       </Dialog>
     </div>

@@ -13,6 +13,7 @@ import { useUser } from "@clerk/clerk-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { TokenUSDT } from "@token-icons/react";
 
 const colors = [
   "#C6B4D8",
@@ -123,7 +124,6 @@ export function CurrentHoldings() {
   const totalForActiveCrypto =
     totalsByCrypto[activeCryptoName]?.toFixed(2) ?? "0.0";
 
-
   return (
     <Card data-chart={id} className="flex flex-col">
       <ChartStyle id={id} config={chartConfig} />
@@ -195,10 +195,12 @@ export function CurrentHoldings() {
                               y={165}
                               className="fill-foreground text-lg font-semibold"
                             >
-                              {finalData?.[activeIndex ?? 0]?.crypto === "Others" ? 
-                                `$${finalData?.[activeIndex ?? 0]?.total.toFixed(2)}` : 
-                                `$${totalForActiveCrypto}`  
-                              }
+                              {finalData?.[activeIndex ?? 0]?.crypto ===
+                              "Others"
+                                ? `$${finalData?.[
+                                    activeIndex ?? 0
+                                  ]?.total.toFixed(2)}`
+                                : `$${totalForActiveCrypto}`}
                             </tspan>
                           </text>
                         </>
@@ -218,19 +220,21 @@ export function CurrentHoldings() {
         )}
       </CardContent>
       <CardFooter className="flex flex-col">
-        {finalData && finalData.length > 1 && !isNaN(finalData.find(item => item.crypto === "Others")?.total) && (
-          <div className="grid grid-cols-2 items-center mx-auto justify-center object-center gap-4">
-            {finalData
-              ?.sort(
-                (a, b) => (b.total / totalSum) * 100 - (a.total / totalSum) * 100
-              )
-              .map((item) => (
-                <div
-                  key={item.crypto}
-                  className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
-                  onClick={() => setActiveMonth(item.crypto.toString())}
-                >
-                  {item?.imageUrl ? (
+        {finalData &&
+          finalData.length > 1 &&
+          !isNaN(finalData.find((item) => item.crypto === "Others")?.total) && (
+            <div className="grid grid-cols-2 items-center mx-auto justify-center object-center gap-4">
+              {finalData
+                ?.sort(
+                  (a, b) =>
+                    (b.total / totalSum) * 100 - (a.total / totalSum) * 100
+                )
+                .map((item) => (
+                  <div
+                    key={item.crypto}
+                    className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
+                    onClick={() => setActiveMonth(item.crypto.toString())}
+                  >
                     <Image
                       src={`https://cryptocompare.com/${item.imageUrl}`}
                       alt={item.crypto.toString()}
@@ -238,15 +242,15 @@ export function CurrentHoldings() {
                       height={18}
                       className="rounded-full"
                     />
-                  ) : null}
-                  <p className="text-gray-300">{item.crypto}</p>
-                  <p className="text-md font-semibold text-white">
-                    {((item.total / totalSum) * 100).toFixed(2)}%
-                  </p>
-                </div>
-              ))}
-          </div>
-        )}
+
+                    <p className="text-gray-300">{item.crypto}</p>
+                    <p className="text-md font-semibold text-white">
+                      {((item.total / totalSum) * 100).toFixed(2)}%
+                    </p>
+                  </div>
+                ))}
+            </div>
+          )}
       </CardFooter>
     </Card>
   );

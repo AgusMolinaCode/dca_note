@@ -13,6 +13,7 @@ import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
 import Image from "next/image";
+import { TokenUSDT } from "@token-icons/react";
 
 interface DeleteAssetModalProps {
   transaction: Transaction;
@@ -53,15 +54,20 @@ const DeleteAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
         <DialogHeader>
           <DialogTitle className="dark:text-white text-black flex items-center gap-2">
             Delete{"  "}
-            <Image
-              src={`https://cryptocompare.com/${transaction.imageUrl}`}
-              alt={transaction.crypto}
-              width={24}
-              height={24}
-              className="rounded-full bg-zinc-900 p-[3px]"
-            />
+            {transaction.imageUrl ? (
+              <Image
+                src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                alt={transaction.crypto}
+                width={24}
+                height={24}
+                className="rounded-full bg-zinc-900 p-[3px]"
+              />
+            ) : (
+              <TokenUSDT className="w-6 h-6" variant="branded" />
+            )}
             {"  "}
-            {transaction.crypto}{"  "}transaction
+            {transaction.crypto}
+            {"  "}transaction
           </DialogTitle>
           <DialogDescription className="dark:text-white text-black">
             Are you sure you want to delete this transaction?

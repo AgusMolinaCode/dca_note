@@ -2,6 +2,7 @@ import React, { Key } from "react";
 import Image from "next/image";
 import { CardFooter } from "../ui/card";
 import { useUser } from "@clerk/nextjs";
+import { TokenUSDT } from "@token-icons/react";
 
 const CardFooterHoldings = ({
   data,
@@ -23,20 +24,27 @@ const CardFooterHoldings = ({
     }))
     .sort((a, b) => b.percentage - a.percentage);
 
-  const cryptoMap: { [key: string]: any } = groupedData.reduce((acc: { [key: string]: any }, item) => {
-    if (!acc[item.crypto]) {
-      acc[item.crypto] = { ...item };
-    } else {
-      acc[item.crypto].total += item.total;
-      acc[item.crypto].percentage += item.percentage;
-    }
-    return acc;
-  }, {});
+  const cryptoMap: { [key: string]: any } = groupedData.reduce(
+    (acc: { [key: string]: any }, item) => {
+      if (!acc[item.crypto]) {
+        acc[item.crypto] = { ...item };
+      } else {
+        acc[item.crypto].total += item.total;
+        acc[item.crypto].percentage += item.percentage;
+      }
+      return acc;
+    },
+    {}
+  );
 
   const aggregatedData = Object.values(cryptoMap);
 
-  const lessThanSixPercent = aggregatedData.filter((item) => item.percentage < 6);
-  const moreThanSixPercent = aggregatedData.filter((item) => item.percentage >= 6);
+  const lessThanSixPercent = aggregatedData.filter(
+    (item) => item.percentage < 6
+  );
+  const moreThanSixPercent = aggregatedData.filter(
+    (item) => item.percentage >= 6
+  );
 
   const finalData = [
     ...moreThanSixPercent,
@@ -74,7 +82,9 @@ const CardFooterHoldings = ({
                     height={18}
                     className="rounded-full"
                   />
-                ) : null}
+                ) : (
+                  <TokenUSDT className="w-6 h-6" variant="branded" />
+                )}
                 <p className="text-gray-300">{item.crypto}</p>
                 <p className="text-md font-semibold text-white">
                   {((item.total / totalSum) * 100).toFixed(2)}%
