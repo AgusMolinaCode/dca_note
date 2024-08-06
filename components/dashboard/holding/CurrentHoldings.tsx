@@ -10,10 +10,9 @@ import { loadTransactions } from "@/app/api";
 import CardHeaderHoldings from "./CardHeaderHoldings";
 import Image from "next/image";
 import { useUser } from "@clerk/clerk-react";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../ui/chart";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
-import { TokenUSDT } from "@token-icons/react";
 
 const colors = [
   "#C6B4D8",
@@ -101,7 +100,7 @@ export function CurrentHoldings() {
         0
       ),
       fill: "var(--color-others)",
-      imageUrl: "",
+      // imageUrl: "/media/37746338/usdt.png",
     },
   ];
 
@@ -235,13 +234,24 @@ export function CurrentHoldings() {
                     className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
                     onClick={() => setActiveMonth(item.crypto.toString())}
                   >
-                    <Image
+                    {item.crypto === "Others" ? (
+                      null
+                    ) : (
+                      <Image
+                        src={`https://cryptocompare.com/${item.imageUrl}`}
+                        alt={item.crypto.toString()}
+                        width={18}
+                        height={18}
+                        className="rounded-full"
+                      />
+                    )}
+                    {/* <Image
                       src={`https://cryptocompare.com/${item.imageUrl}`}
                       alt={item.crypto.toString()}
                       width={18}
                       height={18}
                       className="rounded-full"
-                    />
+                    /> */}
 
                     <p className="text-gray-300">{item.crypto}</p>
                     <p className="text-md font-semibold text-white">

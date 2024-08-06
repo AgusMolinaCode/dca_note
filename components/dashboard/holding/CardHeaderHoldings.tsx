@@ -1,5 +1,5 @@
 import React from "react";
-import { CardHeader, CardTitle } from "../ui/card";
+import { CardHeader, CardTitle } from "../../ui/card";
 
 
 const CardHeaderHoldings = () => {

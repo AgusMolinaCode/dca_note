@@ -1,6 +1,6 @@
 import React from "react";
-import { CardContent } from "../ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import { CardContent } from "../../ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../ui/chart";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { useUser } from "@clerk/nextjs";

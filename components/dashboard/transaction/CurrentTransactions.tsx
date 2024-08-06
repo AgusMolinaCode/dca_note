@@ -3,7 +3,7 @@
 import React from "react";
 import { loadTransactions } from "@/app/api";
 import { useQuery } from "@tanstack/react-query";
-import DataTransaction from "../dashboard/DataTransaction";
+import DataTransaction from "./DataTransaction";
 import RecentTransactions from "./RecentTransactions";
 
 const CurrentTransactions = () => {

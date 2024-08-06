@@ -3,7 +3,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "../ui/hover-card";
+} from "../../ui/hover-card";
 import { InfoIcon } from "lucide-react";
 
 const CurrentBalanceItem = ({ title = "", description = "", value = "", classNameValue ="" }) => {

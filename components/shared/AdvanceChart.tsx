@@ -1,8 +1,8 @@
-import CurrentBalance from "../dashboard/CurrentBalance";
-import { CurrentHoldings } from "../dashboard/CurrentHoldings";
+import CurrentBalance from "../dashboard/balance/CurrentBalance";
+import { CurrentHoldings } from "../dashboard/holding/CurrentHoldings";
 import CurrentNotes from "../dashboard/CurrentNotes";
-import CurrentPerformance from "../dashboard/CurrentPerformance";
-import CurrentTransactions from "../dashboard/CurrentTransactions";
+import CurrentPerformance from "../dashboard/performance/CurrentPerformance";
+import CurrentTransactions from "../dashboard/transaction/CurrentTransactions";
 
 const AdvancedChart = () => {
   return (

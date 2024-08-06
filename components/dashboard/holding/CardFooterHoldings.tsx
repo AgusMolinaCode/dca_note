@@ -1,6 +1,6 @@
 import React, { Key } from "react";
 import Image from "next/image";
-import { CardFooter } from "../ui/card";
+import { CardFooter } from "../../ui/card";
 import { useUser } from "@clerk/nextjs";
 import { TokenUSDT } from "@token-icons/react";
 

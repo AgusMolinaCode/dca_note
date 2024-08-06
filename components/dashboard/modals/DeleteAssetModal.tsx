@@ -74,14 +74,13 @@ const DeleteAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          {/* <AlertDialogCancel className=" dark:border-white border-black">Cancel</AlertDialogCancel> */}
-          <button
+          <Button
             type="submit"
-            className="border dark:border-white border-black py-1 px-3 rounded-xl hover:bg-red-400 duration-300"
+            className="bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white w-full"
             onClick={() => mutation.mutate(transaction)}
           >
-            Delete
-          </button>
+            Delete Transaction
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

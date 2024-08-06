@@ -1,16 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
-import { Edit } from "lucide-react";
-import DeleteAssetModal from "./modals/DeleteAssetModal";
+import DeleteAssetModal from "../modals/DeleteAssetModal";
 import Image from "next/image";
 import { CircleDollarSignIcon, DollarSign } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "../ui/hover-card";
-import EditAssetModal from "./modals/EditAssetModal";
+} from "../../ui/hover-card";
+import EditAssetModal from "../modals/EditAssetModal";
 import { TokenUSDT } from "@token-icons/react";
 
 type DataTransactionProps = {
@@ -89,29 +88,27 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
         </div>
         {Object.keys(groupedTransactions).map((date) => (
           <div key={date}>
+            <h3 className="text-lg font-semibold pt-2 text-gray-100 border-t border-gray-700">{date}</h3>
             <table className="table-auto w-full">
-              <thead className="dark:bg-gray-800 bg-gray-600 border-b border-t border-gray-700">
+              <thead className="dark:bg-gray-800 bg-gray-600 border-b border-gray-700">
                 <tr className="text-left">
-                  <th className="px-4 py-2 text-sm text-gray-400">Name</th>
-                  <th className="px-4 py-2 text-sm text-gray-400">Amount</th>
-                  <th className="px-4 py-2 text-sm text-gray-400">Buy Price</th>
-                  <th className="px-4 py-2 text-sm text-gray-400">
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Name</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Amount</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Buy Price</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
                     Current Price
                   </th>
-                  <th className="px-4 py-2 text-sm text-gray-400">Gain/Loss</th>
-                  <th className="px-4 py-2 text-sm text-gray-400 text-center">
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Gain/Loss</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 text-center w-[8rem]">
                     Actions
                   </th>
                 </tr>
               </thead>
 
-              <h3 className="text-lg font-semibold pt-2 text-gray-100">
-                {date}
-              </h3>
               <tbody>
                 {groupedTransactions[date].map((transaction: Transaction) => (
-                  <tr key={transaction.id}>
-                    <td className="flex gap-1 items-center my-2">
+                  <tr key={transaction.id} className="text-left">
+                    <td className="flex gap-1 items-center my-2 w-[8rem]">
                       <div className="relative">
                         {transaction.imageUrl ? (
                           <Image
@@ -133,11 +130,11 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         {transaction.crypto}
                       </p>
                     </td>
-                    <td className="px-4 py-2 font-semibold">
+                    <td className="px-4 py-2 font-semibold w-[8rem]">
                       {transaction.amount.toFixed(2)}
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold
+                      className={`px-4 py-2 font-semibold w-[8rem]
                     ${
                       value[transaction.crypto]
                         ? value[transaction.crypto] >= transaction.price
@@ -149,14 +146,14 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     >
                       $ {transaction.price.toFixed(2)}
                     </td>
-                    <td className="px-4 py-2 font-semibold">
+                    <td className="px-4 py-2 font-semibold w-[8rem]">
                       $
                       {value[transaction.crypto]
                         ? value[transaction.crypto].toFixed(2)
                         : "0.00"}
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold
+                      className={`px-4 py-2 font-semibold w-[8rem]
                     ${
                       value[transaction.crypto]
                         ? value[transaction.crypto] * transaction.amount -
@@ -176,7 +173,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                           ).toFixed(2)
                         : "0.00"}
                     </td>
-                    <td className="flex items-center py-2 justify-center">
+                    <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
                       <HoverCard>
                         <HoverCardTrigger>
                           <DollarSign size={24} />

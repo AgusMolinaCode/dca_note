@@ -29,7 +29,6 @@ import { editSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
 import { TokenUSDT } from "@token-icons/react";
-import { on } from "events";
 
 interface DeleteAssetModalProps {
   transaction: Transaction;
@@ -71,7 +70,6 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
-
     } catch (error) {
       console.error("Failed to edit transaction", error);
     }
@@ -97,27 +95,27 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
     form.setValue("total", parseFloat(newTotal.toFixed(2)));
   };
 
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = event.target.value as unknown as number;
-    form.setValue("amount", newAmount);
-    const newTotal = newAmount * (criptoPrice || 0);
-    setTotalPrice(newTotal || 0);
-    form.setValue("total", newTotal || 0);
+   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newAmount = parseFloat(event.target.value);
+    if (!isNaN(newAmount)) {
+      form.setValue("amount", newAmount);
+      const newTotal = newAmount * (criptoPrice || 0);
+      setTotalPrice(newTotal || 0);
+      form.setValue("total", newTotal || 0);
+    }
   };
 
-    const onSubmitMutation = (data: z.infer<typeof editSchema>) => {
+  const onSubmitMutation = (data: z.infer<typeof editSchema>) => {
     mutation.mutate(data, {
       onSuccess: () => {
         setOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["items"] });
       },
     });
   };
   return (
     <div>
-      <Dialog 
-        open={open} 
-        onOpenChange={setOpen}
-      >
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="px-1">
             <Edit size={24} className="hover:text-blue-400 duration-300" />
@@ -144,9 +142,7 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
             </DialogTitle>
             <DialogDescription className="dark:text-white text-black">
               <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmitMutation)}
-                >
+                <form onSubmit={form.handleSubmit(onSubmitMutation)}>
                   <FormField
                     control={form.control}
                     name="amount"
@@ -218,13 +214,10 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
                               id="total"
                               type="text"
                               readOnly
-                              value={
-                                totalPrice !== null
-                                  ? totalPrice.toFixed(2)
-                                  : "0.00"
-                              }
+                              value={totalPrice.toFixed(2)}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
-                              defaultValue={transaction.total.toString()}
+                              defaultValue={transaction.total}
+                              placeholder={transaction.total.toString()}
                             />
                           </div>
                         </FormControl>
@@ -245,7 +238,6 @@ const EditAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
               </Form>
             </DialogDescription>
           </DialogHeader>
-          
         </DialogContent>
       </Dialog>
     </div>

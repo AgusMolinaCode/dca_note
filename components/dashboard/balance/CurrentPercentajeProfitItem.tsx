@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
 import { InfoIcon } from "lucide-react";
-import { HoverCardContent } from "../ui/hover-card";
+import { HoverCardContent } from "../../ui/hover-card";
 
 interface CryptoCurrency {
   PRICE: number;
