@@ -10,7 +10,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { DollarSign, Edit } from "lucide-react";
 import Image from "next/image";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -29,11 +29,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
 import { TokenUSDT } from "@token-icons/react";
 
-interface EditAssetModalProps {
+interface SellAssetModalProps {
   transaction: Transaction;
 }
 
-const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
+const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
   const queryClient = useQueryClient();
 
   const [criptoPrice, setCriptoPrice] = useState<number | null>(
@@ -114,13 +114,16 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="px-1">
-            <Edit size={24} className="hover:text-blue-400 duration-300" />
+            <DollarSign
+              size={24}
+              className="hover:text-yellow-400 duration-300"
+            />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
           <DialogHeader>
             <DialogTitle className="dark:text-white text-black flex items-center gap-2">
-              Edit{"  "}
+              Sell{"  "}
               {transaction.imageUrl ? (
                 <Image
                   src={`https://cryptocompare.com/${transaction.imageUrl}`}
@@ -134,7 +137,7 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
               )}
               {"  "}
               {transaction.crypto}
-              {"  "}transaction
+              {"  "}Asset
             </DialogTitle>
             <DialogDescription className="dark:text-white text-black">
               <Form {...form}>
@@ -145,7 +148,7 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <div className="pt-4 flex flex-col gap-2">
+                          <div className="pt-4 flex flex-col gap-2 relative">
                             <Label
                               htmlFor="amount"
                               className="text-white text-[1rem]"
@@ -157,9 +160,15 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
                               id="amount"
                               type="number"
                               onChange={handleAmountChange}
-                              placeholder={transaction.amount.toString()}
+                            //   placeholder={transaction.amount.toString()}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
+                            <button
+                              type="button"
+                              className="text-white text-sm font-bold bg-gray-700  rounded-xl py-1 px-4 absolute top-[3.15rem] right-2"
+                            >
+                              All
+                            </button>
                           </div>
                         </FormControl>
                         <FormMessage className="text-white" />
@@ -228,7 +237,7 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
                       type="submit"
                       className="bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white"
                     >
-                      Edit Transaction
+                      Sell Asset
                     </Button>
                   </div>
                 </form>
@@ -241,4 +250,4 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
   );
 };
 
-export default EditAssetModal;
+export default SellAssetModal;

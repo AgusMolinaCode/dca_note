@@ -23,10 +23,13 @@ export const nicknameSchema = z.object({
 
 export const editSchema = z.object({
   amount: z
-    .number({ message: "The 'amount' must be a number greater than 0." })
-    .min(0.01, { message: "The 'amount' must be greater than 0." }), // Cambiado a 0.01 para evitar el 0
+    .string()
+    .refine((value) => !isNaN(parseFloat(value)) && parseFloat(value) > 0, {
+      message: "The 'amount' must be a number greater than 0.",
+    })
+    .transform((value) => parseFloat(value)),
   price: z
     .number({ message: "The 'price' must be a number greater than 0." })
-    .min(0.01, { message: "The 'price' must be greater than 0." }), // Cambiado a 0.01 para evitar el 0
+    .min(0, { message: "The 'price' must be greater than 0." }),
   total: z.number().min(0),
 });

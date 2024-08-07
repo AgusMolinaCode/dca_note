@@ -11,6 +11,7 @@ import {
 } from "../../ui/hover-card";
 import EditAssetModal from "../modals/EditAssetModal";
 import { TokenUSDT } from "@token-icons/react";
+import SellAssetModal from "../modals/SellAssetModal";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
@@ -88,17 +89,27 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
         </div>
         {Object.keys(groupedTransactions).map((date) => (
           <div key={date}>
-            <h3 className="text-lg font-semibold pt-2 text-gray-100 border-t border-gray-700">{date}</h3>
+            <h3 className="text-lg font-semibold pt-2 text-gray-100 border-t border-gray-700">
+              {date}
+            </h3>
             <table className="table-auto w-full">
               <thead className="dark:bg-gray-800 bg-gray-600 border-b border-gray-700">
                 <tr className="text-left">
-                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Name</th>
-                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Amount</th>
-                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Buy Price</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
+                    Name
+                  </th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
+                    Amount
+                  </th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
+                    Buy Price
+                  </th>
                   <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
                     Current Price
                   </th>
-                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">Gain/Loss</th>
+                  <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
+                    Gain/Loss
+                  </th>
                   <th className="px-4 py-2 text-sm text-gray-400 text-center w-[8rem]">
                     Actions
                   </th>
@@ -176,7 +187,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
                       <HoverCard>
                         <HoverCardTrigger>
-                          <DollarSign size={24} />
+                          <SellAssetModal transaction={transaction} />
                         </HoverCardTrigger>
                         <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
                           Sell transaction
