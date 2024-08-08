@@ -28,6 +28,8 @@ import { editSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
 import { TokenUSDT } from "@token-icons/react";
+import { searchCryptos } from "@/app/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface EditAssetModalProps {
   transaction: Transaction;

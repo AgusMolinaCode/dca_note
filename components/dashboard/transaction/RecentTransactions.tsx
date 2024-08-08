@@ -187,7 +187,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
                       <HoverCard>
                         <HoverCardTrigger>
-                          <SellAssetModal transaction={transaction} />
+                          <SellAssetModal transaction={transaction} criptoPrice={null} />
                         </HoverCardTrigger>
                         <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
                           Sell transaction

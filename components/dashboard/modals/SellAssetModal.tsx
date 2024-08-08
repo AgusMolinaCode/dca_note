@@ -1,6 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { searchCryptos } from "@/app/api";
 import {
   Dialog,
   DialogContent,
@@ -10,13 +15,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Edit } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import Image from "next/image";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -24,79 +26,99 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { editSchema } from "@/lib/validator";
+import { editSchema, sellSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { LOAD_TRANSACTIONS } from "@/app/api";
 import { TokenUSDT } from "@token-icons/react";
 
 interface SellAssetModalProps {
   transaction: Transaction;
+  criptoPrice: number | null;
+}
+
+interface CryptoCurrency {
+  PRICE: number;
+  OPEN24HOUR: number;
+  HIGH24HOUR: number;
+}
+
+interface CryptoListResult {
+  RAW: {
+    [key: number]: {
+      USD: CryptoCurrency;
+    };
+  };
 }
 
 const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
   const queryClient = useQueryClient();
 
-  const [criptoPrice, setCriptoPrice] = useState<number | null>(
-    transaction ? parseFloat(transaction.price.toFixed(2)) : null
-  );
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState(transaction.crypto);
+  const [price, setPrice] = useState<number | string>("");
 
-  const form = useForm<z.infer<typeof editSchema>>({
-    resolver: zodResolver(editSchema),
+  const { data } = useQuery({
+    queryKey: ["cryptoPrice", debouncedQuery],
+    queryFn: () => searchCryptos(debouncedQuery),
+    enabled: !!debouncedQuery,
+  });
+
+  const criptoPrice = data?.RAW[transaction.crypto]?.USD.PRICE || 0;
+
+  useEffect(() => {
+    if (criptoPrice !== undefined) {
+      setPrice(criptoPrice.toFixed(2));
+    }
+  }, [criptoPrice]);
+
+  const form = useForm<z.infer<typeof sellSchema>>({
+    resolver: zodResolver(sellSchema),
     defaultValues: {
-      price: criptoPrice !== null ? criptoPrice : undefined,
+      price: criptoPrice > 0 ? criptoPrice : 0,
       total: transaction.total,
     },
   });
-  const editTransaction = async (values: z.infer<typeof editSchema>) => {
+
+  const sellTransaction = async (values: z.infer<typeof sellSchema>) => {
     const editData = {
       amount: values.amount,
       price: values.price,
       total: values.total,
     };
 
-    try {
-      const response = await fetch(`${LOAD_TRANSACTIONS}/${transaction.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-    } catch (error) {
-      console.error("Failed to edit transaction", error);
-    }
+    console.log(editData);
   };
 
   const mutation = useMutation({
-    mutationFn: editTransaction,
+    mutationFn: sellTransaction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
     const inputText = event.target.value;
-    let newValue = parseFloat(inputText);
-    newValue = parseFloat(newValue.toFixed(2));
-    setCriptoPrice(newValue);
-    form.setValue("price", newValue);
-    const amount = form.getValues("amount");
-    const newTotal = newValue * (amount || 0) || 0;
-    setTotalPrice(parseFloat(newTotal.toFixed(2)));
-    form.setValue("total", parseFloat(newTotal.toFixed(2)));
+    const newValue = parseFloat(inputText);
+
+    if (!isNaN(newValue) && newValue > 0) {
+      setPrice(newValue);
+      form.setValue("price", newValue);
+      const amount = form.getValues("amount");
+      const newTotal = newValue * (amount || 0) || 0;
+      setTotalPrice(parseFloat(newTotal.toFixed(2)));
+      form.setValue("total", parseFloat(newTotal.toFixed(2)));
+    } else {
+      setPrice("");
+      form.setValue("price", 0);
+      setTotalPrice(0);
+      form.setValue("total", 0);
+    }
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = event.target.value as unknown as number;
+    const newAmount = parseFloat(event.target.value);
     form.setValue("amount", newAmount);
-    const newTotal = newAmount * (criptoPrice || 0);
+    const newTotal = newAmount * (parseFloat(price as string) || 0);
     setTotalPrice(newTotal || 0);
     form.setValue("total", newTotal || 0);
   };
@@ -108,7 +130,9 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
         queryClient.invalidateQueries({ queryKey: ["items"] });
       },
     });
+    console.log(data);
   };
+
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -160,12 +184,11 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
                               id="amount"
                               type="number"
                               onChange={handleAmountChange}
-                            //   placeholder={transaction.amount.toString()}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
                             <button
                               type="button"
-                              className="text-white text-sm font-bold bg-gray-700  rounded-xl py-1 px-4 absolute top-[3.15rem] right-2"
+                              className="text-white text-sm font-bold bg-gray-700 rounded-xl py-1 px-4 absolute top-[3.15rem] right-2"
                             >
                               All
                             </button>
@@ -191,10 +214,9 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
                               {...field}
                               id="price"
                               type="number"
-                              value={criptoPrice !== null ? criptoPrice : ""}
+                              value={price}
                               onChange={handlePriceChange}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
-                              defaultValue={transaction.price.toString()}
                             />
                           </div>
                         </FormControl>
@@ -231,7 +253,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
                       </FormItem>
                     )}
                   />
-
                   <div className="pt-4 flex flex-col gap-2">
                     <Button
                       type="submit"
