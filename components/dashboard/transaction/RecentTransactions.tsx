@@ -28,6 +28,10 @@ const groupByDate = (
     return {};
   }
 
+  transactions.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   return transactions.reduce(
     (acc: { [x: string]: Transaction[] }, transaction: Transaction) => {
       const date = new Date(transaction.createdAt).toLocaleDateString("en-US", {
@@ -187,7 +191,10 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
                       <HoverCard>
                         <HoverCardTrigger>
-                          <SellAssetModal transaction={transaction} criptoPrice={null} />
+                          <SellAssetModal
+                            transaction={transaction}
+                            criptoPrice={null}
+                          />
                         </HoverCardTrigger>
                         <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
                           Sell transaction

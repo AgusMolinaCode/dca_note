@@ -224,7 +224,6 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
                       </FormItem>
                     )}
                   />
-
                   <div className="pt-4 flex flex-col gap-2">
                     <Button
                       type="submit"

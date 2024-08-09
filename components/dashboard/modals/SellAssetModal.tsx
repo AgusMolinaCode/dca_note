@@ -184,14 +184,10 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
                               id="amount"
                               type="number"
                               onChange={handleAmountChange}
+                              max={transaction.amount}
+                              placeholder={transaction.amount.toString()}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
-                            <button
-                              type="button"
-                              className="text-white text-sm font-bold bg-gray-700 rounded-xl py-1 px-4 absolute top-[3.15rem] right-2"
-                            >
-                              All
-                            </button>
                           </div>
                         </FormControl>
                         <FormMessage className="text-white" />
