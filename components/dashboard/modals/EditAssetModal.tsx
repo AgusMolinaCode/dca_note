@@ -28,8 +28,6 @@ import { editSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
 import { TokenUSDT } from "@token-icons/react";
-import { searchCryptos } from "@/app/api";
-import { useQuery } from "@tanstack/react-query";
 
 interface EditAssetModalProps {
   transaction: Transaction;
@@ -59,6 +57,7 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
     };
 
     try {
+      // Realizar la solicitud PUT para actualizar la transacción existente
       const response = await fetch(`${LOAD_TRANSACTIONS}/${transaction.id}`, {
         method: "PUT",
         headers: {
@@ -69,6 +68,32 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
 
       if (!response.ok) {
         throw new Error("Something went wrong");
+      }
+
+      // Si la transacción es una venta parcial, realizar una solicitud POST para crear una nueva transacción en USDT
+      if (transaction.crypto !== "USDT" && values.amount < transaction.amount) {
+        const usdtAmount = values.amount * values.price; // Calcular el valor en USDT
+
+        const usdtData = {
+          userId: transaction.userId,
+          amount: usdtAmount,
+          price: 1, // El precio de USDT es 1
+          total: usdtAmount,
+          crypto: "USDT",
+          imageUrl: transaction.imageUrl,
+        };
+
+        const usdtResponse = await fetch(`${LOAD_TRANSACTIONS}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(usdtData),
+        });
+
+        if (!usdtResponse.ok) {
+          throw new Error("Failed to create USDT transaction");
+        }
       }
     } catch (error) {
       console.error("Failed to edit transaction", error);
