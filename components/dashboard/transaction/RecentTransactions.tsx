@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import DeleteAssetModal from "../modals/DeleteAssetModal";
 import Image from "next/image";
-import { CircleDollarSignIcon, DollarSign } from "lucide-react";
+import { CircleDollarSignIcon, DollarSign, Edit } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -238,14 +238,21 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                           Delete transaction
                         </HoverCardContent>
                       </HoverCard>
-                      <HoverCard>
-                        <HoverCardTrigger>
-                          <EditAssetModal transaction={transaction} />
-                        </HoverCardTrigger>
-                        <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
-                          Edit transaction
-                        </HoverCardContent>
-                      </HoverCard>
+                      {transaction.imageUrl === "/images/usdt.png" ? (
+                        <Edit
+                          size={24}
+                          className="text-gray-500 duration-300"
+                        />
+                      ) : (
+                        <HoverCard>
+                          <HoverCardTrigger>
+                            <EditAssetModal transaction={transaction} />
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                            Edit transaction
+                          </HoverCardContent>
+                        </HoverCard>
+                      )}
                     </td>
                   </tr>
                 ))}
