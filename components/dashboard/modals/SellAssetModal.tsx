@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { searchCryptos } from "@/app/api";
+import { LOAD_TRANSACTIONS, searchCryptos } from "@/app/api";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +33,7 @@ import { TokenUSDT } from "@token-icons/react";
 interface SellAssetModalProps {
   transaction: Transaction;
   criptoPrice: number | null;
+  amount: number;
 }
 
 interface CryptoCurrency {
@@ -49,7 +50,7 @@ interface CryptoListResult {
   };
 }
 
-const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
+const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction,amount }) => {
   const queryClient = useQueryClient();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -74,19 +75,36 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
   const form = useForm<z.infer<typeof sellSchema>>({
     resolver: zodResolver(sellSchema),
     defaultValues: {
-      price: criptoPrice > 0 ? criptoPrice : 0,
+      price: criptoPrice,
       total: transaction.total,
     },
   });
 
   const sellTransaction = async (values: z.infer<typeof sellSchema>) => {
-    const editData = {
+    const sellData = {
+      userId: transaction.userId,
+      crypto: transaction.crypto,
       amount: values.amount,
       price: values.price,
       total: values.total,
+      imageUrl: "/images/usdt.png",
     };
 
-    console.log(editData);
+    try {
+      const response = await fetch(LOAD_TRANSACTIONS, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(sellData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+    } catch (error) {
+      console.error("Failed to add transaction", error);
+    }
   };
 
   const mutation = useMutation({
@@ -116,14 +134,21 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = parseFloat(event.target.value);
+    const newAmount = event.target.value as unknown as number;
     form.setValue("amount", newAmount);
-    const newTotal = newAmount * (parseFloat(price as string) || 0);
+    const newTotal = newAmount * (criptoPrice || 0);
     setTotalPrice(newTotal || 0);
     form.setValue("total", newTotal || 0);
   };
 
   const onSubmitMutation = (data: z.infer<typeof editSchema>) => {
+    if (data.price === 0) {
+      data.price = criptoPrice;
+    }
+
+    data.amount = -Math.abs(data.amount);
+    // data.total = -Math.abs(data.total);
+
     mutation.mutate(data, {
       onSuccess: () => {
         setOpen(false);
@@ -137,11 +162,11 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="px-1">
-            <DollarSign
-              size={24}
-              className="hover:text-yellow-400 duration-300"
-            />
+          <Button
+            type="submit"
+            className="bg-gray-700 hover:bg-gray-800 rounded-xl text-white"
+          >
+            Sell Asset
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
@@ -177,15 +202,15 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction }) => {
                               htmlFor="amount"
                               className="text-white text-[1rem]"
                             >
-                              Amount
+                              Amount to sell
                             </Label>
                             <Input
                               {...field}
                               id="amount"
                               type="number"
                               onChange={handleAmountChange}
-                              max={transaction.amount}
-                              placeholder={transaction.amount.toString()}
+                              max={amount}
+                              placeholder={amount.toString()}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
                           </div>

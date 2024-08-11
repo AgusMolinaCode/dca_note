@@ -1,6 +1,13 @@
 import React from "react";
 import Image from "next/image";
 import { TokenUSDT } from "@token-icons/react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { DollarSign } from "lucide-react";
+import SellAssetModal from "../modals/SellAssetModal";
 
 const DataTransactionTable = ({
   groupedTransactionsArray,
@@ -32,8 +39,9 @@ const DataTransactionTable = ({
             <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
               <tr className="text-left">
                 <th className="px-4 py-2 text-sm text-gray-400">Asset</th>
+                <th className="px-4 py-2 text-sm text-gray-400">Current Price</th>
                 <th className="px-4 py-2 text-sm text-gray-400">
-                  Current Price
+                  Amount
                 </th>
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Avg. Buy Price
@@ -50,9 +58,7 @@ const DataTransactionTable = ({
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Current Profit
                 </th>
-                {/* <th className="px-4 py-2 text-sm text-gray-400 text-center">
-                  Actions
-                </th> */}
+                <th className="px-4 py-2 text-sm text-gray-400">Actions</th>
               </tr>
             </thead>
             <tbody className="dark:bg-gray-800 bg-gray-400">
@@ -62,6 +68,11 @@ const DataTransactionTable = ({
                 const currentProfit = amount * currentValue;
                 const finalProfit =
                   currentProfit - sortedGroupedTotals?.[transaction.crypto];
+                const totalInvested = sortedGroupedTotals?.[transaction.crypto];
+
+                if (totalInvested < 1 || amount <= 0) {
+                  return null;
+                }
 
                 return (
                   <tr
@@ -69,7 +80,7 @@ const DataTransactionTable = ({
                     className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
                     onClick={() => handleRowClick(transaction.crypto)}
                   >
-                    <td className="flex gap-1 items-center my-2">
+                    <td className="flex gap-1 justify-center items-center py-4">
                       {transaction.imageUrl ? (
                         <Image
                           src={`https://cryptocompare.com/${transaction.imageUrl}`}
@@ -90,6 +101,7 @@ const DataTransactionTable = ({
                         ? `$ ${currentValue.toFixed(2)}`
                         : "$ 0.00"}
                     </td>
+                    <td className="px-4 py-2 font-semibold">{amount}</td>
                     <td
                       className={`px-4 py-2 font-semibold  ${
                         (currentValue ?? 0) <
@@ -129,9 +141,7 @@ const DataTransactionTable = ({
                       %
                     </td>
                     <td className="px-4 py-2 font-semibold">
-                      ${" "}
-                      {sortedGroupedTotals?.[transaction.crypto]?.toFixed(2) ??
-                        "0.00"}
+                      $ {totalInvested?.toFixed(2) ?? "0.00"}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
@@ -139,6 +149,24 @@ const DataTransactionTable = ({
                       }`}
                     >
                       ${finalProfit.toFixed(2)}
+                    </td>
+                    <td>
+                      <HoverCard>
+                        <HoverCardTrigger>
+                          {transaction.amount < 0 ? null : (
+                            <SellAssetModal
+                              amount={amount}
+                              transaction={transaction}
+                              criptoPrice={null}
+                            />
+                          )}
+                        </HoverCardTrigger>
+                        {transaction.amount < 0 ? null : (
+                          <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                            Sell transaction
+                          </HoverCardContent>
+                        )}
+                      </HoverCard>
                     </td>
                   </tr>
                 );

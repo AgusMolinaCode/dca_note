@@ -19,13 +19,12 @@ import { transactionSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import { TokenUSDT } from "@token-icons/react";
+import { LOAD_TRANSACTIONS } from "@/app/api";
 
 interface SecondDialogContentProps {
   selectedCrypto: { crypto: string; price: number; imageUrl: string } | null;
   onAddTransaction: () => void;
 }
-
-const ADD_TRANSACTION_URL = `http://localhost:3000/api/transactions`;
 
 const SecondDialogModal: React.FC<SecondDialogContentProps> = ({
   selectedCrypto,
@@ -60,7 +59,7 @@ const SecondDialogModal: React.FC<SecondDialogContentProps> = ({
     };
 
     try {
-      const response = await fetch(ADD_TRANSACTION_URL, {
+      const response = await fetch(LOAD_TRANSACTIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

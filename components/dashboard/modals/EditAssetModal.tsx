@@ -148,16 +148,22 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
           <DialogHeader>
             <DialogTitle className="dark:text-white text-black flex items-center gap-2">
               Edit{"  "}
-              {transaction.imageUrl ? (
+              {transaction.imageUrl === "/images/usdt.png" ? (
                 <Image
-                  src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                  src={transaction.imageUrl}
                   alt={transaction.crypto}
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   className="rounded-full bg-zinc-900 p-[3px]"
                 />
               ) : (
-                <TokenUSDT size={24} variant="branded" />
+                <Image
+                  src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                  alt={transaction.crypto}
+                  width={32}
+                  height={32}
+                  className="rounded-full bg-zinc-900 p-[3px]"
+                />
               )}
               {"  "}
               {transaction.crypto}

@@ -12,6 +12,7 @@ import {
 import EditAssetModal from "../modals/EditAssetModal";
 import { TokenUSDT } from "@token-icons/react";
 import SellAssetModal from "../modals/SellAssetModal";
+import { Button } from "@/components/ui/button";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
@@ -106,7 +107,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     Amount
                   </th>
                   <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
-                    Buy Price
+                    Price
                   </th>
                   <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
                     Current Price
@@ -125,7 +126,15 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                   <tr key={transaction.id} className="text-left">
                     <td className="flex gap-1 items-center my-2 w-[8rem]">
                       <div className="relative">
-                        {transaction.imageUrl ? (
+                        {transaction.imageUrl === "/images/usdt.png" ? (
+                          <Image
+                            src={transaction.imageUrl}
+                            alt={`${transaction.crypto} sell`}
+                            width={32}
+                            height={32}
+                            className="rounded-full bg-zinc-900"
+                          />
+                        ) : (
                           <Image
                             src={`https://cryptocompare.com/${transaction.imageUrl}`}
                             alt={transaction.crypto}
@@ -133,8 +142,6 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                             height={32}
                             className="rounded-full bg-zinc-900 p-[3px]"
                           />
-                        ) : (
-                          <TokenUSDT className="w-6 h-6" variant="branded" />
                         )}
                         <CircleDollarSignIcon
                           size={24}
@@ -169,37 +176,60 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold w-[8rem]
-                    ${
-                      value[transaction.crypto]
-                        ? value[transaction.crypto] * transaction.amount -
-                            transaction.price * transaction.amount >=
-                          0
-                          ? "text-green-400"
-                          : "text-red-400"
-                        : ""
-                    }
+                        ${
+                          value[transaction.crypto]
+                            ? value[transaction.crypto] *
+                                (transaction.imageUrl === "/images/usdt.png"
+                                  ? Math.abs(transaction.amount)
+                                  : transaction.amount) -
+                                transaction.price *
+                                  (transaction.imageUrl === "/images/usdt.png"
+                                    ? Math.abs(transaction.amount)
+                                    : transaction.amount) >=
+                              0
+                              ? "text-green-400"
+                              : "text-red-400"
+                            : ""
+                        }
                       `}
                     >
                       $
                       {value[transaction.crypto]
                         ? (
-                            value[transaction.crypto] * transaction.amount -
-                            transaction.price * transaction.amount
+                            value[transaction.crypto] *
+                              (transaction.imageUrl === "/images/usdt.png"
+                                ? Math.abs(transaction.amount)
+                                : transaction.amount) -
+                            transaction.price *
+                              (transaction.imageUrl === "/images/usdt.png"
+                                ? Math.abs(transaction.amount)
+                                : transaction.amount)
                           ).toFixed(2)
                         : "0.00"}
                     </td>
                     <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
-                      <HoverCard>
+                      {/* <HoverCard>
                         <HoverCardTrigger>
-                          <SellAssetModal
-                            transaction={transaction}
-                            criptoPrice={null}
-                          />
+                          {transaction.amount < 0 ? (
+                            <DollarSign
+                              size={24}
+                              className="text-gray-400 duration-300"
+                            />
+                          ) : (
+                            <SellAssetModal
+                              transaction={transaction}
+                              criptoPrice={null}
+                            />
+                          )}
                         </HoverCardTrigger>
-                        <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
-                          Sell transaction
-                        </HoverCardContent>
-                      </HoverCard>
+                        {transaction.amount < 0 ? (
+                          null
+                        ) : (
+                          <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                            Sell transaction
+                          </HoverCardContent>
+                        )}
+                      </HoverCard> */}
                       <HoverCard>
                         <HoverCardTrigger>
                           <DeleteAssetModal transaction={transaction} />
