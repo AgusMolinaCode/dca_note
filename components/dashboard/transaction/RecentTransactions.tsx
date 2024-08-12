@@ -124,7 +124,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
               <tbody>
                 {groupedTransactions[date].map((transaction: Transaction) => (
                   <tr key={transaction.id} className="text-left">
-                    <td className="flex gap-1 items-center my-2 w-[8rem]">
+                    <td className="flex gap-1 items-center my-2">
                       <div className="relative">
                         {transaction.imageUrl === "/images/usdt.png" ? (
                           <Image
@@ -151,21 +151,20 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                       <p className="px-4 py-2 text-md font-semibold text-gray-200">
                         {transaction.crypto}
                       </p>
+                      {transaction.imageUrl === "/images/usdt.png" ? (
+                        <p className="bg-red-500/10 border-[0.2px] border-red-500 text-red-300 px-2 text-sm rounded-xl">
+                          sell
+                        </p>
+                      ) : (
+                        <p className="bg-green-500/10 border-[0.2px] border-green-500 text-green-300 px-2 text-sm rounded-xl">
+                          buy
+                        </p>
+                      )}
                     </td>
                     <td className="px-4 py-2 font-semibold w-[8rem]">
                       {transaction.amount.toFixed(2)}
                     </td>
-                    <td
-                      className={`px-4 py-2 font-semibold w-[8rem]
-                    ${
-                      value[transaction.crypto]
-                        ? value[transaction.crypto] >= transaction.price
-                          ? "text-green-400"
-                          : "text-red-400"
-                        : ""
-                    }
-                      `}
-                    >
+                    <td className="px-4 py-2 font-semibold w-[8rem]">
                       $ {transaction.price.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 font-semibold w-[8rem]">
@@ -176,34 +175,22 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold w-[8rem]
-                        ${
-                          value[transaction.crypto]
-                            ? value[transaction.crypto] *
-                                (transaction.imageUrl === "/images/usdt.png"
-                                  ? Math.abs(transaction.amount)
-                                  : transaction.amount) -
-                                transaction.price *
-                                  (transaction.imageUrl === "/images/usdt.png"
-                                    ? Math.abs(transaction.amount)
-                                    : transaction.amount) >=
-                              0
-                              ? "text-green-400"
-                              : "text-red-400"
-                            : ""
-                        }
+                       ${
+                         value[transaction.crypto]
+                           ? value[transaction.crypto] * transaction.amount -
+                               transaction.price * transaction.amount >=
+                             0
+                             ? "text-green-400"
+                             : "text-red-400"
+                           : ""
+                       }
                       `}
                     >
                       $
                       {value[transaction.crypto]
                         ? (
-                            value[transaction.crypto] *
-                              (transaction.imageUrl === "/images/usdt.png"
-                                ? Math.abs(transaction.amount)
-                                : transaction.amount) -
-                            transaction.price *
-                              (transaction.imageUrl === "/images/usdt.png"
-                                ? Math.abs(transaction.amount)
-                                : transaction.amount)
+                            value[transaction.crypto] * transaction.amount -
+                            transaction.price * transaction.amount
                           ).toFixed(2)
                         : "0.00"}
                     </td>
