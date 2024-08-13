@@ -50,7 +50,10 @@ interface CryptoListResult {
   };
 }
 
-const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction,amount }) => {
+const SellAssetModal: React.FC<SellAssetModalProps> = ({
+  transaction,
+  amount,
+}) => {
   const queryClient = useQueryClient();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -90,6 +93,15 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction,amount }) =
       imageUrl: "/images/usdt.png",
     };
 
+    const usdtData = {
+      userId: transaction.userId,
+      crypto: "USDT",
+      amount: values.total,
+      price: 1,
+      total: values.total,
+      imageUrl: "/media/37746338/usdt.png",
+    };
+
     try {
       const response = await fetch(LOAD_TRANSACTIONS, {
         method: "POST",
@@ -104,6 +116,22 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction,amount }) =
       }
     } catch (error) {
       console.error("Failed to add transaction", error);
+    }
+
+    try {
+      const response = await fetch(LOAD_TRANSACTIONS, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(usdtData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Something went wrong with USDT data");
+      }
+    } catch (error) {
+      console.error("Failed to add USDT transaction", error);
     }
   };
 
@@ -155,7 +183,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({ transaction,amount }) =
         queryClient.invalidateQueries({ queryKey: ["items"] });
       },
     });
-    console.log(data);
   };
 
   return (

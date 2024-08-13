@@ -6,7 +6,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { DollarSign } from "lucide-react";
 import SellAssetModal from "../modals/SellAssetModal";
 
 const DataTransactionTable = ({
@@ -39,10 +38,10 @@ const DataTransactionTable = ({
             <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
               <tr className="text-left">
                 <th className="px-4 py-2 text-sm text-gray-400">Asset</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Current Price</th>
                 <th className="px-4 py-2 text-sm text-gray-400">
-                  Amount
+                  Current Price
                 </th>
+                <th className="px-4 py-2 text-sm text-gray-400">Amount</th>
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Avg. Buy Price
                 </th>
@@ -55,9 +54,7 @@ const DataTransactionTable = ({
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Total Invested
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">
-                  Current Profit
-                </th>
+                <th className="px-4 py-2 text-sm text-gray-400">Gain/Loss</th>
                 <th className="px-4 py-2 text-sm text-gray-400">Actions</th>
               </tr>
             </thead>
@@ -66,8 +63,11 @@ const DataTransactionTable = ({
                 const amount = groupedAmounts[transaction.crypto];
                 const currentValue = value?.[transaction.crypto];
                 const currentProfit = amount * currentValue;
-                const finalProfit =
-                  currentProfit - sortedGroupedTotals?.[transaction.crypto];
+
+                const currentTotal =
+                  amount * averagePricesResult?.[transaction.crypto];
+
+                const finalProfit = currentProfit - currentTotal;
                 const totalInvested = sortedGroupedTotals?.[transaction.crypto];
 
                 if (totalInvested < 1 || amount <= 0) {
@@ -101,7 +101,9 @@ const DataTransactionTable = ({
                         ? `$ ${currentValue.toFixed(2)}`
                         : "$ 0.00"}
                     </td>
-                    <td className="px-4 py-2 font-semibold">{amount}</td>
+                    <td className="px-4 py-2 font-semibold">
+                      {amount.toFixed(2)}
+                    </td>
                     <td
                       className={`px-4 py-2 font-semibold  ${
                         (currentValue ?? 0) <
@@ -141,7 +143,10 @@ const DataTransactionTable = ({
                       %
                     </td>
                     <td className="px-4 py-2 font-semibold">
-                      $ {totalInvested?.toFixed(2) ?? "0.00"}
+                      ${" "}
+                      {(
+                        amount * averagePricesResult[transaction.crypto]
+                      ).toFixed(2)}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${

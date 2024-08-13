@@ -77,8 +77,6 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
     return acc;
   }, {} as { [key: string]: number });
 
- 
-
   const sortedGroupedTotals = Object.keys(groupedTotals ?? {})
     .sort((a, b) => (groupedTotals?.[b] ?? 0) - (groupedTotals?.[a] ?? 0))
     .reduce((acc, key) => {

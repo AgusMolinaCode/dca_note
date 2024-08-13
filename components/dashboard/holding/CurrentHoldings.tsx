@@ -10,9 +10,15 @@ import { loadTransactions } from "@/app/api";
 import CardHeaderHoldings from "./CardHeaderHoldings";
 import Image from "next/image";
 import { useUser } from "@clerk/clerk-react";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "../../ui/chart";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
+
+type ExtendedTransaction = Transaction & { fullAmounts: number };
 
 const colors = [
   "#C6B4D8",
@@ -51,6 +57,60 @@ export function CurrentHoldings() {
 
   const [activeMonth, setActiveMonth] = React.useState("");
 
+  const groupedTotals = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = 0;
+    }
+    acc[transaction.crypto] += transaction.total;
+    return acc;
+  }, {} as { [key: string]: number });
+
+  const averagePrices = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = { total: 0, count: 0 };
+    }
+    acc[transaction.crypto].total += transaction.price;
+    acc[transaction.crypto].count += 1;
+    return acc;
+  }, {} as { [key: string]: { total: number; count: number } });
+
+  const averagePricesResult = averagePrices
+    ? Object.keys(averagePrices).reduce((acc, crypto) => {
+        acc[crypto] = averagePrices[crypto].total / averagePrices[crypto].count;
+        return acc;
+      }, {} as { [key: string]: number })
+    : ({} as { [key: string]: number });
+
+  const groupedAmounts = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = 0;
+    }
+    acc[transaction.crypto] += transaction.amount;
+    return acc;
+  }, {} as { [key: string]: number });
+
+  const groupedTransactions = dataUserId?.reduce((acc, transaction) => {
+    if (!acc[transaction.crypto]) {
+      acc[transaction.crypto] = { ...transaction, total: 0 };
+    }
+    acc[transaction.crypto].total += transaction.price;
+    return acc;
+  }, {} as { [key: string]: Transaction & { total: number } });
+
+  const groupedTransactionsArray: ExtendedTransaction[] = groupedTransactions
+    ? Object.values(groupedTransactions)
+        .sort(
+          (a, b) =>
+            (groupedTotals?.[b.crypto] ?? 0) - (groupedTotals?.[a.crypto] ?? 0)
+        )
+        .map((transaction) => {
+          const fullAmounts =
+            groupedAmounts[transaction.crypto] *
+            averagePricesResult?.[transaction.crypto];
+          return { ...transaction, fullAmounts } as ExtendedTransaction;
+        })
+    : [];
+
   React.useEffect(() => {
     if (data) {
       const highestAmountItem = data.reduce((prev, current) => {
@@ -84,10 +144,10 @@ export function CurrentHoldings() {
   const aggregatedData = Object.values(cryptoMap);
 
   const lessThanSixPercent = aggregatedData.filter(
-    (item) => item.percentage < 2
+    (item) => item.percentage < 1
   );
   const moreThanSixPercent = aggregatedData.filter(
-    (item) => item.percentage >= 2
+    (item) => item.percentage >= 1
   );
 
   const finalData = [
@@ -120,9 +180,6 @@ export function CurrentHoldings() {
 
   const activeCryptoName = finalData?.[activeIndex ?? 0]?.crypto;
 
-  const totalForActiveCrypto =
-    totalsByCrypto[activeCryptoName]?.toFixed(2) ?? "0.0";
-
   return (
     <Card data-chart={id} className="flex flex-col">
       <ChartStyle id={id} config={chartConfig} />
@@ -140,10 +197,10 @@ export function CurrentHoldings() {
                 content={<ChartTooltipContent hideLabel />}
               />
               <Pie
-                data={finalData.map((item, index) => ({
-                  month: item.crypto,
-                  desktop: item.total,
-                  fill: colors[index % colors.length],
+                data={groupedTransactionsArray.map((transaction) => ({
+                  month: transaction.crypto,
+                  desktop: transaction.fullAmounts,
+                  fill: colors[groupedTransactionsArray.indexOf(transaction)],
                 }))}
                 dataKey="desktop"
                 nameKey="month"
@@ -189,18 +246,23 @@ export function CurrentHoldings() {
                             >
                               total
                             </tspan>
-                            <tspan
-                              x={viewBox.cx}
-                              y={165}
-                              className="fill-foreground text-lg font-semibold"
-                            >
-                              {finalData?.[activeIndex ?? 0]?.crypto ===
-                              "Others"
-                                ? `$${finalData?.[
-                                    activeIndex ?? 0
-                                  ]?.total.toFixed(2)}`
-                                : `$${totalForActiveCrypto}`}
-                            </tspan>
+                            {groupedTransactionsArray.map(
+                              (transaction: any) => {
+                                if (transaction.crypto === activeCryptoName) {
+                                  return (
+                                    <tspan
+                                      key={transaction.crypto}
+                                      x={viewBox.cx}
+                                      y={165}
+                                      className="fill-foreground text-lg font-semibold"
+                                    >
+                                      {transaction.fullAmounts.toFixed(2)}
+                                    </tspan>
+                                  );
+                                }
+                                return null;
+                              }
+                            )}
                           </text>
                         </>
                       );
@@ -234,9 +296,7 @@ export function CurrentHoldings() {
                     className="flex justify-center items-center gap-1 cursor-pointer hover:bg-gray-500/20 p-1 rounded-xl duration-200"
                     onClick={() => setActiveMonth(item.crypto.toString())}
                   >
-                    {item.crypto === "Others" ? (
-                      null
-                    ) : (
+                    {item.crypto === "Others" ? null : (
                       <Image
                         src={`https://cryptocompare.com/${item.imageUrl}`}
                         alt={item.crypto.toString()}
@@ -245,14 +305,6 @@ export function CurrentHoldings() {
                         className="rounded-full"
                       />
                     )}
-                    {/* <Image
-                      src={`https://cryptocompare.com/${item.imageUrl}`}
-                      alt={item.crypto.toString()}
-                      width={18}
-                      height={18}
-                      className="rounded-full"
-                    /> */}
-
                     <p className="text-gray-300">{item.crypto}</p>
                     <p className="text-md font-semibold text-white">
                       {((item.total / totalSum) * 100).toFixed(2)}%
