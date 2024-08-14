@@ -8,7 +8,7 @@ const CardHeaderHoldings = () => {
       <CardHeader className="flex-row items-start space-y-0">
         <div className="grid gap-1">
           <CardTitle className="text-lg font-semibold text-gray-500">
-            Current Holdings
+            Holdings
           </CardTitle>
         </div>
       </CardHeader>

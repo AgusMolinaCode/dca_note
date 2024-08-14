@@ -104,7 +104,7 @@ const CurrentBalance = () => {
             <div className="flex justify-between items-center"
             >
               <h1 className="text-lg font-semibold text-gray-500">
-                Current Balance
+                Balance
               </h1>
               <p className="text-gray-500 text-md font-semibold">24h</p>
             </div>
