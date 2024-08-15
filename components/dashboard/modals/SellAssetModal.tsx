@@ -102,6 +102,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       imageUrl: "/media/37746338/usdt.png",
     };
 
+    
     try {
       const response = await fetch(LOAD_TRANSACTIONS, {
         method: "POST",
@@ -110,12 +111,17 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
         },
         body: JSON.stringify(sellData),
       });
-
+      
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
     } catch (error) {
       console.error("Failed to add transaction", error);
+    }
+    
+    if (transaction.imageUrl === "/media/37746338/usdt.png") {
+      console.error("No se puede vender y comprar la misma criptomoneda (USDT).");
+      return;
     }
 
     try {
@@ -237,7 +243,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
                               type="number"
                               onChange={handleAmountChange}
                               max={amount}
-                              placeholder={amount.toString()}
+                              placeholder={amount.toFixed(2)}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
                           </div>

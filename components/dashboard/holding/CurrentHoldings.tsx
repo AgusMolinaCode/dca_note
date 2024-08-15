@@ -9,6 +9,7 @@ import { loadTransactions } from "@/app/api";
 import CardHeaderHoldings from "./CardHeaderHoldings";
 import Image from "next/image";
 import { useUser } from "@clerk/clerk-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type ExtendedTransaction = Transaction & { fullAmounts: number };
 
@@ -68,17 +69,12 @@ export function CurrentHoldings() {
   }, {} as { [key: string]: Transaction & { total: number } });
 
   const groupedTransactionsArray: ExtendedTransaction[] = groupedTransactions
-    ? Object.values(groupedTransactions)
-        .sort(
-          (a, b) =>
-            (groupedTotals?.[b.crypto] ?? 0) - (groupedTotals?.[a.crypto] ?? 0)
-        )
-        .map((transaction) => {
-          const fullAmounts =
-            groupedAmounts[transaction.crypto] *
-            averagePricesResult?.[transaction.crypto];
-          return { ...transaction, fullAmounts } as ExtendedTransaction;
-        })
+    ? Object.values(groupedTransactions).map((transaction) => {
+        const fullAmounts =
+          groupedAmounts[transaction.crypto] *
+          averagePricesResult?.[transaction.crypto];
+        return { ...transaction, fullAmounts } as ExtendedTransaction;
+      })
     : [];
 
   React.useEffect(() => {
@@ -100,20 +96,27 @@ export function CurrentHoldings() {
     }
   });
 
+  // Calcular los porcentajes y ordenar de mayor a menor
+  const sortedTransactionsArray = groupedTransactionsArray
+    .map((transaction) => {
+      const percentage =
+        ((groupedAmounts[transaction.crypto] *
+          averagePricesResult?.[transaction.crypto]) /
+          totalSum) *
+        100;
+      return { ...transaction, percentage };
+    })
+    .filter((transaction) => transaction.percentage > 0)
+    .sort((a, b) => b.percentage - a.percentage);
+
   return (
     <Card className="flex flex-col">
       <CardHeaderHoldings />
       <CardContent className="">
-        {dataUserId && dataUserId.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4">
-            {groupedTransactionsArray.map((transaction, index) => {
-              const percentage =
-                ((groupedAmounts[transaction.crypto] *
-                  averagePricesResult?.[transaction.crypto]) /
-                  totalSum) *
-                100;
-
-              return (
+        <ScrollArea className="h-[12rem]">
+          {dataUserId && dataUserId.length > 0 ? (
+            <div className="grid grid-cols-2 gap-4">
+              {sortedTransactionsArray.map((transaction, index) => (
                 <div
                   key={index}
                   className="flex gap-2 justify-between items-center p-3 bg-gray-700/90 rounded-xl"
@@ -135,20 +138,20 @@ export function CurrentHoldings() {
                   </div>
                   <div className="flex items-center">
                     <p className="text-white font-semibold text-md">
-                      {percentage.toFixed(2)}%
+                      {transaction.percentage.toFixed(2)}%
                     </p>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
-            <p className="text-center text-gray-500">
-              No current holdings loaded yet.
-            </p>
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
+              <p className="text-center text-gray-500">
+                No current holdings loaded yet.
+              </p>
+            </div>
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   );
