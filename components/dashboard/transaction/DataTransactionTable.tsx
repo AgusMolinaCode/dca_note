@@ -20,7 +20,7 @@ const DataTransactionTable = ({
 }: {
   groupedTransactionsArray: (Transaction & { total: number })[];
   value: { [key: string]: number };
-  averagePricesResult: { [key: string]: number };
+  averagePricesResult: { [key: string]: { total: number; count: number; average: number } };
   profitValue: { [key: string]: number };
   percentageValue: { [key: string]: number };
   sortedGroupedTotals: { [key: string]: number };
@@ -65,7 +65,7 @@ const DataTransactionTable = ({
                 const currentProfit = amount * currentValue;
 
                 const currentTotal =
-                  amount * averagePricesResult?.[transaction.crypto];
+                  amount * (averagePricesResult?.[transaction.crypto]?.average ?? 0);
 
                 const finalProfit = currentProfit - currentTotal;
                 const totalInvested = sortedGroupedTotals?.[transaction.crypto];
@@ -107,13 +107,13 @@ const DataTransactionTable = ({
                     <td
                       className={`px-4 py-2 font-semibold  ${
                         (currentValue ?? 0) <
-                        (averagePricesResult?.[transaction.crypto] ?? 0)
+                        (averagePricesResult?.[transaction.crypto]?.average ?? 0)
                           ? "text-red-400"
                           : "text-green-400"
                       }`}
                     >
                       ${" "}
-                      {averagePricesResult?.[transaction.crypto]?.toFixed(2) ??
+                      {averagePricesResult?.[transaction.crypto]?.average?.toFixed(2) ??
                         "0.00"}
                     </td>
                     <td
@@ -145,7 +145,7 @@ const DataTransactionTable = ({
                     <td className="px-4 py-2 font-semibold">
                       ${" "}
                       {(
-                        amount * averagePricesResult[transaction.crypto]
+                        amount * (averagePricesResult[transaction.crypto]?.average ?? 0)
                       ).toFixed(2)}
                     </td>
                     <td

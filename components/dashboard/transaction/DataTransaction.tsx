@@ -5,6 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import DataTransactionTable from "./DataTransactionTable";
+import useCryptoCalculations from "@/hooks/useCryptoCalculations";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
@@ -58,6 +59,8 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
     [key: string]: number;
   }>({}); // Provide an empty object as the default value
   const [selectedSymbol, setSelectedSymbol] = useState<string>("");
+  const { averagePrices } = useCryptoCalculations();
+
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
 
@@ -84,21 +87,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
       return acc;
     }, {} as { [key: string]: number });
 
-  const averagePrices = dataUserId?.reduce((acc, transaction) => {
-    if (!acc[transaction.crypto]) {
-      acc[transaction.crypto] = { total: 0, count: 0 };
-    }
-    acc[transaction.crypto].total += transaction.price;
-    acc[transaction.crypto].count += 1;
-    return acc;
-  }, {} as { [key: string]: { total: number; count: number } });
-
-  const averagePricesResult = averagePrices
-    ? Object.keys(averagePrices).reduce((acc, crypto) => {
-        acc[crypto] = averagePrices[crypto].total / averagePrices[crypto].count;
-        return acc;
-      }, {} as { [key: string]: number })
-    : ({} as { [key: string]: number });
+  
 
   const cryptoJoin = dataUserId?.map((item) => item.crypto).join(",");
 
@@ -189,7 +178,7 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
           groupedAmounts={groupedAmounts || {}}
           groupedTransactionsArray={groupedTransactionsArray}
           value={value}
-          averagePricesResult={averagePricesResult}
+          averagePricesResult={averagePrices}
           profitValue={profitValue}
           percentageValue={percentageValue}
           sortedGroupedTotals={sortedGroupedTotals}

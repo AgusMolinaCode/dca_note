@@ -8,6 +8,7 @@ import CurrentBalanceItem from "./CurrentBalanceItem";
 import { useUser } from "@clerk/clerk-react";
 import CurrentTodayProfitItem from "./CurrentTodayProfitItem";
 import CurrentPercentajeProfitItem from "./CurrentPercentajeProfitItem";
+import useCryptoCalculations from "@/hooks/useCryptoCalculations";
 
 type CryptoPrices = {
   [key: string]: {
@@ -20,6 +21,8 @@ const CurrentBalance = () => {
   const [cryptoAmounts, setCryptoAmounts] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
+  const { userCryptoAmounts, averagePrices, sumCounts } =
+    useCryptoCalculations();
 
   const { user } = useUser();
 
@@ -54,9 +57,7 @@ const CurrentBalance = () => {
           });
           setCryptoPrices(prices);
         })
-        .catch((error) =>
-          console.error("Error al obtener precios de criptomonedas:", error)
-        );
+        .catch((error) => console.error("Error", error));
     }
   }, [data]);
 
@@ -71,14 +72,6 @@ const CurrentBalance = () => {
     setTotalValue(sum);
   }, [cryptoPrices, dataUserId]);
 
-  useEffect(() => {
-    let sum = 0;
-    dataUserId?.forEach((item) => {
-      sum += item?.total;
-    });
-    setTotalSum(sum);
-  }, [dataUserId]);
-
   const formattedTotalSum = totalSum.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -89,7 +82,7 @@ const CurrentBalance = () => {
     currency: "USD",
   });
 
-  const formattedProfitUnrealizedValue = totalValue - totalSum;
+  const formattedProfitUnrealizedValue = totalValue - sumCounts();
   const formattedProfitUnrealized =
     formattedProfitUnrealizedValue.toLocaleString("en-US", {
       style: "currency",
@@ -101,11 +94,8 @@ const CurrentBalance = () => {
       {dataUserId && dataUserId.length > 0 ? (
         <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
           <div>
-            <div className="flex justify-between items-center"
-            >
-              <h1 className="text-lg font-semibold text-gray-500">
-                Balance
-              </h1>
+            <div className="flex justify-between items-center">
+              <h1 className="text-lg font-semibold text-gray-500">Balance</h1>
               <p className="text-gray-500 text-md font-semibold">24h</p>
             </div>
             <div>
@@ -159,7 +149,7 @@ const CurrentBalance = () => {
                   <CurrentBalanceItem
                     title="Total Invested"
                     description="The total amount of money you have invested in your account."
-                    value={formattedTotalSum.toString()}
+                    value={sumCounts().toFixed(2)}
                   />
                 </div>
               )}

@@ -3,24 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import DeleteAssetModal from "../modals/DeleteAssetModal";
 import Image from "next/image";
-import { CircleDollarSignIcon, DollarSign, Edit } from "lucide-react";
+import { CircleDollarSignIcon, Edit } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
 import EditAssetModal from "../modals/EditAssetModal";
-import { TokenUSDT } from "@token-icons/react";
-import SellAssetModal from "../modals/SellAssetModal";
-import { Button } from "@/components/ui/button";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
 };
-
-interface Transactions {
-  createdAt: string | number | Date;
-}
 
 const groupByDate = (
   transactions: Transaction[]
@@ -195,28 +188,6 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         : "0.00"}
                     </td>
                     <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
-                      {/* <HoverCard>
-                        <HoverCardTrigger>
-                          {transaction.amount < 0 ? (
-                            <DollarSign
-                              size={24}
-                              className="text-gray-400 duration-300"
-                            />
-                          ) : (
-                            <SellAssetModal
-                              transaction={transaction}
-                              criptoPrice={null}
-                            />
-                          )}
-                        </HoverCardTrigger>
-                        {transaction.amount < 0 ? (
-                          null
-                        ) : (
-                          <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
-                            Sell transaction
-                          </HoverCardContent>
-                        )}
-                      </HoverCard> */}
                       <HoverCard>
                         <HoverCardTrigger>
                           <DeleteAssetModal transaction={transaction} />

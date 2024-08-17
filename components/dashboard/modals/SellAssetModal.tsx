@@ -242,7 +242,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
                               id="amount"
                               type="number"
                               onChange={handleAmountChange}
-                              max={amount}
+                              max={amount.toFixed(2)}
                               placeholder={amount.toFixed(2)}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
