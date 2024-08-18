@@ -70,7 +70,7 @@ const DataTransactionTable = ({
                 const finalProfit = currentProfit - currentTotal;
                 const totalInvested = sortedGroupedTotals?.[transaction.crypto];
 
-                if (totalInvested < 1 || amount <= 0) {
+                if (totalInvested <= 0 || amount <= 0) {
                   return null;
                 }
 

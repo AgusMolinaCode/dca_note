@@ -113,7 +113,7 @@ export function CurrentHoldings() {
     <Card className="flex flex-col">
       <CardHeaderHoldings />
       <CardContent className="">
-        <ScrollArea className="h-[12rem]">
+        <ScrollArea className="max-h-[12rem]">
           {dataUserId && dataUserId.length > 0 ? (
             <div className="grid grid-cols-2 gap-4">
               {sortedTransactionsArray.map((transaction, index) => (

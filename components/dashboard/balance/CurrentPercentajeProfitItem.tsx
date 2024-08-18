@@ -34,10 +34,11 @@ const CurrentPercentajeProfitItem = ({
   const [cryptoPrices, setCryptoPrices] = useState<CryptoListResult | null>(
     null
   );
-  const [cryptoAmountsFetch, setCryptoAmountsFetch] = useState<number | null>(
-    null
-  );
-  const [open24HourValue, setOpen24HourValue] = useState<number | null>(null);
+  const [low24HourValue, setLow24HourValue] = useState<number | null>(null);
+  const [high24HourValue, setHigh24HourValue] = useState<number | null>(null);
+  const [percentage24HourValue, setPercentage24HourValue] = useState<
+    number | null
+  >(null);
 
   const cryptoJoin = allCryptos.map((item) => item.crypto).join(",");
 
@@ -55,29 +56,40 @@ const CurrentPercentajeProfitItem = ({
       );
       const data: CryptoListResult = await response.json();
 
-      let totalSum = 0;
+      let totalLow24HourValue = 0;
 
       cryptoAmountsAndCrypto.forEach((item) => {
-        const open24HourValue =
-          data?.RAW[item.crypto as any].USD.CHANGEPCT24HOUR;
+        const low24HourValue = data?.RAW[item.crypto as any].USD.LOW24HOUR;
         const amountOfCrypto = item.amount;
-        const product = open24HourValue * amountOfCrypto;
-        totalSum += product;
+        const product = low24HourValue * amountOfCrypto;
+        totalLow24HourValue += product;
       });
-
-      setCryptoAmountsFetch(totalSum);
-      let totalOpen24HourValue = 0;
+      console.log(totalLow24HourValue);
+      setLow24HourValue(totalLow24HourValue);
+      let totalHigh24HourValue = 0;
 
       cryptoAmountsAndCrypto.forEach((item) => {
-        const open24HourValue =
-          data?.RAW[item.crypto as unknown as number].USD.CHANGE24HOUR;
+        const high24HourValue =
+          data?.RAW[item.crypto as unknown as number].USD.HIGH24HOUR;
         const amount = item.amount;
-        const product = open24HourValue * amount;
-        totalOpen24HourValue += product;
+        const product = high24HourValue * amount;
+        totalHigh24HourValue += product;
+      });
+      // console.log(totalHigh24HourValue);
+      setHigh24HourValue(totalHigh24HourValue);
+      setCryptoPrices(data);
+
+      let totalPercentage24HourValue = 0;
+
+      cryptoAmountsAndCrypto.forEach((item) => {
+        const high24HourValue =
+          data?.RAW[item.crypto as unknown as number].USD.CHANGEPCT24HOUR;
+        const amount = item.amount;
+        const product = high24HourValue * amount;
+        totalHigh24HourValue += product;
       });
 
-      setOpen24HourValue(totalOpen24HourValue);
-      setCryptoPrices(data);
+      setPercentage24HourValue(totalPercentage24HourValue);
     }
   };
 
@@ -87,46 +99,47 @@ const CurrentPercentajeProfitItem = ({
 
   return (
     <div className="flex justify-start gap-2 items-center">
-      <p>
+      {/* <p>
         <span
           className={`${
-            (cryptoAmountsFetch ?? 0) <= 0
+            (low24HourValue ?? 0) <= 0
               ? `text-red-500 bg-red-500/20`
               : `text-green-500 bg-green-500/20`
-          } text-sm font-medium  px-3 py-1 rounded-[0.45rem]`}
+          } text-sm font-medium  px-2 py-[0.1rem] rounded-[0.45rem]`}
         >
-          {(cryptoAmountsFetch ?? 0).toFixed(2)}%
+          {percentage24HourValue}%
         </span>
-      </p>
-      <HoverCard>
-        <HoverCardTrigger>
-          <InfoIcon className="text-gray-500" size={12} />
-        </HoverCardTrigger>
-        <HoverCardContent className="text-gray-400">
-          the 24hs change percentage of your assets
-        </HoverCardContent>
-      </HoverCard>
-      <p>
+      </p> */}
+
+      <p className="flex flex-col justify-center mx-auto">
+        <span className="text-xs text-gray-500 font-semibold">Low 24h: </span>
         <span
           className={` ${
-            (open24HourValue ?? 0) <= 0 ? `text-red-500` : `text-green-500`
+            (low24HourValue ?? 0) <= 0 ? `text-red-500` : `text-green-500`
           }
-           text-lg font-medium py-1`}
+           text-md font-medium py-1`}
         >
-          {open24HourValue?.toLocaleString("en-US", {
+          {low24HourValue?.toLocaleString("en-US", {
             style: "currency",
             currency: "USD",
           }) || "$0.00"}
         </span>
       </p>
-      <HoverCard>
-        <HoverCardTrigger>
-          <InfoIcon className="text-gray-500" size={12} />
-        </HoverCardTrigger>
-        <HoverCardContent className="text-gray-400">
-          the 24hs change value of your assets
-        </HoverCardContent>
-      </HoverCard>
+
+      <p className="flex flex-col justify-center mx-auto">
+        <span className="text-xs text-gray-500 font-semibold">High 24h: </span>
+        <span
+          className={` ${
+            (high24HourValue ?? 0) <= 0 ? `text-red-500` : `text-green-500`
+          }
+           text-md font-medium py-1`}
+        >
+          {high24HourValue?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          }) || "$0.00"}
+        </span>
+      </p>
     </div>
   );
 };

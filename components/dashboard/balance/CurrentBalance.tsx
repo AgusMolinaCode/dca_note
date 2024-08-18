@@ -20,9 +20,7 @@ const CurrentBalance = () => {
   const [cryptoPrices, setCryptoPrices] = useState<CryptoPrices>({});
   const [cryptoAmounts, setCryptoAmounts] = useState({});
   const [totalValue, setTotalValue] = useState(0);
-  const [totalSum, setTotalSum] = useState(0);
-  const { userCryptoAmounts, averagePrices, sumCounts } =
-    useCryptoCalculations();
+  const { sumCounts } = useCryptoCalculations();
 
   const { user } = useUser();
 
@@ -71,11 +69,6 @@ const CurrentBalance = () => {
     });
     setTotalValue(sum);
   }, [cryptoPrices, dataUserId]);
-
-  const formattedTotalSum = totalSum.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   const formattedTotalValue = totalValue.toLocaleString("en-US", {
     style: "currency",
