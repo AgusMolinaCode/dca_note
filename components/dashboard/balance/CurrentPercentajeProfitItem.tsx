@@ -64,7 +64,6 @@ const CurrentPercentajeProfitItem = ({
         const product = low24HourValue * amountOfCrypto;
         totalLow24HourValue += product;
       });
-      console.log(totalLow24HourValue);
       setLow24HourValue(totalLow24HourValue);
       let totalHigh24HourValue = 0;
 
@@ -75,7 +74,6 @@ const CurrentPercentajeProfitItem = ({
         const product = high24HourValue * amount;
         totalHigh24HourValue += product;
       });
-      // console.log(totalHigh24HourValue);
       setHigh24HourValue(totalHigh24HourValue);
       setCryptoPrices(data);
 

@@ -66,7 +66,8 @@ const DataTransactionTable = ({
 
                 const currentTotal =
                   amount * (averagePricesResult?.[transaction.crypto]?.average ?? 0);
-
+                
+                
                 const finalProfit = currentProfit - currentTotal;
                 const totalInvested = sortedGroupedTotals?.[transaction.crypto];
 

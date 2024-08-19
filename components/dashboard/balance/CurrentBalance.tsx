@@ -92,7 +92,7 @@ const CurrentBalance = () => {
               <p className="text-gray-500 text-md font-semibold">24h</p>
             </div>
             <div>
-              <p className="text-4xl font-semibold pt-4">
+              <p className="text-4xl font-semibold pt-2">
                 {formattedTotalValue}
               </p>
               {isLoading ? (
@@ -118,7 +118,7 @@ const CurrentBalance = () => {
                   </span>
                 </p>
               ) : (
-                <div className="pt-4">
+                <div className="pt-2">
                   <CurrentTodayProfitItem
                     totalValue={totalValue}
                     allCryptos={allCryptos}
