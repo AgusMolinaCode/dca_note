@@ -20,7 +20,9 @@ const DataTransactionTable = ({
 }: {
   groupedTransactionsArray: (Transaction & { total: number })[];
   value: { [key: string]: number };
-  averagePricesResult: { [key: string]: { total: number; count: number; average: number } };
+  averagePricesResult: {
+    [key: string]: { total: number; count: number; average: number };
+  };
   profitValue: { [key: string]: number };
   percentageValue: { [key: string]: number };
   sortedGroupedTotals: { [key: string]: number };
@@ -65,13 +67,15 @@ const DataTransactionTable = ({
                 const currentProfit = amount * currentValue;
 
                 const currentTotal =
-                  amount * (averagePricesResult?.[transaction.crypto]?.average ?? 0);
-                
-                
-                const finalProfit = currentProfit - currentTotal;
-                const totalInvested = sortedGroupedTotals?.[transaction.crypto];
+                  amount *
+                  (averagePricesResult?.[transaction.crypto]?.average ?? 0);
 
-                if (totalInvested <= 0 || amount <= 0) {
+                const finalProfit = currentProfit - currentTotal;
+                const totalInvested =
+                  amount *
+                  (averagePricesResult[transaction.crypto]?.average ?? 0);
+
+                if (amount <= 0) {
                   return null;
                 }
 
@@ -108,14 +112,13 @@ const DataTransactionTable = ({
                     <td
                       className={`px-4 py-2 font-semibold  ${
                         (currentValue ?? 0) <
-                        (averagePricesResult?.[transaction.crypto]?.average ?? 0)
+                        (averagePricesResult?.[transaction.crypto]?.average ??
+                          0)
                           ? "text-red-400"
                           : "text-green-400"
                       }`}
                     >
-                      ${" "}
-                      {averagePricesResult?.[transaction.crypto]?.average?.toFixed(2) ??
-                        "0.00"}
+                      $ {transaction.price.toFixed(2)}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
@@ -143,11 +146,12 @@ const DataTransactionTable = ({
                         : "0.00"}{" "}
                       %
                     </td>
-                    <td className="px-4 py-2 font-semibold">
-                      ${" "}
-                      {(
-                        amount * (averagePricesResult[transaction.crypto]?.average ?? 0)
-                      ).toFixed(2)}
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        totalInvested < 0 ? "text-green-400" : ""
+                      }`}
+                    >
+                      $ {Math.abs(totalInvested).toFixed(2)}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
@@ -164,6 +168,7 @@ const DataTransactionTable = ({
                               amount={amount}
                               transaction={transaction}
                               criptoPrice={null}
+                              finalProfit={finalProfit}
                             />
                           )}
                         </HoverCardTrigger>

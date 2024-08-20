@@ -119,16 +119,16 @@ const CurrentBalance = () => {
                 </p>
               ) : (
                 <div className="pt-2">
-                  <CurrentTodayProfitItem
-                    totalValue={totalValue}
-                    allCryptos={allCryptos}
-                  />
-
                   <CurrentBalanceItem
                     title="Total Profit"
                     description="The profit you have made from selling assets."
                     value={"$0.00"}
                   />
+                  <CurrentTodayProfitItem
+                    totalValue={totalValue}
+                    allCryptos={allCryptos}
+                  />
+
                   <CurrentBalanceItem
                     title="Unrealized Profit"
                     description="The profit you would make if you sold all your assets at the current market price."

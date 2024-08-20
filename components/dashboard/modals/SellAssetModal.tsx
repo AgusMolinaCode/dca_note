@@ -34,6 +34,7 @@ interface SellAssetModalProps {
   transaction: Transaction;
   criptoPrice: number | null;
   amount: number;
+  finalProfit: number;
 }
 
 interface CryptoCurrency {
@@ -53,7 +54,9 @@ interface CryptoListResult {
 const SellAssetModal: React.FC<SellAssetModalProps> = ({
   transaction,
   amount,
+  finalProfit,
 }) => {
+  
   const queryClient = useQueryClient();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -262,7 +265,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
                               htmlFor="price"
                               className="text-white text-[1rem]"
                             >
-                              Price
+                              Current Price
                             </Label>
                             <Input
                               {...field}
@@ -288,7 +291,36 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
                               htmlFor="total"
                               className="text-white text-[1rem]"
                             >
-                              Total
+                              Total USDT to receive
+                            </Label>
+                            <Input
+                              {...field}
+                              id="total"
+                              type="text"
+                              readOnly
+                              value={
+                                totalPrice !== null
+                                  ? totalPrice.toFixed(2)
+                                  : "0.00"
+                              }
+                              className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
+                            />
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    name="total"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0 relative">
+                        <FormControl>
+                          <div className="pt-4 flex flex-col gap-2">
+                            <Label
+                              htmlFor="total"
+                              className="text-white text-[1rem]"
+                            >
+                              Profit
                             </Label>
                             <Input
                               {...field}
