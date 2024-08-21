@@ -57,7 +57,7 @@ const DataTransactionTable = ({
                   Total Invested
                 </th>
                 <th className="px-4 py-2 text-sm text-gray-400">Gain/Loss</th>
-                <th className="px-4 py-2 text-sm text-gray-400">Actions</th>
+                {/* <th className="px-4 py-2 text-sm text-gray-400">Actions</th> */}
               </tr>
             </thead>
             <tbody className="dark:bg-gray-800 bg-gray-400">
@@ -75,6 +75,8 @@ const DataTransactionTable = ({
                   amount *
                   (averagePricesResult[transaction.crypto]?.average ?? 0);
 
+
+                
                 if (amount <= 0) {
                   return null;
                 }
@@ -118,7 +120,7 @@ const DataTransactionTable = ({
                           : "text-green-400"
                       }`}
                     >
-                      $ {transaction.price.toFixed(2)}
+                      $ {averagePricesResult?.[transaction.crypto]?.average.toFixed(2)}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
@@ -160,7 +162,7 @@ const DataTransactionTable = ({
                     >
                       ${finalProfit.toFixed(2)}
                     </td>
-                    <td>
+                    {/* <td>
                       <HoverCard>
                         <HoverCardTrigger>
                           {transaction.amount < 0 ? null : (
@@ -178,7 +180,7 @@ const DataTransactionTable = ({
                           </HoverCardContent>
                         )}
                       </HoverCard>
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}

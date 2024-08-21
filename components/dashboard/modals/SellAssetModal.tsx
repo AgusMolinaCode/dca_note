@@ -35,6 +35,7 @@ interface SellAssetModalProps {
   criptoPrice: number | null;
   amount: number;
   finalProfit: number;
+  result: number;
 }
 
 interface CryptoCurrency {
@@ -55,8 +56,8 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
   transaction,
   amount,
   finalProfit,
+  result,
 }) => {
-  
   const queryClient = useQueryClient();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -105,7 +106,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       imageUrl: "/media/37746338/usdt.png",
     };
 
-    
     try {
       const response = await fetch(LOAD_TRANSACTIONS, {
         method: "POST",
@@ -114,16 +114,18 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
         },
         body: JSON.stringify(sellData),
       });
-      
+
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
     } catch (error) {
       console.error("Failed to add transaction", error);
     }
-    
+
     if (transaction.imageUrl === "/media/37746338/usdt.png") {
-      console.error("No se puede vender y comprar la misma criptomoneda (USDT).");
+      console.error(
+        "No se puede vender y comprar la misma criptomoneda (USDT)."
+      );
       return;
     }
 
@@ -200,9 +202,17 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
         <DialogTrigger asChild>
           <Button
             type="submit"
-            className="bg-gray-700 hover:bg-gray-800 rounded-xl text-white"
+            className="px-1"
           >
-            Sell Asset
+            {result > 0 ? (
+              <p className="text-green-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
+                TP
+              </p>
+            ) : (
+              <p className="text-red-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
+                SL
+              </p>
+            )}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
