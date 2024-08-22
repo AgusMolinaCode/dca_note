@@ -51,18 +51,25 @@ const CurrentPerformance = () => {
       let best = { name: "", value: -Infinity, imageUrl: "" };
       let worst = { name: "", value: Infinity, imageUrl: "" };
 
-      for (const item of dataUserId ?? []) {
-        const change = prices[item.crypto];
-        if (change > best.value) {
-          best = { name: item.crypto, value: change, imageUrl: item.imageUrl };
-        }
-        if (change < worst.value) {
-          worst = { name: item.crypto, value: change, imageUrl: item.imageUrl };
-        }
-      }
+      const uniqueCryptos = new Set(dataUserId?.map((item) => item.crypto));
 
-      setBestPerformance(best);
-      setWorstPerformance(worst);
+      if (uniqueCryptos.size > 1) {
+        for (const item of dataUserId ?? []) {
+          const change = prices[item.crypto];
+          if (change > best.value) {
+            best = { name: item.crypto, value: change, imageUrl: item.imageUrl };
+          }
+          if (change < worst.value) {
+            worst = { name: item.crypto, value: change, imageUrl: item.imageUrl };
+          }
+        }
+
+        setBestPerformance(best);
+        setWorstPerformance(worst);
+      } else {
+        setBestPerformance(null);
+        setWorstPerformance(null);
+      }
     }
   };
 
@@ -70,13 +77,15 @@ const CurrentPerformance = () => {
     fetchFullCryptosData();
   }, [cryptoJoin]);
 
+  const uniqueCryptos = new Set(dataUserId?.map((item) => item.crypto));
+
   return (
     <div className="bg-card text-card-foreground shadow-sm flex flex-col w-full">
       <div className="flex justify-between items-center pb-2">
         <h1 className="text-lg font-semibold text-gray-500">Performance</h1>
         <p className="text-gray-500 text-md font-semibold">24h</p>
       </div>
-      {dataUserId && dataUserId.length > 1 ? (
+      {uniqueCryptos.size > 1 ? (
         <div className="grid gap-2">
           {bestPerformance && (
             <div className="bg-gray-700/90 w-full px-4 h-16 items-center rounded-xl flex gap-2 justify-between">
@@ -148,7 +157,9 @@ const CurrentPerformance = () => {
       ) : (
         <div className="mx-auto aspect-square w-full max-w-[300px] h-[150px] flex items-center justify-center">
           <p className="text-center text-gray-500">
-            No current performance loaded yet.
+            {uniqueCryptos.size === 1
+              ? "Add more transactions to see performance."
+              : "No current performance loaded yet."}
           </p>
         </div>
       )}

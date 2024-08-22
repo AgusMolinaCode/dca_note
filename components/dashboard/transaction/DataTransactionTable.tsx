@@ -56,7 +56,7 @@ const DataTransactionTable = ({
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Total Invested
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">Gain/Loss</th>
+                <th className="px-4 py-2 text-sm text-gray-400">Avg .Gain/Loss</th>
                 {/* <th className="px-4 py-2 text-sm text-gray-400">Actions</th> */}
               </tr>
             </thead>

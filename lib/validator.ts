@@ -36,11 +36,8 @@ export const editSchema = z.object({
 
 export const sellSchema = z.object({
   amount: z
-    .string()
-    .refine((value) => !isNaN(parseFloat(value)) && parseFloat(value), {
-      message: "The 'amount' must be a number greater than 0.",
-    })
-    .transform((value) => parseFloat(value)),
+    .number({ message: "The 'amount' must be a number greater than 0." })
+    .min(0, { message: "The 'amount' must be greater than 0." }),
   price: z
     .number({ message: "The 'price' must be a number greater than 0." })
     .min(0, { message: "The 'price' must be greater than 0." }),

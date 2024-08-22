@@ -11,6 +11,7 @@ import {
   HoverCardTrigger,
 } from "../../ui/hover-card";
 import EditAssetModal from "../modals/EditAssetModal";
+import { Button } from "@/components/ui/button";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
@@ -119,9 +120,13 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
 
                 <tbody>
                   {groupedTransactions[date].map((transaction: Transaction) => {
-                    const result =
-                      value[transaction.crypto] * transaction.amount -
-                      transaction.price * transaction.amount;
+                    const result = value[transaction.crypto]
+                      ? value[transaction.crypto] * transaction.amount -
+                        transaction.price * transaction.amount
+                      : 0;
+
+                    const resultClass =
+                      result >= 0 ? "text-green-400" : "text-red-400";
                     return (
                       <tr key={transaction.id} className="text-left">
                         <td className="flex gap-1 items-center my-2">
@@ -174,38 +179,24 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                             : "0.00"}
                         </td>
                         <td
-                          className={`px-4 py-2 font-semibold w-[8rem]
-                         ${
-                           value[transaction.crypto]
-                             ? value[transaction.crypto] * transaction.amount -
-                                 transaction.price * transaction.amount >=
-                               0
-                               ? "text-green-400"
-                               : "text-red-400"
-                             : ""
-                         }
-                        `}
+                          className={`px-4 py-2 font-semibold w-[8rem] ${resultClass}`}
                         >
                           $
                           {value[transaction.crypto]
-                            ? (
-                                value[transaction.crypto] * transaction.amount -
-                                transaction.price * transaction.amount
-                              ).toFixed(2)
+                            ? result.toFixed(2)
                             : "0.00"}
                         </td>
-                        <td className="flex items-center py-2 justify-center mx-auto w-[8rem]">
+                        <td className="flex items-center py-2 justify-end mx-auto w-[8rem]">
                           <HoverCard closeDelay={10} openDelay={10}>
                             <HoverCardTrigger>
                               <SellAssetModal
                                 transaction={transaction}
                                 criptoPrice={value[transaction.crypto]}
                                 amount={transaction.amount}
-                                finalProfit={result}
                                 result={result}
                               />
                             </HoverCardTrigger>
-                            <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
+                            {/* <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
                               {result > 0 ? (
                                 <p className="text-green-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
                                   Take profit
@@ -215,7 +206,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                                   Stop loss
                                 </p>
                               )}
-                            </HoverCardContent>
+                            </HoverCardContent> */}
                           </HoverCard>
                           <HoverCard closeDelay={10} openDelay={10}>
                             <HoverCardTrigger>
@@ -226,10 +217,9 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                             </HoverCardContent>
                           </HoverCard>
                           {transaction.imageUrl === "/images/usdt.png" ? (
-                            <Edit
-                              size={24}
-                              className="text-gray-500 duration-300"
-                            />
+                            <Button disabled className="px-1">
+                              <Edit size={24} />
+                            </Button>
                           ) : (
                             <HoverCard closeDelay={10} openDelay={10}>
                               <HoverCardTrigger>

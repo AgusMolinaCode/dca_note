@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -34,7 +32,6 @@ interface SellAssetModalProps {
   transaction: Transaction;
   criptoPrice: number | null;
   amount: number;
-  finalProfit: number;
   result: number;
 }
 
@@ -55,15 +52,15 @@ interface CryptoListResult {
 const SellAssetModal: React.FC<SellAssetModalProps> = ({
   transaction,
   amount,
-  finalProfit,
   result,
 }) => {
   const queryClient = useQueryClient();
 
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(result);
   const [open, setOpen] = useState(false);
   const [debouncedQuery, setDebouncedQuery] = useState(transaction.crypto);
   const [price, setPrice] = useState<number | string>("");
+  const [profit, setProfit] = useState<number>(0);
 
   const { data } = useQuery({
     queryKey: ["cryptoPrice", debouncedQuery],
@@ -92,7 +89,8 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       userId: transaction.userId,
       crypto: transaction.crypto,
       amount: values.amount,
-      price: values.price,
+      price: transaction.price,
+      //TODO - Cambiar el total por el total de la venta
       total: values.total,
       imageUrl: "/images/usdt.png",
     };
@@ -144,7 +142,33 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     } catch (error) {
       console.error("Failed to add USDT transaction", error);
     }
+     // Actualizar el amount restante
+     const remainingAmount = transaction.amount - Math.abs(values.amount);
+     console.log("Amount: ", transaction.amount);
+     console.log("Values: ", values.amount);
+     console.log("Remaining Amount: ", remainingAmount);
+     const updateData = {
+       ...transaction,
+       amount: remainingAmount,
+     };
+
+    try {
+      const response = await fetch(`${LOAD_TRANSACTIONS}/${transaction.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update remaining amount");
+      }
+    } catch (error) {
+      console.error("Failed to update remaining amount", error);
+    }
   };
+
 
   const mutation = useMutation({
     mutationFn: sellTransaction,
@@ -164,20 +188,28 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       const newTotal = newValue * (amount || 0) || 0;
       setTotalPrice(parseFloat(newTotal.toFixed(2)));
       form.setValue("total", parseFloat(newTotal.toFixed(2)));
+      calculateProfit(amount, newValue);
     } else {
       setPrice("");
       form.setValue("price", 0);
       setTotalPrice(0);
       form.setValue("total", 0);
+      setProfit(0);
     }
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = event.target.value as unknown as number;
+    const newAmount = parseFloat(event.target.value);
     form.setValue("amount", newAmount);
-    const newTotal = newAmount * (criptoPrice || 0);
+    const newTotal = newAmount * (parseFloat(price as string) || 0);
     setTotalPrice(newTotal || 0);
     form.setValue("total", newTotal || 0);
+    calculateProfit(newAmount, parseFloat(price as string));
+  };
+
+  const calculateProfit = (amount: number, currentPrice: number) => {
+    const profit = (currentPrice - transaction.price) * amount;
+    setProfit(profit);
   };
 
   const onSubmitMutation = (data: z.infer<typeof editSchema>) => {
@@ -186,7 +218,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     }
 
     data.amount = -Math.abs(data.amount);
-    // data.total = -Math.abs(data.total);
 
     mutation.mutate(data, {
       onSuccess: () => {
@@ -200,20 +231,19 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button
-            type="submit"
-            className="px-1"
-          >
-            {result > 0 ? (
-              <p className="text-green-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
-                TP
-              </p>
-            ) : (
-              <p className="text-red-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
-                SL
-              </p>
-            )}
-          </Button>
+          {amount <= 0 || transaction.crypto === "USDT" ? null : (
+            <Button type="submit" className="px-1">
+              {result > 0 ? (
+                <p className="text-green-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
+                  TP
+                </p>
+              ) : (
+                <p className="text-red-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
+                  SL
+                </p>
+              )}
+            </Button>
+          )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
           <DialogHeader>
@@ -291,57 +321,27 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
                       </FormItem>
                     )}
                   />
+
                   <FormField
-                    name="total"
+                    name="profit"
                     render={({ field }) => (
                       <FormItem className="space-y-0 relative">
                         <FormControl>
                           <div className="pt-4 flex flex-col gap-2">
                             <Label
-                              htmlFor="total"
-                              className="text-white text-[1rem]"
-                            >
-                              Total USDT to receive
-                            </Label>
-                            <Input
-                              {...field}
-                              id="total"
-                              type="text"
-                              readOnly
-                              value={
-                                totalPrice !== null
-                                  ? totalPrice.toFixed(2)
-                                  : "0.00"
-                              }
-                              className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
-                            />
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="total"
-                    render={({ field }) => (
-                      <FormItem className="space-y-0 relative">
-                        <FormControl>
-                          <div className="pt-4 flex flex-col gap-2">
-                            <Label
-                              htmlFor="total"
+                              htmlFor="profit"
                               className="text-white text-[1rem]"
                             >
                               Profit
                             </Label>
                             <Input
                               {...field}
-                              id="total"
+                              id="profit"
                               type="text"
-                              readOnly
                               value={
-                                totalPrice !== null
-                                  ? totalPrice.toFixed(2)
-                                  : "0.00"
+                                !isNaN(profit) ? profit.toFixed(2) : "0.00"
                               }
+                              readOnly
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
                           </div>
