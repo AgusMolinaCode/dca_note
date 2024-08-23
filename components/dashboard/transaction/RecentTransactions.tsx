@@ -125,8 +125,11 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         transaction.price * transaction.amount
                       : 0;
 
-                    const resultClass =
-                      result >= 0 ? "text-green-400" : "text-red-400";
+                    const sellResult = value[transaction.crypto]
+                      ? transaction.price * transaction.amount -
+                        value[transaction.crypto] * transaction.amount
+                      : 0;
+
                     return (
                       <tr key={transaction.id} className="text-left">
                         <td className="flex gap-1 items-center my-2">
@@ -179,12 +182,34 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                             : "0.00"}
                         </td>
                         <td
-                          className={`px-4 py-2 font-semibold w-[8rem] ${resultClass}`}
+                          className={`px-4 py-2 font-semibold w-[8rem] ${
+                            transaction.imageUrl === "/images/usdt.png"
+                              ? sellResult > 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                              : result > 0
+                              ? "text-green-400"
+                              : "text-red-400"
+                          }`}
                         >
-                          $
-                          {value[transaction.crypto]
-                            ? result.toFixed(2)
-                            : "0.00"}
+                          <div className="flex gap-2 items-center justify-start">
+
+                          <p>
+                            {transaction.imageUrl === "/images/usdt.png"
+                              ? sellResult.toFixed(2)
+                              : result.toFixed(2)}
+                          </p>
+                          <p className="">
+                            {transaction.imageUrl === "/images/usdt.png" &&
+                              (sellResult > 0 ? (
+                                <span className="text-gray-300 text-xs bg-green-400/20 py-[0.15rem] px-2 rounded-xl">Profit</span>
+                              ) : (
+                                <span className="text-gray-300 text-xs bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
+                                  No Profit
+                                </span>
+                              ))}
+                          </p>
+                          </div>
                         </td>
                         <td className="flex items-center py-2 justify-end mx-auto w-[8rem]">
                           <HoverCard closeDelay={10} openDelay={10}>
@@ -196,17 +221,6 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                                 result={result}
                               />
                             </HoverCardTrigger>
-                            {/* <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
-                              {result > 0 ? (
-                                <p className="text-green-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
-                                  Take profit
-                                </p>
-                              ) : (
-                                <p className="text-red-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
-                                  Stop loss
-                                </p>
-                              )}
-                            </HoverCardContent> */}
                           </HoverCard>
                           <HoverCard closeDelay={10} openDelay={10}>
                             <HoverCardTrigger>

@@ -8,7 +8,7 @@ const MULTIPLE_FULL_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemu
 
 export const LOAD_TRANSACTIONS = `http://localhost:3000/api/transactions`;
 
-const LOAD_VALUES = `http://localhost:3000/api/values`;
+export const LOAD_VALUES = `http://localhost:3000/api/values`;
 
 const LOAD_USERS = `http://localhost:3000/api/users`;
 

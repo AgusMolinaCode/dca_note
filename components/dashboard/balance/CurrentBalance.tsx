@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { loadTransactions, getMultipleCryptos } from "@/app/api";
+import { loadTransactions, getMultipleCryptos, loadValues } from "@/app/api";
 import CurrentBalanceItem from "./CurrentBalanceItem";
 import { useUser } from "@clerk/clerk-react";
 import CurrentTodayProfitItem from "./CurrentTodayProfitItem";
@@ -24,20 +24,32 @@ const CurrentBalance = () => {
 
   const { user } = useUser();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["items"],
-    queryFn: loadTransactions,
-    refetchInterval: 900000,
+  const { data: transactionsData, isLoading: isLoadingTransactions } = useQuery(
+    {
+      queryKey: ["items"],
+      queryFn: loadTransactions,
+      refetchInterval: 900000,
+    }
+  );
+
+  const { data: valuesData, isLoading: isLoadingValues } = useQuery({
+    queryKey: ["values"],
+    queryFn: loadValues,
   });
 
-  const dataUserId = data?.filter((item) => item.userId === user?.id);
+  const dataUserId = transactionsData?.filter(
+    (item) => item.userId === user?.id
+  );
   const allCryptos = dataUserId?.map((item) => item) || [];
 
+  const userValues = valuesData?.find((item) => item.userId === user?.id);
+  const totalInvested = userValues?.total || 0;
+
   useEffect(() => {
-    if (data) {
+    if (transactionsData) {
       const tempMap = new Map();
 
-      data.forEach((item) => {
+      transactionsData.forEach((item) => {
         if (!tempMap.has(item.crypto)) {
           tempMap.set(item.crypto, item.amount);
         }
@@ -57,7 +69,7 @@ const CurrentBalance = () => {
         })
         .catch((error) => console.error("Error", error));
     }
-  }, [data]);
+  }, [transactionsData]);
 
   useEffect(() => {
     let sum = 0;
@@ -95,7 +107,7 @@ const CurrentBalance = () => {
               <p className="text-4xl font-semibold pt-2">
                 {formattedTotalValue}
               </p>
-              {isLoading ? (
+              {isLoadingTransactions ? (
                 <p>
                   <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto">
                     Loading...
@@ -111,7 +123,7 @@ const CurrentBalance = () => {
               )}
             </div>
             <div>
-              {isLoading ? (
+              {isLoadingTransactions ? (
                 <p>
                   <span className="text-gray-500 text-md font-semibold flex justify-center items-center mx-auto h-44">
                     Loading...
@@ -122,7 +134,7 @@ const CurrentBalance = () => {
                   <CurrentBalanceItem
                     title="Total Profit"
                     description="The profit you have made from selling assets."
-                    value={"$0.00"}
+                    value={totalInvested.toFixed(2)}
                   />
                   <CurrentTodayProfitItem
                     totalValue={totalValue}

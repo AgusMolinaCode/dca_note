@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { LOAD_TRANSACTIONS, searchCryptos } from "@/app/api";
+import { LOAD_TRANSACTIONS, LOAD_VALUES, searchCryptos } from "@/app/api";
 import {
   Dialog,
   DialogContent,
@@ -90,7 +90,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       crypto: transaction.crypto,
       amount: values.amount,
       price: transaction.price,
-      //TODO - Cambiar el total por el total de la venta
       total: values.total,
       imageUrl: "/images/usdt.png",
     };
@@ -103,6 +102,29 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       total: values.total,
       imageUrl: "/media/37746338/usdt.png",
     };
+
+    const valueData = {
+      userId: transaction.userId,
+      total: profit,
+    };
+
+    console.log("Profit: ", profit);
+
+    try {
+      const response = await fetch(LOAD_VALUES, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(valueData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+    } catch (error) {
+      console.error("Failed to add transaction", error);
+    }
 
     try {
       const response = await fetch(LOAD_TRANSACTIONS, {
@@ -142,15 +164,12 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     } catch (error) {
       console.error("Failed to add USDT transaction", error);
     }
-     // Actualizar el amount restante
-     const remainingAmount = transaction.amount - Math.abs(values.amount);
-     console.log("Amount: ", transaction.amount);
-     console.log("Values: ", values.amount);
-     console.log("Remaining Amount: ", remainingAmount);
-     const updateData = {
-       ...transaction,
-       amount: remainingAmount,
-     };
+    // Actualizar el amount restante
+    const remainingAmount = transaction.amount - Math.abs(values.amount);
+    const updateData = {
+      ...transaction,
+      amount: remainingAmount,
+    };
 
     try {
       const response = await fetch(`${LOAD_TRANSACTIONS}/${transaction.id}`, {
@@ -167,13 +186,15 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     } catch (error) {
       console.error("Failed to update remaining amount", error);
     }
-  };
 
+    
+  };
 
   const mutation = useMutation({
     mutationFn: sellTransaction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
+      queryClient.invalidateQueries({ queryKey: ["values"] });
     },
   });
 
@@ -223,6 +244,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       onSuccess: () => {
         setOpen(false);
         queryClient.invalidateQueries({ queryKey: ["items"] });
+        queryClient.invalidateQueries({ queryKey: ["values"] });
       },
     });
   };
