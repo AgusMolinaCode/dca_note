@@ -108,8 +108,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       total: profit,
     };
 
-    console.log("Profit: ", profit);
-
     try {
       const response = await fetch(LOAD_VALUES, {
         method: "POST",

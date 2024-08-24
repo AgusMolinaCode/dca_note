@@ -61,7 +61,6 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
   const [selectedSymbol, setSelectedSymbol] = useState<string>("");
   const { averagePrices } = useCryptoCalculations();
 
-
   const dataUserId = data?.filter((item) => item.userId === user?.id);
 
   const groupedTotals = dataUserId?.reduce((acc, transaction) => {
@@ -73,10 +72,12 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
   }, {} as { [key: string]: number });
 
   const groupedAmounts = dataUserId?.reduce((acc, transaction) => {
-    if (!acc[transaction.crypto]) {
-      acc[transaction.crypto] = 0;
+    if (transaction.amount > 0) {
+      if (!acc[transaction.crypto]) {
+        acc[transaction.crypto] = 0;
+      }
+      acc[transaction.crypto] += transaction.amount;
     }
-    acc[transaction.crypto] += transaction.amount;
     return acc;
   }, {} as { [key: string]: number });
 
@@ -86,8 +87,6 @@ const DataTransaction: React.FC<DataTransactionProps> = ({ data }) => {
       acc[key] = groupedTotals?.[key] ?? 0;
       return acc;
     }, {} as { [key: string]: number });
-
-  
 
   const cryptoJoin = dataUserId?.map((item) => item.crypto).join(",");
 

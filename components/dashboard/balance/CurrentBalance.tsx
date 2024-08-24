@@ -20,6 +20,7 @@ const CurrentBalance = () => {
   const [cryptoPrices, setCryptoPrices] = useState<CryptoPrices>({});
   const [cryptoAmounts, setCryptoAmounts] = useState({});
   const [totalValue, setTotalValue] = useState(0);
+  const [totalInvested, setTotalInvested] = useState(0);
   const { sumCounts } = useCryptoCalculations();
 
   const { user } = useUser();
@@ -41,9 +42,6 @@ const CurrentBalance = () => {
     (item) => item.userId === user?.id
   );
   const allCryptos = dataUserId?.map((item) => item) || [];
-
-  const userValues = valuesData?.find((item) => item.userId === user?.id);
-  const totalInvested = userValues?.total || 0;
 
   useEffect(() => {
     if (transactionsData) {
@@ -81,6 +79,16 @@ const CurrentBalance = () => {
     });
     setTotalValue(sum);
   }, [cryptoPrices, dataUserId]);
+
+  useEffect(() => {
+    let investedSum = 0;
+    valuesData?.forEach((item) => {
+      if (item.userId === user?.id) {
+        investedSum += item.total || 0;
+      }
+    });
+    setTotalInvested(investedSum);
+  }, [valuesData, user]);
 
   const formattedTotalValue = totalValue.toLocaleString("en-US", {
     style: "currency",
@@ -154,7 +162,7 @@ const CurrentBalance = () => {
                   <CurrentBalanceItem
                     title="Total Invested"
                     description="The total amount of money you have invested in your account."
-                    value={sumCounts().toFixed(2)}
+                    value={(sumCounts() - totalInvested).toFixed(2).toString()}
                   />
                 </div>
               )}

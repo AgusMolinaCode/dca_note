@@ -56,7 +56,9 @@ const DataTransactionTable = ({
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Total Invested
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">Avg .Gain/Loss</th>
+                <th className="px-4 py-2 text-sm text-gray-400">
+                  Avg .Gain/Loss
+                </th>
                 {/* <th className="px-4 py-2 text-sm text-gray-400">Actions</th> */}
               </tr>
             </thead>
@@ -68,18 +70,23 @@ const DataTransactionTable = ({
 
                 const currentTotal =
                   amount *
-                  (averagePricesResult?.[transaction.crypto]?.average ?? 0);
+                  (isNaN(averagePricesResult?.[transaction.crypto]?.average)
+                    ? transaction.price
+                    : averagePricesResult[transaction.crypto].average);
 
                 const finalProfit = currentProfit - currentTotal;
+
                 const totalInvested =
                   amount *
-                  (averagePricesResult[transaction.crypto]?.average ?? 0);
+                  (isNaN(averagePricesResult[transaction.crypto]?.average)
+                    ? transaction.price
+                    : averagePricesResult[transaction.crypto].average);
 
-
-                
                 if (amount <= 0) {
                   return null;
                 }
+
+                console.log(averagePricesResult?.[transaction.crypto]?.average);
 
                 return (
                   <tr
@@ -109,18 +116,27 @@ const DataTransactionTable = ({
                         : "$ 0.00"}
                     </td>
                     <td className="px-4 py-2 font-semibold">
-                      {amount.toFixed(2)}
+                      {amount?.toFixed(2)}
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold  ${
+                      className={`px-4 py-2 font-semibold ${
                         (currentValue ?? 0) <
-                        (averagePricesResult?.[transaction.crypto]?.average ??
-                          0)
+                        (Number.isFinite(
+                          averagePricesResult?.[transaction.crypto]?.average
+                        )
+                          ? averagePricesResult[transaction.crypto].average
+                          : transaction.price)
                           ? "text-red-400"
                           : "text-green-400"
                       }`}
                     >
-                      $ {averagePricesResult?.[transaction.crypto]?.average.toFixed(2)}
+                      ${" "}
+                      {(Number.isFinite(
+                        averagePricesResult?.[transaction.crypto]?.average
+                      )
+                        ? averagePricesResult[transaction.crypto].average
+                        : transaction.price
+                      ).toFixed(2)}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
