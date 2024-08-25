@@ -56,11 +56,13 @@ const CurrentTodayProfitItem = ({
       let totalSum = 0;
 
       cryptoAmountsAndCrypto.forEach((item) => {
-        const open24HourValue =
-          data?.RAW[item.crypto as unknown as number].USD.CHANGEHOUR;
-        const amount = item.amount;
-        const product = open24HourValue * amount;
-        totalSum += product;
+        if (item.amount > 0) {
+          const open24HourValue =
+            data?.RAW[item.crypto as unknown as number].USD.CHANGEHOUR;
+          const amount = item.amount;
+          const product = open24HourValue * amount;
+          totalSum += product;
+        }
       });
 
       setCryptoAmountsFetch(totalSum);

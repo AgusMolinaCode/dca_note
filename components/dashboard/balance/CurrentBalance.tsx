@@ -1,12 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { loadTransactions, getMultipleCryptos, loadValues } from "@/app/api";
 import CurrentBalanceItem from "./CurrentBalanceItem";
 import { useUser } from "@clerk/clerk-react";
-import CurrentTodayProfitItem from "./CurrentTodayProfitItem";
 import CurrentPercentajeProfitItem from "./CurrentPercentajeProfitItem";
 import useCryptoCalculations from "@/hooks/useCryptoCalculations";
 
@@ -21,6 +19,8 @@ const CurrentBalance = () => {
   const [cryptoAmounts, setCryptoAmounts] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [totalInvested, setTotalInvested] = useState(0);
+  const [totalProfit, setTotalProfit] = useState(0);
+  const [totalLoss, setTotalLoss] = useState(0);
   const { sumCounts } = useCryptoCalculations();
 
   const { user } = useUser();
@@ -42,6 +42,11 @@ const CurrentBalance = () => {
     (item) => item.userId === user?.id
   );
   const allCryptos = dataUserId?.map((item) => item) || [];
+  const allPrices =
+    dataUserId
+      ?.filter((item) => item.imageUrl !== "/images/usdt.png")
+      .map((item) => item.price * item.amount) || [];
+  const totalPrices = allPrices.reduce((acc, price) => acc + price, 0);
 
   useEffect(() => {
     if (transactionsData) {
@@ -72,7 +77,7 @@ const CurrentBalance = () => {
   useEffect(() => {
     let sum = 0;
     dataUserId?.forEach((item) => {
-      if (cryptoPrices[item.crypto]) {
+      if (cryptoPrices[item.crypto] && item.amount > 0) {
         const value = item.amount * cryptoPrices[item.crypto]?.USD || 0;
         sum += value;
       }
@@ -82,12 +87,21 @@ const CurrentBalance = () => {
 
   useEffect(() => {
     let investedSum = 0;
+    let profitSum = 0;
+    let lossSum = 0;
     valuesData?.forEach((item) => {
       if (item.userId === user?.id) {
         investedSum += item.total || 0;
+        if (item.total > 0) {
+          profitSum += item.total;
+        } else {
+          lossSum += item.total;
+        }
       }
     });
     setTotalInvested(investedSum);
+    setTotalProfit(profitSum);
+    setTotalLoss(lossSum);
   }, [valuesData, user]);
 
   const formattedTotalValue = totalValue.toLocaleString("en-US", {
@@ -95,12 +109,27 @@ const CurrentBalance = () => {
     currency: "USD",
   });
 
-  const formattedProfitUnrealizedValue = totalValue - sumCounts();
+  const formattedProfitUnrealizedValue = totalValue - totalPrices;
   const formattedProfitUnrealized =
     formattedProfitUnrealizedValue.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
     });
+
+  const formattedTotalInvested = totalInvested.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
+  const formattedTotalProfit = totalProfit.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
+  const formattedTotalLoss = totalLoss.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   return (
     <div className="w-full">
@@ -140,13 +169,28 @@ const CurrentBalance = () => {
               ) : (
                 <div className="pt-2">
                   <CurrentBalanceItem
-                    title="Total Profit"
-                    description="The profit you have made from selling assets."
-                    value={totalInvested.toFixed(2)}
+                    title="Net Profit"
+                    description="The total profit minus the total loss."
+                    value={formattedTotalInvested.toString()}
+                    classNameValue={`text-[18px] py-[0.08rem] px-2 rounded-lg ${
+                      totalInvested > 0
+                        ? "text-green-300 bg-green-300/20"
+                        : "text-red-300 bg-red-300/20"
+                    }`}
                   />
-                  <CurrentTodayProfitItem
-                    totalValue={totalValue}
-                    allCryptos={allCryptos}
+
+                  <CurrentBalanceItem
+                    title="Total Profit"
+                    description="The total profit you have made from selling assets."
+                    value={formattedTotalProfit}
+                    classNameValue="text-green-300 text-[14px] bg-green-300/20 py-[0.08rem] px-2 rounded-lg"
+                  />
+
+                  <CurrentBalanceItem
+                    title="Total Loss"
+                    description="The total loss you have made from selling assets."
+                    value={formattedTotalLoss}
+                    classNameValue="text-red-300 text-[14px] bg-red-300/20 py-[0.08rem] px-2 rounded-lg"
                   />
 
                   <CurrentBalanceItem
@@ -159,10 +203,11 @@ const CurrentBalance = () => {
                         : "text-red-500"
                     }
                   />
+
                   <CurrentBalanceItem
                     title="Total Invested"
                     description="The total amount of money you have invested in your account."
-                    value={(sumCounts() - totalInvested).toFixed(2).toString()}
+                    value={totalPrices.toFixed(2)}
                   />
                 </div>
               )}

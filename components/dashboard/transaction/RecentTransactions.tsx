@@ -86,12 +86,18 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
           <h2 className="text-lg font-semibold text-gray-500">
             Recent Transactions
           </h2>
+          <button className="group rounded-xl relative inline-flex h-8 items-center justify-center overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-700 px-2 md:px-4 font-medium text-neutral-200 transition hover:scale-110">
+            <span>Sell Transactions</span>
+            <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
+              <div className="relative h-full w-8 bg-white/20"></div>
+            </div>
+          </button>
         </div>
 
         {groupedTransactions && Object.keys(groupedTransactions).length > 0 ? (
           Object.keys(groupedTransactions).map((date) => (
             <div key={date}>
-              <h3 className="text-lg font-semibold pt-2 text-gray-100 border-t border-gray-700">
+              <h3 className="text-lg font-semibold mt-2 text-gray-100 border-t border-gray-700">
                 {date}
               </h3>
               <table className="table-auto w-full">
@@ -118,68 +124,92 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody className="">
                   {groupedTransactions[date].map((transaction: Transaction) => {
                     const result = value[transaction.crypto]
                       ? value[transaction.crypto] * transaction.amount -
                         transaction.price * transaction.amount
                       : 0;
 
-                    const sellResult = value[transaction.crypto]
-                      ? transaction.price * transaction.amount -
-                        value[transaction.crypto] * transaction.amount
-                      : 0;
+                    const sellResult = transaction.total - transaction.price;
 
                     return (
-                      <tr key={transaction.id} className="text-left">
-                        <td className="flex gap-1 items-center my-2">
-                          <div className="relative">
+                      <tr key={transaction.id} className="">
+                        <td>
+                          <div className="flex justify-center mx-auto gap-1 py-2">
+                            <div className="relative">
+                              {transaction.imageUrl === "/images/usdt.png" ? (
+                                <Image
+                                  src={transaction.imageUrl}
+                                  alt={`${transaction.crypto} sell`}
+                                  width={32}
+                                  height={32}
+                                  className="rounded-full bg-zinc-900"
+                                />
+                              ) : (
+                                <Image
+                                  src={`https://cryptocompare.com/${transaction.imageUrl}`}
+                                  alt={transaction.crypto}
+                                  width={32}
+                                  height={32}
+                                  className="rounded-full bg-zinc-900 p-[3px]"
+                                />
+                              )}
+                              <CircleDollarSignIcon
+                                size={24}
+                                className="text-green-400 bg-zinc-900 rounded-full  absolute bottom-[-11px] left-3 p-[3px]"
+                              />
+                            </div>
+                            <p className="px-4 py-2 text-md font-semibold text-gray-200">
+                              {transaction.crypto}
+                            </p>
                             {transaction.imageUrl === "/images/usdt.png" ? (
-                              <Image
-                                src={transaction.imageUrl}
-                                alt={`${transaction.crypto} sell`}
-                                width={32}
-                                height={32}
-                                className="rounded-full bg-zinc-900"
-                              />
+                              <p className="bg-red-500/10 border-[0.2px] border-red-500 text-red-300 px-2 my-auto text-xs rounded-xl">
+                                sell
+                              </p>
                             ) : (
-                              <Image
-                                src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                                alt={transaction.crypto}
-                                width={32}
-                                height={32}
-                                className="rounded-full bg-zinc-900 p-[3px]"
-                              />
+                              <p className="bg-green-500/10 border-[0.2px] border-green-500 text-green-300 px-2 my-auto text-xs rounded-xl">
+                                buy
+                              </p>
                             )}
-                            <CircleDollarSignIcon
-                              size={24}
-                              className="text-green-400 bg-zinc-900 rounded-full  absolute bottom-[-11px] left-3 p-[3px]"
-                            />
                           </div>
-                          <p className="px-4 py-2 text-md font-semibold text-gray-200">
-                            {transaction.crypto}
-                          </p>
-                          {transaction.imageUrl === "/images/usdt.png" ? (
-                            <p className="bg-red-500/10 border-[0.2px] border-red-500 text-red-300 px-2 text-sm rounded-xl">
-                              sell
-                            </p>
-                          ) : (
-                            <p className="bg-green-500/10 border-[0.2px] border-green-500 text-green-300 px-2 text-sm rounded-xl">
-                              buy
-                            </p>
-                          )}
                         </td>
                         <td className="px-4 py-2 font-semibold w-[8rem]">
                           {transaction.amount.toFixed(2)}
                         </td>
                         <td className="px-4 py-2 font-semibold w-[8rem]">
-                          $ {transaction.price.toFixed(2)}
+                          <div className="flex gap-2 items-center justify-start">
+                            <p>
+                              $
+                              {transaction.imageUrl === "/images/usdt.png"
+                                ? transaction.total.toFixed(2)
+                                : transaction.price.toFixed(2)}
+                            </p>
+                            <p>
+                              {transaction.imageUrl === "/images/usdt.png" && (
+                                <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                                  Sell Price
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </td>
                         <td className="px-4 py-2 font-semibold w-[8rem]">
-                          $
-                          {value[transaction.crypto]
-                            ? value[transaction.crypto].toFixed(2)
-                            : "0.00"}
+                          <div className="flex gap-2 items-center justify-start">
+                            <p>
+                              $
+                              {transaction.imageUrl === "/images/usdt.png"
+                                ? transaction.price.toFixed(2)
+                                : value[transaction.crypto]?.toFixed(2)}
+                            </p>
+                            <p>
+                              {transaction.imageUrl === "/images/usdt.png" && (
+                                <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                                  Buy Price
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </td>
                         <td
                           className={`px-4 py-2 font-semibold w-[8rem] ${
@@ -193,25 +223,26 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                           }`}
                         >
                           <div className="flex gap-2 items-center justify-start">
-
-                          <p>
-                            {transaction.imageUrl === "/images/usdt.png"
-                              ? sellResult.toFixed(2)
-                              : result.toFixed(2)}
-                          </p>
-                          <p className="">
-                            {transaction.imageUrl === "/images/usdt.png" &&
-                              (sellResult > 0 ? (
-                                <span className="text-gray-300 text-xs bg-green-400/20 py-[0.15rem] px-2 rounded-xl">Profit</span>
-                              ) : (
-                                <span className="text-gray-300 text-xs bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
-                                  No Profit
-                                </span>
-                              ))}
-                          </p>
+                            <p>
+                              {transaction.imageUrl === "/images/usdt.png"
+                                ? sellResult.toFixed(2)
+                                : result.toFixed(2)}
+                            </p>
+                            <p>
+                              {transaction.imageUrl === "/images/usdt.png" &&
+                                (sellResult > 0 ? (
+                                  <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                                    Profit
+                                  </span>
+                                ) : (
+                                  <span className="text-gray-300 text-[0.60rem] bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
+                                    No Profit
+                                  </span>
+                                ))}
+                            </p>
                           </div>
                         </td>
-                        <td className="flex items-center py-2 justify-end mx-auto w-[8rem]">
+                        <td className="flex items-center justify-end mx-auto w-[8rem] gap-1 py-2">
                           <HoverCard closeDelay={10} openDelay={10}>
                             <HoverCardTrigger>
                               <SellAssetModal

@@ -1,12 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import { TokenUSDT } from "@token-icons/react";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import SellAssetModal from "../modals/SellAssetModal";
 
 const DataTransactionTable = ({
   groupedTransactionsArray,
@@ -85,8 +79,6 @@ const DataTransactionTable = ({
                 if (amount <= 0) {
                   return null;
                 }
-
-                console.log(averagePricesResult?.[transaction.crypto]?.average);
 
                 return (
                   <tr

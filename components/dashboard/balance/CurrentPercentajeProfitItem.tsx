@@ -59,20 +59,25 @@ const CurrentPercentajeProfitItem = ({
       let totalLow24HourValue = 0;
 
       cryptoAmountsAndCrypto.forEach((item) => {
-        const low24HourValue = data?.RAW[item.crypto as any].USD.LOW24HOUR;
-        const amountOfCrypto = item.amount;
-        const product = low24HourValue * amountOfCrypto;
-        totalLow24HourValue += product;
+        if (item.amount > 0) {
+          const low24HourValue = data?.RAW[item.crypto as any].USD.LOW24HOUR;
+          const amountOfCrypto = item.amount;
+          const product = low24HourValue * amountOfCrypto;
+          totalLow24HourValue += product;
+        }
       });
       setLow24HourValue(totalLow24HourValue);
+
       let totalHigh24HourValue = 0;
 
       cryptoAmountsAndCrypto.forEach((item) => {
-        const high24HourValue =
-          data?.RAW[item.crypto as unknown as number].USD.HIGH24HOUR;
-        const amount = item.amount;
-        const product = high24HourValue * amount;
-        totalHigh24HourValue += product;
+        if (item.amount > 0) {
+          const high24HourValue =
+            data?.RAW[item.crypto as unknown as number].USD.HIGH24HOUR;
+          const amount = item.amount;
+          const product = high24HourValue * amount;
+          totalHigh24HourValue += product;
+        }
       });
       setHigh24HourValue(totalHigh24HourValue);
       setCryptoPrices(data);
@@ -80,11 +85,13 @@ const CurrentPercentajeProfitItem = ({
       let totalPercentage24HourValue = 0;
 
       cryptoAmountsAndCrypto.forEach((item) => {
-        const high24HourValue =
-          data?.RAW[item.crypto as unknown as number].USD.CHANGEPCT24HOUR;
-        const amount = item.amount;
-        const product = high24HourValue * amount;
-        totalHigh24HourValue += product;
+        if (item.amount > 0) {
+          const high24HourValue =
+            data?.RAW[item.crypto as unknown as number].USD.CHANGEPCT24HOUR;
+          const amount = item.amount;
+          const product = high24HourValue * amount;
+          totalPercentage24HourValue += product;
+        }
       });
 
       setPercentage24HourValue(totalPercentage24HourValue);

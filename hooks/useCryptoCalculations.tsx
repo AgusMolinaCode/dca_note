@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { loadTransactions } from "@/app/api";
@@ -12,7 +11,7 @@ type CryptoPrices = {
 
 const useCryptoCalculations = () => {
   const [cryptoPrices, setCryptoPrices] = useState<CryptoPrices>({});
-  const [userCryptoAmounts, setUserCryptoAmounts] = useState({});
+  const [userCryptoAmounts, setUserCryptoAmounts] = useState<{ [key: string]: number }>({});
   const [averagePrices, setAveragePrices] = useState<{ [key: string]: { total: number; count: number; average: number } }>({});
 
   const { user } = useUser();
@@ -55,11 +54,55 @@ const useCryptoCalculations = () => {
     return Object.values(averagePrices).reduce((sum, { total }) => sum + total, 0);
   };
 
+  // Hook para obtener el amount
+  const getAmount = (crypto: string) => {
+    return userCryptoAmounts[crypto] || 0;
+  };
+
+  // Hook para obtener el currentValue
+  const getCurrentValue = (crypto: string) => {
+    return cryptoPrices[crypto]?.USD || 0;
+  };
+
+  // Hook para obtener el currentProfit
+  const getCurrentProfit = (crypto: string) => {
+    const amount = getAmount(crypto);
+    const currentValue = getCurrentValue(crypto);
+    return amount * currentValue;
+  };
+
+  // Hook para obtener el currentTotal
+  const getCurrentTotal = (crypto: string) => {
+    const amount = getAmount(crypto);
+    const averagePrice = averagePrices[crypto]?.average || 0;
+    return amount * averagePrice;
+  };
+
+  // Hook para obtener el finalProfit
+  const getFinalProfit = (crypto: string) => {
+    const currentProfit = getCurrentProfit(crypto);
+    const currentTotal = getCurrentTotal(crypto);
+    return currentProfit - currentTotal;
+  };
+
+  // Hook para obtener el totalInvested
+  const getTotalInvested = (crypto: string) => {
+    const amount = getAmount(crypto);
+    const averagePrice = averagePrices[crypto]?.average || 0;
+    return amount * averagePrice;
+  };
+
   return {
     userCryptoAmounts,
     averagePrices,
     sumCounts,
     isLoading,
+    getAmount,
+    getCurrentValue,
+    getCurrentProfit,
+    getCurrentTotal,
+    getFinalProfit,
+    getTotalInvested,
   };
 };
 
