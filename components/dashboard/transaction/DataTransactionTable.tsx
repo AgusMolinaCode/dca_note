@@ -64,19 +64,19 @@ const DataTransactionTable = ({
 
                 const currentTotal =
                   amount *
-                  (isNaN(averagePricesResult?.[transaction.crypto]?.average)
-                    ? transaction.price
-                    : averagePricesResult[transaction.crypto].average);
+                  (Number.isFinite(averagePricesResult?.[transaction.crypto]?.average)
+                    ? averagePricesResult[transaction.crypto].average
+                    : transaction.price);
 
                 const finalProfit = currentProfit - currentTotal;
 
                 const totalInvested =
                   amount *
-                  (isNaN(averagePricesResult[transaction.crypto]?.average)
-                    ? transaction.price
-                    : averagePricesResult[transaction.crypto].average);
+                  (Number.isFinite(averagePricesResult[transaction.crypto]?.average)
+                    ? averagePricesResult[transaction.crypto].average
+                    : transaction.price);
 
-                if (amount <= 0) {
+                if (amount <= 0 || amount === undefined || isNaN(amount)) {
                   return null;
                 }
 
@@ -123,11 +123,9 @@ const DataTransactionTable = ({
                       }`}
                     >
                       ${" "}
-                      {(Number.isFinite(
-                        averagePricesResult?.[transaction.crypto]?.average
-                      )
-                        ? averagePricesResult[transaction.crypto].average
-                        : transaction.price
+                      {(Number.isFinite(Number(averagePricesResult?.[transaction.crypto]?.average))
+                        ? Number(averagePricesResult[transaction.crypto].average)
+                        : Number(transaction.price)
                       ).toFixed(2)}
                     </td>
                     <td

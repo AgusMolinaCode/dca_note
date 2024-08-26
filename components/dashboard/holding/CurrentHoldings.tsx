@@ -23,98 +23,31 @@ export function CurrentHoldings() {
   });
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
-  const totals = dataUserId?.map((item) => item.total) ?? [];
-  const totalSum = (totals ?? []).reduce((acc, curr) => acc + curr, 0);
+  // creamos una constante para separar los amounts de las transacciones no repetir item.crypto
 
-  const [activeMonth, setActiveMonth] = React.useState("");
-
-  const groupedTotals = dataUserId?.reduce((acc, transaction) => {
-    if (!acc[transaction.crypto]) {
-      acc[transaction.crypto] = 0;
+    const groupedAmounts = dataUserId?.reduce((acc, item) => {
+    if (item.amount > 0) { // Solo sumar si el amount es positivo
+      const amountWithPrice = item.amount * item.price; // Multiplicar amount por item.price
+      if (acc[item.crypto]) {
+        acc[item.crypto] += amountWithPrice;
+      } else {
+        acc[item.crypto] = amountWithPrice;
+      }
     }
-    acc[transaction.crypto] += transaction.total;
     return acc;
   }, {} as { [key: string]: number });
+  
+  console.log("groupedAmounts", groupedAmounts);
+  
 
-  const averagePrices = dataUserId?.reduce((acc, transaction) => {
-    if (!acc[transaction.crypto]) {
-      acc[transaction.crypto] = { total: 0, count: 0 };
-    }
-    acc[transaction.crypto].total += transaction.price;
-    acc[transaction.crypto].count += 1;
-    return acc;
-  }, {} as { [key: string]: { total: number; count: number } });
-
-  const averagePricesResult = averagePrices
-    ? Object.keys(averagePrices).reduce((acc, crypto) => {
-        acc[crypto] = averagePrices[crypto].total / averagePrices[crypto].count;
-        return acc;
-      }, {} as { [key: string]: number })
-    : ({} as { [key: string]: number });
-
-  const groupedAmounts = dataUserId?.reduce((acc, transaction) => {
-    if (!acc[transaction.crypto]) {
-      acc[transaction.crypto] = 0;
-    }
-    acc[transaction.crypto] += transaction.amount;
-    return acc;
-  }, {} as { [key: string]: number });
-
-  const groupedTransactions = dataUserId?.reduce((acc, transaction) => {
-    if (!acc[transaction.crypto]) {
-      acc[transaction.crypto] = { ...transaction, total: 0 };
-    }
-    acc[transaction.crypto].total += transaction.price;
-    return acc;
-  }, {} as { [key: string]: Transaction & { total: number } });
-
-  const groupedTransactionsArray: ExtendedTransaction[] = groupedTransactions
-    ? Object.values(groupedTransactions).map((transaction) => {
-        const fullAmounts =
-          groupedAmounts[transaction.crypto] *
-          averagePricesResult?.[transaction.crypto];
-        return { ...transaction, fullAmounts } as ExtendedTransaction;
-      })
-    : [];
-
-  React.useEffect(() => {
-    if (data) {
-      const highestAmountItem = data.reduce((prev, current) => {
-        return prev.total > current.total ? prev : current;
-      }, data[0]);
-      setActiveMonth(highestAmountItem?.crypto);
-    }
-  }, [data]);
-
-  const totalsByCrypto: { [key: string]: number } = {};
-
-  dataUserId?.forEach((item) => {
-    if (totalsByCrypto[item.crypto]) {
-      totalsByCrypto[item.crypto] += item.total;
-    } else {
-      totalsByCrypto[item.crypto] = item.total;
-    }
-  });
-
-  // Calcular los porcentajes y ordenar de mayor a menor
-  const sortedTransactionsArray = groupedTransactionsArray
-    .map((transaction) => {
-      const percentage =
-        ((groupedAmounts[transaction.crypto] *
-          averagePricesResult?.[transaction.crypto]) /
-          totalSum) *
-        100;
-      return { ...transaction, percentage };
-    })
-    .filter((transaction) => transaction.percentage > 0)
-    .sort((a, b) => b.percentage - a.percentage);
+  
 
   return (
     <Card className="flex flex-col">
       <CardHeaderHoldings />
       <CardContent className="">
         <ScrollArea className="max-h-[12rem]">
-          {dataUserId && dataUserId.length > 0 ? (
+          {/* {dataUserId && dataUserId.length > 0 ? (
             <div className="grid grid-cols-2 gap-4">
               {sortedTransactionsArray.map((transaction, index) => (
                 <div
@@ -150,7 +83,7 @@ export function CurrentHoldings() {
                 No current holdings loaded yet.
               </p>
             </div>
-          )}
+          )} */}
         </ScrollArea>
       </CardContent>
     </Card>
