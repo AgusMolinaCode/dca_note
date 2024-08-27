@@ -80,7 +80,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     resolver: zodResolver(sellSchema),
     defaultValues: {
       price: criptoPrice,
-      total: transaction.total,
     },
   });
 
@@ -90,18 +89,10 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       crypto: transaction.crypto,
       amount: values.amount,
       price: transaction.price,
-      total: values.total,
+      total: profit,
       imageUrl: "/images/usdt.png",
     };
-
-    const usdtData = {
-      userId: transaction.userId,
-      crypto: "USDT",
-      amount: values.total,
-      price: 1,
-      total: values.total,
-      imageUrl: "/media/37746338/usdt.png",
-    };
+    console.log(sellData);
 
     const valueData = {
       userId: transaction.userId,
@@ -147,21 +138,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       return;
     }
 
-    // try {
-    //   const response = await fetch(LOAD_TRANSACTIONS, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(usdtData),
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error("Something went wrong with USDT data");
-    //   }
-    // } catch (error) {
-    //   console.error("Failed to add USDT transaction", error);
-    // }
     // Actualizar el amount restante
     const remainingAmount = transaction.amount - Math.abs(values.amount);
     const updateData = {

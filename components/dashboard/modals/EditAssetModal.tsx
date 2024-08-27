@@ -70,33 +70,9 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
         throw new Error("Something went wrong");
       }
 
-      // Si la transacción es una venta parcial, realizar una solicitud POST para crear una nueva transacción en USDT
-      if (transaction.crypto !== "USDT" && values.amount < transaction.amount) {
-        const usdtAmount = values.amount * values.price; // Calcular el valor en USDT
-
-        const usdtData = {
-          userId: transaction.userId,
-          amount: usdtAmount,
-          price: 1, // El precio de USDT es 1
-          total: usdtAmount,
-          crypto: "USDT",
-          imageUrl: transaction.imageUrl,
-        };
-
-        const usdtResponse = await fetch(`${LOAD_TRANSACTIONS}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(usdtData),
-        });
-
-        if (!usdtResponse.ok) {
-          throw new Error("Failed to create USDT transaction");
-        }
-      }
+      return response.json();
     } catch (error) {
-      console.error("Failed to edit transaction", error);
+      console.error(error);
     }
   };
 
@@ -190,7 +166,7 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
                               id="amount"
                               type="number"
                               onChange={handleAmountChange}
-                              placeholder={transaction.amount.toString()}
+                              placeholder={transaction.amount.toFixed(2)}
                               className="col-span-3 placeholder:text-gray-500 rounded-xl border-gray-500 text-white font-bold placeholder:text-right"
                             />
                           </div>

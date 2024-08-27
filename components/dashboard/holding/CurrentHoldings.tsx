@@ -23,55 +23,60 @@ export function CurrentHoldings() {
   });
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
-  // creamos una constante para separar los amounts de las transacciones no repetir item.crypto
 
-    const groupedAmounts = dataUserId?.reduce((acc, item) => {
-    if (item.amount > 0) { // Solo sumar si el amount es positivo
-      const amountWithPrice = item.amount * item.price; // Multiplicar amount por item.price
+  const groupedAmounts = dataUserId?.reduce((acc, item) => {
+    if (item.amount > 0) {
+      const amountWithPrice = item.amount * item.price;
       if (acc[item.crypto]) {
-        acc[item.crypto] += amountWithPrice;
+        acc[item.crypto].amountWithPrice += amountWithPrice;
       } else {
-        acc[item.crypto] = amountWithPrice;
+        acc[item.crypto] = {
+          amountWithPrice,
+          imageUrl: item.imageUrl,
+        };
       }
     }
     return acc;
-  }, {} as { [key: string]: number });
-  
-  console.log("groupedAmounts", groupedAmounts);
-  
+  }, {} as { [key: string]: { amountWithPrice: number; imageUrl: string } });
 
-  
+  // Calcular el total de groupedAmounts
+  const totalAmount = Object.values(groupedAmounts).reduce((acc, value) => acc + value.amountWithPrice, 0);
+
+  // Calcular el porcentaje de cada criptomoneda
+  const percentages = Object.keys(groupedAmounts).reduce((acc, key) => {
+    acc[key] = (groupedAmounts[key].amountWithPrice / totalAmount) * 100;
+    return acc;
+  }, {} as { [key: string]: number });
+
+  // Ordenar las criptomonedas por porcentaje de mayor a menor
+  const sortedCryptos = Object.keys(groupedAmounts).sort((a, b) => percentages[b] - percentages[a]);
 
   return (
     <Card className="flex flex-col">
       <CardHeaderHoldings />
       <CardContent className="">
         <ScrollArea className="max-h-[12rem]">
-          {/* {dataUserId && dataUserId.length > 0 ? (
+          {dataUserId && dataUserId.length > 0 ? (
             <div className="grid grid-cols-2 gap-4">
-              {sortedTransactionsArray.map((transaction, index) => (
+              {sortedCryptos.map((crypto, index) => (
                 <div
                   key={index}
                   className="flex gap-2 justify-between items-center p-3 bg-gray-700/90 rounded-xl"
                 >
-                  <div className="flex items-center ">
+                  <div className="flex items-center">
                     <div className="flex items-center">
-                      <div className="flex items-center">
-                        <Image
-                          src={`https://cryptocompare.com/${transaction.imageUrl}`}
-                          width={30}
-                          height={30}
-                          alt={transaction.crypto}
-                        />
-                        <p className="text-sm text-gray-400">
-                          {transaction.crypto}
-                        </p>
-                      </div>
+                      <Image
+                        src={`https://cryptocompare.com/${groupedAmounts[crypto].imageUrl}`}
+                        width={30}
+                        height={30}
+                        alt={crypto}
+                      />
+                      <p className="text-sm text-gray-400">{crypto}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <p className="text-white font-semibold text-md">
-                      {transaction.percentage.toFixed(2)}%
+                    <p className="text-white font-semibold text-sm">
+                      {percentages[crypto].toFixed(2)}%
                     </p>
                   </div>
                 </div>
@@ -83,7 +88,7 @@ export function CurrentHoldings() {
                 No current holdings loaded yet.
               </p>
             </div>
-          )} */}
+          )}
         </ScrollArea>
       </CardContent>
     </Card>

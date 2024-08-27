@@ -110,7 +110,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                       Amount
                     </th>
                     <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
-                      Price
+                      Buy Price
                     </th>
                     <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
                       Current Price
@@ -131,7 +131,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         transaction.price * transaction.amount
                       : 0;
 
-                    const sellResult = transaction.total - transaction.price;
+                    const sellResult = transaction.total
 
                     return (
                       <tr key={transaction.id} className="">
@@ -182,8 +182,8 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                             <p>
                               $
                               {transaction.imageUrl === "/images/usdt.png"
-                                ? transaction.total.toFixed(2)
-                                : transaction.price.toFixed(2)}
+                                ? (transaction.total * transaction.amount).toFixed(2)
+                                : (transaction.price * transaction.amount).toFixed(2)} 
                             </p>
                             <p>
                               {transaction.imageUrl === "/images/usdt.png" && (
