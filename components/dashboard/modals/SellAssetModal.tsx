@@ -13,7 +13,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DollarSign } from "lucide-react";
 import Image from "next/image";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -88,8 +87,9 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       userId: transaction.userId,
       crypto: transaction.crypto,
       amount: values.amount,
-      price: transaction.price,
-      total: profit,
+      price: values.price,
+      total: values.total,
+      sellTotal: profit,
       imageUrl: "/images/usdt.png",
     };
     console.log(sellData);

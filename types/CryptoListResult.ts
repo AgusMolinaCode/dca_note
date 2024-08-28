@@ -117,6 +117,7 @@ interface Transaction {
   amount: number;
   price: number;
   total: number;
+  sellTotal: number;
   imageUrl: string;
   createdAt: string;
 }
@@ -128,6 +129,7 @@ type TransactionProps = {
     crypto: string;
     amount: number;
     price: number;
+    sellTotal: number;
     total: number;
     imageUrl: string;
   };

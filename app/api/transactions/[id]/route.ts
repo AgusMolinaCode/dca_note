@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function PUT(request: Request, { params }: Params) {
   try {
-    const { amount, price, total, crypto, imageUrl } = await request.json();
+    const { amount, price, total, crypto, imageUrl, sellTotal } = await request.json();
 
     const updatedTransaction = await prisma.transaction.update({
       where: {
@@ -44,6 +44,7 @@ export async function PUT(request: Request, { params }: Params) {
         total,
         crypto,
         imageUrl,
+        sellTotal,
       },
     });
 
@@ -98,5 +99,3 @@ export async function DELETE(request: Request, { params }: Params) {
     }
   }
 }
-
-

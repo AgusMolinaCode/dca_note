@@ -15,7 +15,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { amount, price, total, crypto, imageUrl, userId } =
+    const { amount, price, total, crypto, imageUrl, userId, sellTotal } =
       await request.json();
 
     const newTransaction = await prisma.transaction.create({
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
         total,
         crypto,
         imageUrl,
+        sellTotal,
       },
     });
 

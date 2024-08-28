@@ -110,7 +110,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                       Amount
                     </th>
                     <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
-                      Buy Price
+                      Price
                     </th>
                     <th className="px-4 py-2 text-sm text-gray-400 w-[8rem]">
                       Current Price
@@ -131,7 +131,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         transaction.price * transaction.amount
                       : 0;
 
-                    const sellResult = transaction.total
+                    const sellResult = transaction.sellTotal;
 
                     return (
                       <tr key={transaction.id} className="">
@@ -179,16 +179,15 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         </td>
                         <td className="px-4 py-2 font-semibold w-[8rem]">
                           <div className="flex gap-2 items-center justify-start">
+                            <p>${transaction.price.toFixed(2)}</p>
                             <p>
-                              $
-                              {transaction.imageUrl === "/images/usdt.png"
-                                ? (transaction.total * transaction.amount).toFixed(2)
-                                : (transaction.price * transaction.amount).toFixed(2)} 
-                            </p>
-                            <p>
-                              {transaction.imageUrl === "/images/usdt.png" && (
+                              {transaction.imageUrl === "/images/usdt.png" ? (
                                 <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
                                   Sell Price
+                                </span>
+                              ) : (
+                                <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                                  Buy Price
                                 </span>
                               )}
                             </p>
@@ -196,19 +195,14 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                         </td>
                         <td className="px-4 py-2 font-semibold w-[8rem]">
                           <div className="flex gap-2 items-center justify-start">
-                            <p>
-                              $
-                              {transaction.imageUrl === "/images/usdt.png"
-                                ? transaction.price.toFixed(2)
-                                : value[transaction.crypto]?.toFixed(2)}
-                            </p>
-                            <p>
+                            <p>${value[transaction.crypto]?.toFixed(2)}</p>
+                            {/* <p>
                               {transaction.imageUrl === "/images/usdt.png" && (
                                 <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
                                   Buy Price
                                 </span>
                               )}
-                            </p>
+                            </p> */}
                           </div>
                         </td>
                         <td
