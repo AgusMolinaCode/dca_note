@@ -18,7 +18,7 @@ const CurrentTransactions = () => {
         <DataTransaction data={data} />
       </div>
       <div className="dark:bg-gray-800 bg-gray-600 rounded-xl">
-        <RecentTransactions data={data}/>
+        <RecentTransactions data={data} />
       </div>
     </div>
   );

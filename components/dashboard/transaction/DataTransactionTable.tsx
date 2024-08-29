@@ -8,7 +8,6 @@ const DataTransactionTable = ({
   averagePricesResult,
   profitValue,
   percentageValue,
-  sortedGroupedTotals,
   handleRowClick,
   groupedAmounts,
 }: {
@@ -53,7 +52,6 @@ const DataTransactionTable = ({
                 <th className="px-4 py-2 text-sm text-gray-400">
                   Avg .Gain/Loss
                 </th>
-                {/* <th className="px-4 py-2 text-sm text-gray-400">Actions</th> */}
               </tr>
             </thead>
             <tbody className="dark:bg-gray-800 bg-gray-400">
@@ -64,7 +62,9 @@ const DataTransactionTable = ({
 
                 const currentTotal =
                   amount *
-                  (Number.isFinite(averagePricesResult?.[transaction.crypto]?.average)
+                  (Number.isFinite(
+                    averagePricesResult?.[transaction.crypto]?.average
+                  )
                     ? averagePricesResult[transaction.crypto].average
                     : transaction.price);
 
@@ -72,7 +72,9 @@ const DataTransactionTable = ({
 
                 const totalInvested =
                   amount *
-                  (Number.isFinite(averagePricesResult[transaction.crypto]?.average)
+                  (Number.isFinite(
+                    averagePricesResult[transaction.crypto]?.average
+                  )
                     ? averagePricesResult[transaction.crypto].average
                     : transaction.price);
 
@@ -123,8 +125,14 @@ const DataTransactionTable = ({
                       }`}
                     >
                       ${" "}
-                      {(Number.isFinite(Number(averagePricesResult?.[transaction.crypto]?.average))
-                        ? Number(averagePricesResult[transaction.crypto].average)
+                      {(Number.isFinite(
+                        Number(
+                          averagePricesResult?.[transaction.crypto]?.average
+                        )
+                      )
+                        ? Number(
+                            averagePricesResult[transaction.crypto].average
+                          )
                         : Number(transaction.price)
                       ).toFixed(2)}
                     </td>
@@ -168,25 +176,6 @@ const DataTransactionTable = ({
                     >
                       ${finalProfit.toFixed(2)}
                     </td>
-                    {/* <td>
-                      <HoverCard>
-                        <HoverCardTrigger>
-                          {transaction.amount < 0 ? null : (
-                            <SellAssetModal
-                              amount={amount}
-                              transaction={transaction}
-                              criptoPrice={null}
-                              finalProfit={finalProfit}
-                            />
-                          )}
-                        </HoverCardTrigger>
-                        {transaction.amount < 0 ? null : (
-                          <HoverCardContent className="w-34 text-center text-gray-400 text-sm">
-                            Sell transaction
-                          </HoverCardContent>
-                        )}
-                      </HoverCard>
-                    </td> */}
                   </tr>
                 );
               })}
