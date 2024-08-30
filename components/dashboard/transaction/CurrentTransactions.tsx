@@ -20,6 +20,9 @@ const CurrentTransactions = () => {
       <div className="dark:bg-gray-800 bg-gray-600 rounded-xl">
         <RecentTransactions data={data} />
       </div>
+      <div className="bg-blue-400 w-full h-[20rem]">
+
+      </div>
     </div>
   );
 };
