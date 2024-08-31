@@ -43,3 +43,9 @@ export const sellSchema = z.object({
     .min(0, { message: "The 'price' must be greater than 0." }),
   total: z.number(),
 });
+
+export const noteSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  userId: z.string(),
+});

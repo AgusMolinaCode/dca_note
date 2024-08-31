@@ -1,7 +1,7 @@
 "use client";
 
 import { PlusCircle } from "lucide-react";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -26,35 +26,65 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { noteSchema } from "@/lib/validator";
+import { useUser } from "@clerk/clerk-react";
+import { LOAD_NOTES } from "@/app/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 );
 
-const formSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-});
-
 const CurrentNotes = () => {
   const [open, setOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+  const { user } = useUser();
 
   const truncateText = (text: string, length: number) => {
     return text.length > length ? text.substring(0, length) + "..." : text;
   };
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof noteSchema>>({
+    resolver: zodResolver(noteSchema),
     defaultValues: {
       title: "",
       description: "",
+      userId: user?.id || "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setOpen(false);
-  }
+  const addNotes = async (values: z.infer<typeof noteSchema>) => {
+    const noteData = {
+      userId: user?.id,
+      title: values.title,
+      description: values.description,
+    };
+
+    try {
+      const response = await fetch(LOAD_NOTES, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(noteData),
+      });
+      if (response.ok) {
+        console.log("Note added successfully");
+      }
+      setOpen(false);
+    } catch (error) {
+      console.error("Failed to add transaction", error);
+    }
+  };
+
+  const mutation = useMutation({
+    mutationFn: addNotes,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
+  });
+
   return (
     <div className="bg-card text-card-foreground shadow-sm flex flex-col w-full">
       <div className="flex justify-between items-center pb-2">
@@ -70,7 +100,11 @@ const CurrentNotes = () => {
               </DialogTitle>
               <DialogDescription className="dark:text-white text-black">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <form
+                    onSubmit={form.handleSubmit((values) =>
+                      mutation.mutate(values)
+                    )}
+                  >
                     <FormField
                       name="title"
                       render={({ field }) => (
