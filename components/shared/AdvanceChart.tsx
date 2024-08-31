@@ -1,6 +1,6 @@
 import CurrentBalance from "../dashboard/balance/CurrentBalance";
 import { CurrentHoldings } from "../dashboard/holding/CurrentHoldings";
-import CurrentNotes from "../dashboard/CurrentNotes";
+import CurrentNotes from "../dashboard/notes/CurrentNotes";
 import CurrentPerformance from "../dashboard/performance/CurrentPerformance";
 import CurrentTransactions from "../dashboard/transaction/CurrentTransactions";
 

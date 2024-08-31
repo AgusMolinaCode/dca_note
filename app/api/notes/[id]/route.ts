@@ -10,19 +10,19 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const totalValueId = await prisma.totalValue.findUnique({
+    const totalNoteId = await prisma.totalNotes.findUnique({
       where: {
         id: Number(params.id),
       },
     });
 
-    if (!totalValueId) {
+    if (!totalNoteId) {
       return NextResponse.json(
-        { message: "Value not found" },
+        { message: "Note not found" },
         { status: 404 }
       );
     }
-    return NextResponse.json(totalValueId);
+    return NextResponse.json(totalNoteId);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });
@@ -32,34 +32,35 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function PUT(request: Request, { params }: Params) {
   try {
-    const { total, userId } = await request.json();
+    const { title, description, userId } = await request.json();
 
-    const updatedTotalValue = await prisma.totalValue.update({
+    const updatedTotalNote = await prisma.totalNotes.update({
       where: {
         id: Number(params.id),
       },
       data: {
-        total,
-        userId
+        title,
+        description,
+        userId,
       },
     });
 
-    if (!updatedTotalValue) {
+    if (!updatedTotalNote) {
       return NextResponse.json(
-        { message: "Value not found" },
+        { message: "Note not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(updatedTotalValue);
+    return NextResponse.json(updatedTotalNote);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "P2025") {
-          return NextResponse.json(
-            { message: "Value not found" },
-            { status: 404 }
-          );
-        }
+      if (error.code === "P2025") {
+        return NextResponse.json(
+          { message: "Note not found" },
+          { status: 404 }
+        );
+      }
     }
 
     if (error instanceof Error) {
@@ -70,28 +71,28 @@ export async function PUT(request: Request, { params }: Params) {
 
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const deletedTotalValue = await prisma.totalValue.delete({
+    const deletedTotalNote = await prisma.totalNotes.delete({
       where: {
         id: Number(params.id),
       },
     });
 
-    if (!deletedTotalValue) {
+    if (!deletedTotalNote) {
       return NextResponse.json(
-        { message: "Value not found" },
+        { message: "TotalValue not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(deletedTotalValue);
+    return NextResponse.json(deletedTotalNote);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "P2025") {
-          return NextResponse.json(
-            { message: "Value not found" },
-            { status: 404 }
-          );
-        }
+      if (error.code === "P2025") {
+        return NextResponse.json(
+          { message: "TotalValue not found" },
+          { status: 404 }
+        );
+      }
     }
 
     if (error instanceof Error) {

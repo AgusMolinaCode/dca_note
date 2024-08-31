@@ -92,7 +92,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       sellTotal: profit,
       imageUrl: "/images/usdt.png",
     };
-    console.log(sellData);
+   
 
     const valueData = {
       userId: transaction.userId,

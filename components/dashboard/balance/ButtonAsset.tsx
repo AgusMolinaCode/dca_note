@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { loadUsers, searchCryptos } from "@/app/api";
 import { useQuery } from "@tanstack/react-query";
-import FirstDialogModal from "./modals/FirstDialogModal";
-import SecondDialogModal from "./modals/SecondDialogModal";
+import FirstDialogModal from "../modals/FirstDialogModal";
+import SecondDialogModal from "../modals/SecondDialogModal";
 import { useUser } from "@clerk/clerk-react";
-import NicknameDialogModal from "./modals/NicknameDialogModal";
+import NicknameDialogModal from "../modals/NicknameDialogModal";
 
 function useDebouncedQuery(query: string) {
   const [debouncedQuery, setDebouncedQuery] = useState(query);
