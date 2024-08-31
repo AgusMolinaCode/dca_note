@@ -12,6 +12,8 @@ export const LOAD_VALUES = `http://localhost:3000/api/values`;
 
 const LOAD_USERS = `http://localhost:3000/api/users`;
 
+const LOAD_NOTES = `http://localhost:3000/api/notes`;
+
 export const getCryptos = async (): Promise<CryptoListResult> => {
   return new Promise<void>((resolve) => {
     setTimeout(() => {

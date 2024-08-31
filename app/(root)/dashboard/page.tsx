@@ -3,7 +3,7 @@ import AdvancedChart from "@/components/shared/AdvanceChart";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import TickerTapeComponent from "@/components/shared/TickerTapeComponent";
-import { ButtonAsset } from "@/components/dashboard/ButtonAsset";
+import { ButtonAsset } from "@/components/dashboard/balance/ButtonAsset";
 
 export default async function Page() {
   const user = await currentUser();

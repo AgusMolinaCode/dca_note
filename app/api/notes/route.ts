@@ -4,8 +4,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export async function GET() {
   try {
-    const values = await prisma.totalValue.findMany();
-    return NextResponse.json(values);
+    const notes = await prisma.totalNotes.findMany();
+    return NextResponse.json(notes);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });
@@ -15,21 +15,22 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { total, userId } = await request.json();
+    const { title, description, userId } = await request.json();
 
-    const newTotalValue = await prisma.totalValue.create({
+    const newNotes = await prisma.totalNotes.create({
       data: {
-        total,
+        title,
+        description,
         userId,
       },
     });
 
-    return NextResponse.json(newTotalValue);
+    return NextResponse.json(newNotes);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return NextResponse.json(
-          { message: "Value already exists." },
+          { message: "Note already exists." },
           { status: 400 }
         );
       }
