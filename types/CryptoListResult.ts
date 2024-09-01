@@ -149,3 +149,12 @@ interface Value {
   updatedAt: string;
 }
 
+interface Notes {
+  id: number;
+  userId: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+

@@ -24,34 +24,45 @@ export const getCryptos = async (): Promise<CryptoListResult> => {
   });
 };
 
-export const getMultipleCryptos = async (query: string): Promise<CryptoListResult> => {
+export const getMultipleCryptos = async (
+  query: string
+): Promise<CryptoListResult> => {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();
     }, 300);
   }).then(() => {
-    return fetch(`${MULTIPLE_SEARCH_URL}?fsyms=${query}&tsyms=USD&api_key=${process.env.NEXT_PUBLIC_CRYPTO_API_KEY}`).then((res) => res.json());
+    return fetch(
+      `${MULTIPLE_SEARCH_URL}?fsyms=${query}&tsyms=USD&api_key=${process.env.NEXT_PUBLIC_CRYPTO_API_KEY}`
+    ).then((res) => res.json());
   });
 };
 
-
-export const getMultipleFullCryptos = async (query: string): Promise<CryptoListResult> => {
+export const getMultipleFullCryptos = async (
+  query: string
+): Promise<CryptoListResult> => {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();
     }, 300);
   }).then(() => {
-    return fetch(`${MULTIPLE_FULL_SEARCH_URL}?fsyms=${query}&tsyms=USD&api_key=${process.env.NEXT_PUBLIC_CRYPTO_API_KEY}`).then((res) => res.json());
+    return fetch(
+      `${MULTIPLE_FULL_SEARCH_URL}?fsyms=${query}&tsyms=USD&api_key=${process.env.NEXT_PUBLIC_CRYPTO_API_KEY}`
+    ).then((res) => res.json());
   });
-}
+};
 
-export const searchCryptos = async (query: string): Promise<CryptoListResult> => {
+export const searchCryptos = async (
+  query: string
+): Promise<CryptoListResult> => {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();
     }, 300);
   }).then(() => {
-    return fetch(`${SEARCH_URL}?fsyms=${query}&tsyms=USD&api_key=${process.env.NEXT_PUBLIC_CRYPTO_API_KEY}`).then((res) => res.json());
+    return fetch(
+      `${SEARCH_URL}?fsyms=${query}&tsyms=USD&api_key=${process.env.NEXT_PUBLIC_CRYPTO_API_KEY}`
+    ).then((res) => res.json());
   });
 };
 
@@ -65,5 +76,8 @@ export const loadUsers = async (): Promise<User[]> => {
 
 export const loadValues = async (): Promise<Value[]> => {
   return fetch(`${LOAD_VALUES}`).then((res) => res.json());
-}
+};
 
+export const getNotes = async (): Promise<Notes[]> => {
+  return fetch(`${LOAD_NOTES}`).then((res) => res.json());
+};
