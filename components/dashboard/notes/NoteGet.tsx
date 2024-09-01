@@ -36,6 +36,8 @@ const NoteGet = () => {
       ))}
     </div>
   );
+
+  
 };
 
 export default NoteGet;
