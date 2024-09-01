@@ -13,7 +13,6 @@ import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
 import Image from "next/image";
-import { TokenUSDT } from "@token-icons/react";
 
 interface DeleteAssetModalProps {
   transaction: Transaction;

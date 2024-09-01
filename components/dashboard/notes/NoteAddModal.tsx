@@ -42,6 +42,8 @@ const NoteAddModal = () => {
     },
   });
 
+  
+
   const addNotes = async (values: z.infer<typeof noteSchema>) => {
     const noteData = {
       userId: user?.id,
