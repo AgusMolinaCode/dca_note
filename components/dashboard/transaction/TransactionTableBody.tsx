@@ -10,7 +10,6 @@ import DeleteAssetModal from "../modals/DeleteAssetModal";
 import SellAssetModal from "../modals/SellAssetModal";
 import EditAssetModal from "../modals/EditAssetModal";
 import { Button } from "@/components/ui/button";
-import Transaction from "../Transaction";
 
 
 interface TransactionTableBodyProps {
@@ -35,7 +34,7 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
         const sellResult = transaction.sellTotal;
 
         return (
-          <tr key={transaction.id} className="">
+          <tr key={transaction.id}>
             <td>
               <div className="flex justify-start mx-auto gap-1 py-2">
                 <div className="relative">

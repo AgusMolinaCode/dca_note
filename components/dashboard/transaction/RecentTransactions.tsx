@@ -8,6 +8,8 @@ import TransactionTableHead from "./TransactionTableHead";
 import SelectCryptoByDate from "./SelectCryptoByDate";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 
 type DataTransactionProps = {
   data: Transaction[] | undefined;
@@ -61,6 +63,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
   );
   const [selectedDate, setSelectedDate] = useState<string>("All");
   const [filter, setFilter] = useState<string>("default");
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const dataUserId = data?.filter((item) => item.userId === user?.id);
 
@@ -103,6 +106,10 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
     setFilter(value);
   };
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
   const filteredTransactions = dataUserId?.filter((transaction) => {
     const matchesSearchTerm = transaction.crypto
       .toLowerCase()
@@ -114,11 +121,26 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
     return matchesSearchTerm && matchesFilter;
   });
 
-  const groupedFilteredTransactions = filteredTransactions
-    ? groupByDate(filteredTransactions)
-    : {};
-
   const uniqueDates = dataUserId ? getUniqueDates(dataUserId) : [];
+
+  // Ordenar las transacciones por fecha en orden descendente
+  const sortedTransactions = filteredTransactions?.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  // Paginación
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(
+    (sortedTransactions?.length || 0) / itemsPerPage
+  );
+  const paginatedTransactions = sortedTransactions?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const paginatedGroupedTransactions = paginatedTransactions
+    ? groupByDate(paginatedTransactions)
+    : {};
 
   return (
     <div>
@@ -129,18 +151,28 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
           </h2>
 
           <div className="flex gap-2">
-            <RadioGroup onValueChange={handleFilterChange} className="flex gap-4" defaultValue="default">
+            <RadioGroup
+              onValueChange={handleFilterChange}
+              className="flex gap-4"
+              defaultValue="default"
+            >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="default" id="r1" />
-                <Label className="text-gray-400" htmlFor="r1">Default</Label>
+                <Label className="text-gray-400" htmlFor="r1">
+                  Default
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="profit" id="r2" />
-                <Label className="text-green-300" htmlFor="r2">Profit</Label>
+                <Label className="text-green-300" htmlFor="r2">
+                  Profit
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="No profit" id="r3" />
-                <Label className="text-red-300" htmlFor="r3">No profit</Label>
+                <Label className="text-red-300" htmlFor="r3">
+                  No profit
+                </Label>
               </div>
             </RadioGroup>
 
@@ -159,10 +191,11 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
           </div>
         </div>
 
+        <div>
         {selectedDate === "All" ? (
-          Object.keys(groupedFilteredTransactions).length > 0 ? (
-            Object.keys(groupedFilteredTransactions).map((date) => (
-              <div key={date} className="">
+          Object.keys(paginatedGroupedTransactions).length > 0 ? (
+            Object.keys(paginatedGroupedTransactions).map((date) => (
+              <div key={date}>
                 <h3 className="text-lg font-semibold mt-2 text-gray-100 border-t border-gray-700">
                   {date}
                 </h3>
@@ -170,7 +203,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
                   <TransactionTableHead />
 
                   <TransactionTableBody
-                    groupedFilteredTransactions={groupedFilteredTransactions}
+                    groupedFilteredTransactions={paginatedGroupedTransactions}
                     value={value}
                     date={date}
                   />
@@ -184,8 +217,8 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
               </p>
             </div>
           )
-        ) : selectedDate && groupedFilteredTransactions[selectedDate] ? (
-          <div className="">
+        ) : selectedDate && paginatedGroupedTransactions[selectedDate] ? (
+          <div>
             <h3 className="text-lg font-semibold mt-2 text-gray-100 border-t border-gray-700">
               {selectedDate}
             </h3>
@@ -193,7 +226,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
               <TransactionTableHead />
 
               <TransactionTableBody
-                groupedFilteredTransactions={groupedFilteredTransactions}
+                groupedFilteredTransactions={paginatedGroupedTransactions}
                 value={value}
                 date={selectedDate}
               />
@@ -206,6 +239,25 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
             </p>
           </div>
         )}
+        </div>
+
+        <div className="flex justify-center items-center mt-4">
+          <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <ArrowBigLeft />
+          </Button>
+          <span className="mx-2 text-gray-500">
+            {currentPage} of {totalPages}
+          </span>
+          <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <ArrowBigRight />
+          </Button>
+        </div>
       </div>
     </div>
   );
