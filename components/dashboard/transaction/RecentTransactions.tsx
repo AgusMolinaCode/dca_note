@@ -129,7 +129,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
   );
 
   // Paginación
-  const itemsPerPage = 5;
+  const itemsPerPage = 12;
   const totalPages = Math.ceil(
     (sortedTransactions?.length || 0) / itemsPerPage
   );
