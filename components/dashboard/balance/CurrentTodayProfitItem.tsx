@@ -2,26 +2,6 @@
 import React, { useEffect, useState } from "react";
 import CurrentBalanceItem from "./CurrentBalanceItem";
 
-interface CryptoCurrency {
-  PRICE: number;
-  OPEN24HOUR: number;
-  HIGH24HOUR: number;
-  LOW24HOUR: number;
-  CHANGE24HOUR: number;
-  CHANGEPCT24HOUR: number;
-  CHANGEDAY: number;
-  CHANGEPCTDAY: number;
-  CHANGEHOUR: number;
-  CHANGEPCTHOUR: number;
-}
-
-interface CryptoListResult {
-  RAW: {
-    [key: number]: {
-      USD: CryptoCurrency;
-    };
-  };
-}
 
 const CurrentTodayProfitItem = ({
   allCryptos,

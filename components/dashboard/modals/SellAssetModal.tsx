@@ -40,14 +40,6 @@ interface CryptoCurrency {
   HIGH24HOUR: number;
 }
 
-interface CryptoListResult {
-  RAW: {
-    [key: number]: {
-      USD: CryptoCurrency;
-    };
-  };
-}
-
 const SellAssetModal: React.FC<SellAssetModalProps> = ({
   transaction,
   amount,

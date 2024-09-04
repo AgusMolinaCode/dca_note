@@ -19,9 +19,6 @@ export default function CriptoList() {
 
   return (
     <>
-      {/* <button onClick={onRefresh} className="my-4 py-2 px-4 border rounded">
-        Refresh
-      </button> */}
       <div className="grid grid-cols-1 gap-4">
         {cryptos.map(crypto => (
           <>

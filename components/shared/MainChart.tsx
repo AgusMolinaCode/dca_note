@@ -25,8 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useQuery } from "@tanstack/react-query"
-import { loadValues } from "@/app/api"
 
 
 const chartConfig = {
@@ -45,11 +43,6 @@ const chartConfig = {
 
 export function MainChart() {
   const [timeRange, setTimeRange] = React.useState("90d")
-
-  const { data } = useQuery({
-    queryKey: ["values"],
-    queryFn: loadValues,
-  });
 
   const chartData = [
     { date: "2021-01-01", desktop: 100, mobile: 50 },

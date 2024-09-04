@@ -1,4 +1,4 @@
-import React, { Key } from "react";
+import React from "react";
 import Image from "next/image";
 import { CardFooter } from "../../ui/card";
 import { useUser } from "@clerk/nextjs";

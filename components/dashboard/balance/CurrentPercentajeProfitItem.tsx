@@ -1,29 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
-import { InfoIcon } from "lucide-react";
-import { HoverCardContent } from "../../ui/hover-card";
-
-interface CryptoCurrency {
-  PRICE: number;
-  OPEN24HOUR: number;
-  HIGH24HOUR: number;
-  LOW24HOUR: number;
-  CHANGE24HOUR: number;
-  CHANGEPCT24HOUR: number;
-  CHANGEDAY: number;
-  CHANGEPCTDAY: number;
-  CHANGEHOUR: number;
-  CHANGEPCTHOUR: number;
-}
-
-interface CryptoListResult {
-  RAW: {
-    [key: number]: {
-      USD: CryptoCurrency;
-    };
-  };
-}
 
 const CurrentPercentajeProfitItem = ({
   allCryptos,
@@ -104,18 +80,6 @@ const CurrentPercentajeProfitItem = ({
 
   return (
     <div className="flex justify-start gap-2 items-center">
-      {/* <p>
-        <span
-          className={`${
-            (low24HourValue ?? 0) <= 0
-              ? `text-red-500 bg-red-500/20`
-              : `text-green-500 bg-green-500/20`
-          } text-sm font-medium  px-2 py-[0.1rem] rounded-[0.45rem]`}
-        >
-          {percentage24HourValue}%
-        </span>
-      </p> */}
-
       <p className="flex flex-col justify-center mx-auto">
         <span className="text-xs text-gray-500 font-semibold">Low 24h: </span>
         <span

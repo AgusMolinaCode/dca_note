@@ -27,7 +27,6 @@ import {
 import { editSchema } from "@/lib/validator";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LOAD_TRANSACTIONS } from "@/app/api";
-import { TokenUSDT } from "@token-icons/react";
 
 interface EditAssetModalProps {
   transaction: Transaction;

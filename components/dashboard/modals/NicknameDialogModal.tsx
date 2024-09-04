@@ -16,7 +16,6 @@ import { Label } from "@/components/ui/label";
 import { nicknameSchema } from "@/lib/validator";
 import { useUser } from "@clerk/clerk-react";
 import {
-  QueryClient,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";

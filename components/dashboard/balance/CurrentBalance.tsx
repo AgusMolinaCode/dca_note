@@ -6,7 +6,6 @@ import { loadTransactions, getMultipleCryptos, loadValues } from "@/app/api";
 import CurrentBalanceItem from "./CurrentBalanceItem";
 import { useUser } from "@clerk/clerk-react";
 import CurrentPercentajeProfitItem from "./CurrentPercentajeProfitItem";
-import useCryptoCalculations from "@/hooks/useCryptoCalculations";
 
 type CryptoPrices = {
   [key: string]: {
@@ -21,7 +20,6 @@ const CurrentBalance = () => {
   const [totalInvested, setTotalInvested] = useState(0);
   const [totalProfit, setTotalProfit] = useState(0);
   const [totalLoss, setTotalLoss] = useState(0);
-  const { sumCounts } = useCryptoCalculations();
 
   const { user } = useUser();
 
@@ -33,7 +31,7 @@ const CurrentBalance = () => {
     }
   );
 
-  const { data: valuesData, isLoading: isLoadingValues } = useQuery({
+  const { data: valuesData } = useQuery({
     queryKey: ["values"],
     queryFn: loadValues,
   });

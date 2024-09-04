@@ -11,8 +11,6 @@ import Image from "next/image";
 import { useUser } from "@clerk/clerk-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-type ExtendedTransaction = Transaction & { fullAmounts: number };
-
 export function CurrentHoldings() {
   const { user } = useUser();
 
