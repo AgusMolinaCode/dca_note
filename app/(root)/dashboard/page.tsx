@@ -4,6 +4,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import TickerTapeComponent from "@/components/shared/TickerTapeComponent";
 import { ButtonAsset } from "@/components/dashboard/balance/ButtonAsset";
+import Link from "next/link";
+import { Github, Linkedin } from "lucide-react";
 
 export default async function Page() {
   const user = await currentUser();
@@ -19,7 +21,7 @@ export default async function Page() {
     : "";
 
   return (
-    
+    <div>
       <div className=" w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative min-h-screen">
         <div className="absolute dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
 
@@ -49,7 +51,41 @@ export default async function Page() {
             <AdvancedChart />
           </div>
         </div>
+        <footer className="w-full p-4 ">
+          <div className="border-t border-t-gray-700 px-[2rem] lg:px-[10rem]">
+            <div className="flex justify-between items-center pt-[2rem]">
+              <div>
+                <p className="text-gray-500 text-sm">
+                  © {new Date().getFullYear()} Crypto DCA. All rights reserved.
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-500">
+
+                Developed by Agustin Molina
+                </p>
+              </div>
+              <div className="flex gap-4">
+                <Link
+                  href="https://www.linkedin.com/in/agustin-molina-994635138/"
+                  target="_blank"
+                >
+                  <Linkedin
+                    size={20}
+                    className="text-neutral-600 dark:text-neutral-400 hover:text-blue-500 dark:hover:text-blue-500 duration-200"
+                  />
+                </Link>
+                <Link href="https://github.com/AgusMolinaCode" target="_blank">
+                  <Github
+                    size={20}
+                    className="text-neutral-600 dark:text-neutral-400 hover:text-blue-500 dark:hover:text-blue-500 duration-200"
+                  />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
-    
+    </div>
   );
 }
