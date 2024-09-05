@@ -132,7 +132,7 @@ const CurrentBalance = () => {
   return (
     <div className="w-full">
       {dataUserId && dataUserId.length > 0 ? (
-        <div className="rounded-lg bg-card text-card-foreground shadow-sm flex flex-col w-full">
+        <div className="rounded-lg bg-white dark:bg-card text-card-foreground shadow-sm flex flex-col w-full">
           <div>
             <div className="flex justify-between items-center">
               <h1 className="text-lg font-semibold text-gray-500">Balance</h1>

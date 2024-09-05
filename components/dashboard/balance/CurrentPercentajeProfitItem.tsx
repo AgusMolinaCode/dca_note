@@ -81,12 +81,9 @@ const CurrentPercentajeProfitItem = ({
   return (
     <div className="flex justify-start gap-2 items-center">
       <p className="flex flex-col justify-center mx-auto">
-        <span className="text-xs text-gray-500 font-semibold">Low 24h: </span>
+        <span className="text-xs text-gray-700 dark:text-gray-500 font-semibold">Low 24h: </span>
         <span
-          className={` ${
-            (low24HourValue ?? 0) <= 0 ? `text-red-500` : `text-green-500`
-          }
-           text-md font-medium py-1`}
+          className={`dark:text-red-400 text-red-500 text-md font-semibold py-1`}
         >
           {low24HourValue?.toLocaleString("en-US", {
             style: "currency",
@@ -96,12 +93,9 @@ const CurrentPercentajeProfitItem = ({
       </p>
 
       <p className="flex flex-col justify-center mx-auto">
-        <span className="text-xs text-gray-500 font-semibold">High 24h: </span>
+        <span className="text-xs text-gray-700 dark:text-gray-500 font-semibold">High 24h: </span>
         <span
-          className={` ${
-            (high24HourValue ?? 0) <= 0 ? `text-red-500` : `text-green-500`
-          }
-           text-md font-medium py-1`}
+          className={`dark:text-green-500 text-green-600 text-md font-semibold py-1`}
         >
           {high24HourValue?.toLocaleString("en-US", {
             style: "currency",

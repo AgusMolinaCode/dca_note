@@ -13,10 +13,13 @@ const CurrentBalanceItem = ({ title = "", description = "", value = "", classNam
         className={`dark:border-gray-700 border-gray-400 flex justify-between items-center gap-2`}
       >
         <div className="flex gap-2 items-center">
-          <p className="font-semibold text-gray-500 text-[14px] py-2">
+          <p className="font-semibold text-gray-700 dark:text-gray-500 text-[14px] py-2">
             {title}
           </p>
-          <HoverCard>
+          <HoverCard
+            openDelay={50}
+            closeDelay={50}
+          >
             <HoverCardTrigger>
               <InfoIcon className="text-gray-500" size={12} />
             </HoverCardTrigger>
