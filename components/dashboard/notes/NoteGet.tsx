@@ -55,9 +55,9 @@ const NoteGet = () => {
       {dataUserId?.map((note) => (
         <Dialog key={note.id}>
           <DialogTrigger className="w-full">
-            <div className="bg-gray-700/90 hover:bg-gray-600/90 duration-200 px-2 py-1 rounded-xl mb-2">
+            <div className="bg-white hover:bg-gray-100 dark:bg-gray-700/90 hover:dark:bg-gray-600/90 border border-gray-200 dark:border-none duration-200 px-2 py-1 rounded-xl mb-2">
               <div className="flex justify-between gap-2 items-center border-b border-gray-400">
-                <p className="text-sm text-left text-white">{truncateText(note.title, 20)}</p>
+                <p className="text-sm text-left text-gray-500 dark:text-white font-semibold">{truncateText(note.title, 20)}</p>
                 <p className="text-xs text-gray-500">
                   {new Date(note.createdAt).toLocaleString()}
                 </p>

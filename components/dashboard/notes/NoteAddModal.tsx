@@ -81,7 +81,7 @@ const NoteAddModal = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-gray-800">
         <DialogHeader>
-          <DialogTitle className="dark:text-white text-black flex items-center gap-2">
+          <DialogTitle className="text-white flex items-center gap-2">
             New note
           </DialogTitle>
           <DialogDescription className="dark:text-white text-black">

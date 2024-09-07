@@ -30,26 +30,26 @@ const DataTransactionTable = ({
             <h2 className="text-lg font-semibold text-gray-500">Assets</h2>
           </div>
           <table className="w-full table-auto">
-            <thead className="dark:bg-gray-800 bg-gray-600 pb-2 border-b border-gray-600">
+            <thead className="dark:bg-gray-800 bg-white pb-2 border-b border-gray-600">
               <tr className="text-left">
-                <th className="px-4 py-2 text-sm text-gray-400">Asset</th>
-                <th className="px-4 py-2 text-sm text-gray-400">
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">Asset</th>
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   Current Price
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">Amount</th>
-                <th className="px-4 py-2 text-sm text-gray-400">
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">Amount</th>
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   Avg. Buy Price
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   24Hs Price Change
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   24Hs % Change
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   Total Invested
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-400">
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   Avg .Gain/Loss
                 </th>
               </tr>

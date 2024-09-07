@@ -14,7 +14,7 @@ const CurrentTransactions = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="dark:bg-gray-800 bg-gray-600 rounded-b-xl">
+      <div className="dark:bg-gray-800 bg-white shadow-md border dark:border-none border-gray-200 rounded-b-xl">
         <DataTransaction data={data} />
       </div>
       <div className="dark:bg-gray-800 bg-gray-600 rounded-xl mb-10">

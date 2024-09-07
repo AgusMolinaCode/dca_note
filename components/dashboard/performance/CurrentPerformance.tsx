@@ -88,7 +88,7 @@ const CurrentPerformance = () => {
       {uniqueCryptos.size > 1 ? (
         <div className="grid gap-2">
           {bestPerformance && (
-            <div className="bg-gray-700/90 w-full px-4 h-16 items-center rounded-xl flex gap-2 justify-between">
+            <div className="bg-white dark:bg-gray-700/90 border dark:border-none border-gray-200 w-full px-4 h-16 items-center rounded-xl flex gap-2 justify-between">
               <div className="flex gap-2 items-center">
                 <div className="relative">
                   <Image
@@ -102,7 +102,7 @@ const CurrentPerformance = () => {
                 </div>
                 <div>
                   <p className="text-gray-500 text-md">Top Gainer</p>
-                  <p className="text-white font-semibold text-lg">
+                  <p className="font-semibold text-gray-700 dark:text-white text-lg">
                     {bestPerformance.name}
                   </p>
                 </div>
@@ -121,7 +121,7 @@ const CurrentPerformance = () => {
             </div>
           )}
           {worstPerformance && (
-            <div className="bg-gray-700/90 w-full px-4 h-16 items-center rounded-xl flex gap-2 justify-between">
+            <div className="bg-white dark:bg-gray-700/90 border dark:border-none border-gray-200 w-full px-4 h-16 items-center rounded-xl flex gap-2 justify-between">
               <div className="flex gap-2 items-center">
                 <div className="relative">
                   <Image
@@ -135,7 +135,7 @@ const CurrentPerformance = () => {
                 </div>
                 <div>
                   <p className="text-gray-500 text-md">Top Loser</p>
-                  <p className="text-white font-semibold text-lg">
+                  <p className="font-semibold text-gray-700 dark:text-white text-lg">
                     {worstPerformance.name}
                   </p>
                 </div>

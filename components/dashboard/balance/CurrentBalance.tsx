@@ -132,7 +132,7 @@ const CurrentBalance = () => {
   return (
     <div className="w-full">
       {dataUserId && dataUserId.length > 0 ? (
-        <div className="rounded-lg bg-white dark:bg-card text-card-foreground shadow-sm flex flex-col w-full">
+        <div className="rounded-lg bg-white dark:bg-card text-card-foreground  flex flex-col w-full">
           <div>
             <div className="flex justify-between items-center">
               <h1 className="text-lg font-semibold text-gray-500">Balance</h1>
@@ -172,8 +172,8 @@ const CurrentBalance = () => {
                     value={formattedTotalInvested.toString()}
                     classNameValue={`text-[18px] py-[0.08rem] px-2 rounded-lg ${
                       totalInvested > 0
-                        ? "text-green-300 bg-green-300/20"
-                        : "text-red-300 bg-red-300/20"
+                        ? "dark:text-green-300 text-green-600 dark:bg-green-300/20 bg-green-300/10 border border-green-300 dark:border-none"
+                        : "dark:text-red-300 text-red-600 dark:bg-red-300/20 bg-red-300/10 border border-red-300 dark:border-none"
                     }`}
                   />
 
@@ -181,14 +181,14 @@ const CurrentBalance = () => {
                     title="Total Profit"
                     description="The total profit you have made from selling assets."
                     value={formattedTotalProfit}
-                    classNameValue="text-green-300 text-[14px] bg-green-300/20 py-[0.08rem] px-2 rounded-lg"
+                    classNameValue="dark:text-green-300 text-green-600 dark:bg-green-300/20 bg-green-300/10 border border-green-300 dark:border-none text-[14px] py-[0.08rem] px-2 rounded-lg"
                   />
 
                   <CurrentBalanceItem
                     title="Total Loss"
                     description="The total loss you have made from selling assets."
                     value={formattedTotalLoss}
-                    classNameValue="text-red-300 text-[14px] bg-red-300/20 py-[0.08rem] px-2 rounded-lg"
+                    classNameValue="dark:text-red-300 text-red-600 dark:bg-red-300/20 bg-red-300/10 border border-red-300 dark:border-none text-[14px] py-[0.08rem] px-2 rounded-lg"
                   />
 
                   <CurrentBalanceItem
