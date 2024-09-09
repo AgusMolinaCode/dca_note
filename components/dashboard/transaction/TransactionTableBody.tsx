@@ -11,7 +11,6 @@ import SellAssetModal from "../modals/SellAssetModal";
 import EditAssetModal from "../modals/EditAssetModal";
 import { Button } from "@/components/ui/button";
 
-
 interface TransactionTableBodyProps {
   groupedFilteredTransactions: { [key: string]: Transaction[] };
   value: { [key: string]: number };
@@ -60,15 +59,15 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                     className="text-green-400 bg-zinc-900 rounded-full  absolute bottom-[-11px] left-3 p-[3px]"
                   />
                 </div>
-                <p className="px-4 py-2 text-md font-semibold text-gray-200">
+                <p className="px-4 py-2 text-md font-semibold  text-gray-700 dark:text-gray-500">
                   {transaction.crypto}
                 </p>
                 {transaction.imageUrl === "/images/usdt.png" ? (
-                  <p className="bg-red-500/10 border-[0.2px] border-red-500 text-red-300 px-2 my-auto text-xs rounded-xl">
+                  <p className="bg-red-500/10 border-[0.2px] border-red-500 text-red-500 dark:text-red-300 px-2 my-auto text-xs rounded-xl">
                     sell
                   </p>
                 ) : (
-                  <p className="bg-green-500/10 border-[0.2px] border-green-500 text-green-300 px-2 my-auto text-xs rounded-xl">
+                  <p className="bg-green-500/10 border-[0.2px] border-green-500 text-green-500 dark:text-green-300 px-2 my-auto text-xs rounded-xl">
                     buy
                   </p>
                 )}
@@ -82,11 +81,11 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                 <p>${transaction.price.toFixed(2)}</p>
                 <p>
                   {transaction.imageUrl === "/images/usdt.png" ? (
-                    <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                    <span className="text-gray-700 dark:text-gray-300 text-[0.60rem] bg-red-400/75 dark:bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
                       Sell Price
                     </span>
                   ) : (
-                    <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                    <span className="text-gray-700 dark:text-gray-300 text-[0.60rem] bg-green-400/75 dark:bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
                       Buy Price
                     </span>
                   )}
@@ -102,27 +101,27 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
               className={`px-4 py-2 font-semibold w-[8rem] ${
                 transaction.imageUrl === "/images/usdt.png"
                   ? sellResult > 0
-                    ? "text-green-400"
-                    : "text-red-400"
+                    ? "text-green-500 dark:text-green-400"
+                    : "text-red-500 dark:text-red-400"
                   : result > 0
-                  ? "text-green-400"
-                  : "text-red-400"
+                  ? "text-green-500 dark:text-green-400"
+                  : "text-red-500 dark:text-red-400"
               }`}
             >
               <div className="flex gap-2 items-center justify-start">
                 <p>
                   {transaction.imageUrl === "/images/usdt.png"
-                    ? sellResult.toFixed(2)
-                    : result.toFixed(2)}
+                    ? sellResult?.toFixed(2)
+                    : result?.toFixed(2)}
                 </p>
                 <p>
                   {transaction.imageUrl === "/images/usdt.png" &&
                     (sellResult > 0 ? (
-                      <span className="text-gray-300 text-[0.60rem] bg-green-400/20 py-[0.15rem] px-2 rounded-xl">
+                      <span className="text-gray-700 dark:text-gray-300 bg-green-400/75 dark:bg-green-400/20 text-[0.60rem]  py-[0.15rem] px-2 rounded-xl">
                         Profit
                       </span>
                     ) : (
-                      <span className="text-gray-300 text-[0.60rem] bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
+                      <span className="text-gray-700 dark:text-gray-300 text-[0.60rem] bg-red-400/75 dark:bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
                         No Profit
                       </span>
                     ))}

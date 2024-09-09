@@ -84,7 +84,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
       sellTotal: profit,
       imageUrl: "/images/usdt.png",
     };
-   
 
     const valueData = {
       userId: transaction.userId,
@@ -152,8 +151,6 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
     } catch (error) {
       console.error("Failed to update remaining amount", error);
     }
-
-    
   };
 
   const mutation = useMutation({
@@ -222,11 +219,11 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
           {amount <= 0 || transaction.crypto === "USDT" ? null : (
             <Button type="submit" className="px-1">
               {result > 0 ? (
-                <p className="text-green-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
+                <p className="text-green-500 dark:text-green-400 font-bold hover:bg-black/80 duration-200  py-1 px-2 rounded-md">
                   TP
                 </p>
               ) : (
-                <p className="text-red-400 font-semibold bg-black/60 py-1 px-2 rounded-md">
+                <p className="text-red-500 dark:text-red-400 font-bold hover:bg-black/80 duration-200  py-1 px-2 rounded-md">
                   SL
                 </p>
               )}
@@ -235,7 +232,7 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
           <DialogHeader>
-            <DialogTitle className="dark:text-white text-black flex items-center gap-2">
+            <DialogTitle className="text-white flex items-center gap-2">
               Sell{"  "}
               {transaction.imageUrl ? (
                 <Image

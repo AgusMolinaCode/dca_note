@@ -158,19 +158,19 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="default" id="r1" />
-                <Label className="text-gray-400" htmlFor="r1">
+                <Label className="text-gray-700 dark:text-gray-500" htmlFor="r1">
                   Default
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="profit" id="r2" />
-                <Label className="text-green-300" htmlFor="r2">
+                <Label className="text-green-500 dark:text-green-400" htmlFor="r2">
                   Profit
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="No profit" id="r3" />
-                <Label className="text-red-300" htmlFor="r3">
+                <Label className="text-red-500 dark:text-red-400" htmlFor="r3">
                   No profit
                 </Label>
               </div>
@@ -196,7 +196,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
           Object.keys(paginatedGroupedTransactions).length > 0 ? (
             Object.keys(paginatedGroupedTransactions).map((date) => (
               <div key={date}>
-                <h3 className="text-lg font-semibold mt-2 text-gray-100 border-t border-gray-700">
+                <h3 className="text-lg font-semibold mt-2 dark:text-gray-100 text-gray-500 border-t border-gray-700">
                   {date}
                 </h3>
                 <table className="table-auto w-full">
@@ -219,7 +219,7 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
           )
         ) : selectedDate && paginatedGroupedTransactions[selectedDate] ? (
           <div>
-            <h3 className="text-lg font-semibold mt-2 text-gray-100 border-t border-gray-700">
+            <h3 className="text-lg font-semibold mt-2 dark:text-gray-100 text-gray-500 border-t border-gray-700">
               {selectedDate}
             </h3>
             <table className="table-auto w-full">

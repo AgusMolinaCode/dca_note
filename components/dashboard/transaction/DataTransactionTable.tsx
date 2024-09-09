@@ -54,7 +54,7 @@ const DataTransactionTable = ({
                 </th>
               </tr>
             </thead>
-            <tbody className="dark:bg-gray-800 bg-gray-400">
+            <tbody className="dark:bg-gray-800">
               {groupedTransactionsArray.map((transaction: any) => {
                 const amount = groupedAmounts[transaction.crypto];
                 const currentValue = value?.[transaction.crypto];
@@ -85,7 +85,7 @@ const DataTransactionTable = ({
                 return (
                   <tr
                     key={transaction.id}
-                    className="border-t border-gray-600 hover:bg-gray-700 cursor-pointer duration-300"
+                    className="border-t border-gray-600 dark:hover:bg-gray-700 hover:bg-gray-100 cursor-pointer duration-300"
                     onClick={() => handleRowClick(transaction.crypto)}
                   >
                     <td className="flex gap-1 justify-center items-center py-4">
@@ -120,8 +120,8 @@ const DataTransactionTable = ({
                         )
                           ? averagePricesResult[transaction.crypto].average
                           : transaction.price)
-                          ? "text-red-400"
-                          : "text-green-400"
+                          ? "text-red-500 dark:text-red-400"
+                          : "text-green-500 dark:text-green-400"
                       }`}
                     >
                       ${" "}
@@ -140,8 +140,8 @@ const DataTransactionTable = ({
                       className={`px-4 py-2 font-semibold ${
                         profitValue?.[transaction.crypto] !== undefined &&
                         profitValue?.[transaction.crypto] < 0
-                          ? "text-red-400"
-                          : "text-green-400"
+                          ? "text-red-500 dark:text-red-400"
+                          : "text-green-500 dark:text-green-400"
                       }`}
                     >
                       ${" "}
@@ -153,8 +153,8 @@ const DataTransactionTable = ({
                       className={`px-4 py-2 font-semibold ${
                         percentageValue?.[transaction.crypto] !== undefined &&
                         percentageValue?.[transaction.crypto] < 0
-                          ? "text-red-400"
-                          : "text-green-400"
+                          ? "text-red-500 dark:text-red-400"
+                          : "text-green-500 dark:text-green-400"
                       }`}
                     >
                       {percentageValue?.[transaction.crypto] !== undefined
@@ -164,14 +164,14 @@ const DataTransactionTable = ({
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
-                        totalInvested < 0 ? "text-green-400" : ""
+                        totalInvested < 0 ? "text-green-500 dark:text-green-400" : ""
                       }`}
                     >
                       $ {Math.abs(totalInvested).toFixed(2)}
                     </td>
                     <td
                       className={`px-4 py-2 font-semibold ${
-                        finalProfit < 0 ? "text-red-400" : "text-green-400"
+                        finalProfit < 0 ? "text-red-500 dark:text-red-400" : "text-green-500 dark:text-green-400"
                       }`}
                     >
                       ${finalProfit.toFixed(2)}
