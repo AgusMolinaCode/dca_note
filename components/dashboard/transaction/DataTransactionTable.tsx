@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { TokenUSDT } from "@token-icons/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const DataTransactionTable = ({
   groupedTransactionsArray,
@@ -23,7 +24,7 @@ const DataTransactionTable = ({
   handleRowClick: (crypto: string) => void;
 }) => {
   return (
-    <div>
+    <div className="">
       {groupedTransactionsArray.length > 0 ? (
         <div className="w-full overflow-x-auto px-2 pb-2">
           <div className="flex justify-between items-center px-2 pt-4">
@@ -32,11 +33,15 @@ const DataTransactionTable = ({
           <table className="w-full table-auto">
             <thead className="dark:bg-gray-800 bg-white pb-2 border-b border-gray-600">
               <tr className="text-left">
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">Asset</th>
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                  Asset
+                </th>
                 <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   Current Price
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">Amount</th>
+                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                  Amount
+                </th>
                 <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
                   Avg. Buy Price
                 </th>
@@ -100,28 +105,38 @@ const DataTransactionTable = ({
                       ) : (
                         <TokenUSDT className="w-6 h-6" variant="branded" />
                       )}
-                      <p className="px-4 py-2 text-md font-semibold">
+                      <p className="px-1 xl:px-4 py-2 text-sm xl:text-base font-semibold">
                         {transaction.crypto}
                       </p>
                     </td>
-                    <td className={`px-4 py-2 font-semibold`}>
-                      {currentValue !== undefined
-                        ? `$ ${currentValue.toFixed(2)}`
-                        : "$ 0.00"}
+                    <td
+                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold`}
+                    >
+                      {currentValue !== undefined ? (
+                        <div>
+                          <p className="text-sm xl:text-base">
+                            $ {currentValue?.toFixed(2)}
+                          </p>
+                        </div>
+                      ) : (
+                        "$ 0.00"
+                      )}
                     </td>
-                    <td className="px-4 py-2 font-semibold">
-                      {amount?.toFixed(2)}
+                    <td className="px-1 xl:px-4 text-center xl:text-left py-2 font-semibold">
+                      <p className="text-sm xl:text-base">
+                        {amount?.toFixed(2)}
+                      </p>
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold ${
+                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         (currentValue ?? 0) <
                         (Number.isFinite(
                           averagePricesResult?.[transaction.crypto]?.average
                         )
                           ? averagePricesResult[transaction.crypto].average
                           : transaction.price)
-                          ? "text-red-500 dark:text-red-400"
-                          : "text-green-500 dark:text-green-400"
+                          ? "text-red-500 dark:text-red-400 text-sm xl:text-base"
+                          : "text-green-500 dark:text-green-400 text-sm xl:text-base"
                       }`}
                     >
                       ${" "}
@@ -137,11 +152,11 @@ const DataTransactionTable = ({
                       ).toFixed(2)}
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold ${
+                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         profitValue?.[transaction.crypto] !== undefined &&
                         profitValue?.[transaction.crypto] < 0
-                          ? "text-red-500 dark:text-red-400"
-                          : "text-green-500 dark:text-green-400"
+                          ? "text-red-500 dark:text-red-400 text-sm xl:text-base"
+                          : "text-green-500 dark:text-green-400 text-sm xl:text-base"
                       }`}
                     >
                       ${" "}
@@ -150,11 +165,11 @@ const DataTransactionTable = ({
                         : "0.00"}
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold ${
+                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         percentageValue?.[transaction.crypto] !== undefined &&
                         percentageValue?.[transaction.crypto] < 0
-                          ? "text-red-500 dark:text-red-400"
-                          : "text-green-500 dark:text-green-400"
+                          ? "text-red-500 dark:text-red-400 text-sm xl:text-base"
+                          : "text-green-500 dark:text-green-400 text-sm xl:text-base"
                       }`}
                     >
                       {percentageValue?.[transaction.crypto] !== undefined
@@ -163,15 +178,19 @@ const DataTransactionTable = ({
                       %
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold ${
-                        totalInvested < 0 ? "text-green-500 dark:text-green-400" : ""
+                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
+                        totalInvested < 0
+                          ? "text-green-500 dark:text-green-400 text-sm xl:text-base"
+                          : "text-sm xl:text-base"
                       }`}
                     >
                       $ {Math.abs(totalInvested).toFixed(2)}
                     </td>
                     <td
-                      className={`px-4 py-2 font-semibold ${
-                        finalProfit < 0 ? "text-red-500 dark:text-red-400" : "text-green-500 dark:text-green-400"
+                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
+                        finalProfit < 0
+                          ? "text-red-500 dark:text-red-400 text-sm xl:text-base"
+                          : "text-green-500 dark:text-green-400 text-sm xl:text-base"
                       }`}
                     >
                       ${finalProfit.toFixed(2)}

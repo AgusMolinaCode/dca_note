@@ -72,12 +72,12 @@ export function ButtonAsset() {
           <>
             <Dialog open={isMainDialogOpen} onOpenChange={setIsMainDialogOpen}>
               <DialogTrigger asChild>
-                <button className="group rounded-xl relative inline-flex h-9 items-center justify-center overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-500 px-3 md:px-6 font-medium text-neutral-200 transition hover:scale-110 dark:bg-gradient-to-r dark:from-indigo-700 dark:to-indigo-800 dark:text-white">
-                  <span>Add Asset</span>
-                  <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
-                    <div className="relative h-full w-8 bg-white/20 dark:bg-gray-700/20"></div>
-                  </div>
-                </button>
+              <button className="group rounded-xl relative inline-flex h-9 items-center justify-center overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-700 px-3 md:px-6 font-medium text-neutral-200 transition hover:scale-110">
+                <span className="text-sm md:text-md">Add Asset</span>
+                <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
+                  <div className="relative h-full w-8 bg-white/20"></div>
+                </div>
+              </button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] bg-gray-800">
                 <DialogHeader>
@@ -110,7 +110,7 @@ export function ButtonAsset() {
           <Dialog open={isMainDialogOpen} onOpenChange={setIsMainDialogOpen}>
             <DialogTrigger asChild>
               <button className="group rounded-xl relative inline-flex h-9 items-center justify-center overflow-hidden bg-gradient-to-r from-indigo-500 to-indigo-700 px-3 md:px-6 font-medium text-neutral-200 transition hover:scale-110">
-                <span>Add Nickname</span>
+                <span className="text-sm md:text-md">Add Nickname</span>
                 <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
                   <div className="relative h-full w-8 bg-white/20"></div>
                 </div>

@@ -39,8 +39,8 @@ export default async function Page() {
                 />
                 <div>
                   <h1 className="text-xl md:text-2xl">{user?.fullName}</h1>
-                  <p className="text-sm text-gray-500">
-                    User created: {createdAtFormatted}
+                  <p className="text-xs md:text-sm text-gray-500">
+                    Created at: {createdAtFormatted}
                   </p>
                 </div>
               </div>

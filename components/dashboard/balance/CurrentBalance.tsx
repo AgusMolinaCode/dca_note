@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -131,13 +131,15 @@ const CurrentBalance = () => {
 
   return (
     <div className="w-full">
-      {dataUserId && dataUserId.length > 0 ? (
-        <div className="rounded-lg bg-white dark:bg-card text-card-foreground  flex flex-col w-full">
-          <div>
-            <div className="flex justify-between items-center">
-              <h1 className="text-lg font-semibold text-gray-500">Balance</h1>
-              <p className="text-gray-500 text-md font-semibold">24h</p>
-            </div>
+      <div className="rounded-lg bg-white dark:bg-card text-card-foreground  flex flex-col w-full">
+        <div>
+          <div className="flex justify-between items-center">
+            <h1 className="text-lg font-semibold text-gray-500">Balance</h1>
+            <p className="text-gray-500 text-md font-semibold">24h</p>
+          </div>
+        </div>
+        {dataUserId && dataUserId.length > 0 ? (
+          <>
             <div>
               <p className="text-4xl font-semibold pt-2">
                 {formattedTotalValue}
@@ -210,15 +212,15 @@ const CurrentBalance = () => {
                 </div>
               )}
             </div>
+          </>
+        ) : (
+          <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
+            <p className="text-center text-gray-500">
+              No current balance loaded yet.
+            </p>
           </div>
-        </div>
-      ) : (
-        <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
-          <p className="text-center text-gray-500">
-            No current balance loaded yet.
-          </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

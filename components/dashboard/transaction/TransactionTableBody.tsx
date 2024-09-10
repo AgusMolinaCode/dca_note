@@ -35,8 +35,8 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
         return (
           <tr key={transaction.id}>
             <td>
-              <div className="flex justify-start mx-auto gap-1 py-2">
-                <div className="relative">
+              <div className="flex justify-start mx-auto items-center gap-1 py-2">
+                <div className="">
                   {transaction.imageUrl === "/images/usdt.png" ? (
                     <Image
                       src={transaction.imageUrl}
@@ -54,23 +54,21 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                       className="rounded-full bg-zinc-900 p-[3px]"
                     />
                   )}
-                  <CircleDollarSignIcon
-                    size={24}
-                    className="text-green-400 bg-zinc-900 rounded-full  absolute bottom-[-11px] left-3 p-[3px]"
-                  />
                 </div>
-                <p className="px-4 py-2 text-md font-semibold  text-gray-700 dark:text-gray-500">
-                  {transaction.crypto}
-                </p>
-                {transaction.imageUrl === "/images/usdt.png" ? (
-                  <p className="bg-red-500/10 border-[0.2px] border-red-500 text-red-500 dark:text-red-300 px-2 my-auto text-xs rounded-xl">
-                    sell
+                <div className="flex flex-wrap justify-center mx-auto">
+                  <p className="md:px-4 md:py-2 text-md font-semibold  text-gray-700 dark:text-gray-500">
+                    {transaction.crypto}
                   </p>
-                ) : (
-                  <p className="bg-green-500/10 border-[0.2px] border-green-500 text-green-500 dark:text-green-300 px-2 my-auto text-xs rounded-xl">
-                    buy
-                  </p>
-                )}
+                  {transaction.imageUrl === "/images/usdt.png" ? (
+                    <span className="bg-red-500/10 text-center border-[0.2px] border-red-500 text-red-500 dark:text-red-300 md:px-2 my-auto text-xs rounded-xl w-9">
+                      sell
+                    </span>
+                  ) : (
+                    <span className="bg-green-500/10 text-center border-[0.2px] border-green-500 text-green-500 dark:text-green-300 md:px-2 my-auto text-xs rounded-xl w-9">
+                      buy
+                    </span>
+                  )}
+                </div>
               </div>
             </td>
             <td className="px-4 py-2 font-semibold w-[8rem]">

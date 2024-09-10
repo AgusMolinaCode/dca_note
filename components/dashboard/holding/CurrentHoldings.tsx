@@ -52,7 +52,7 @@ export function CurrentHoldings() {
   return (
     <Card className="flex flex-col">
       <CardHeaderHoldings />
-      <CardContent className="">
+      <CardContent>
         <ScrollArea className="h-[12rem]">
           {dataUserId && dataUserId.length > 0 ? (
             <div className="grid grid-cols-2 gap-4">
@@ -81,7 +81,7 @@ export function CurrentHoldings() {
               ))}
             </div>
           ) : (
-            <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center">
+            <div className="mx-auto h-[10rem] w-full max-w-[300px] flex items-center justify-center">
               <p className="text-center text-gray-500">
                 No current holdings loaded yet.
               </p>
