@@ -32,29 +32,29 @@ const DataTransactionTable = ({
           </div>
           <table className="w-full table-auto">
             <thead className="dark:bg-gray-800 bg-white pb-2 border-b border-gray-600">
-              <tr className="text-left">
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+              <tr className="text-center md:text-left">
+                <th className="px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   Asset
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   Current Price
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="hidden md:table-cell px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   Amount
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="hidden md:table-cell px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   Avg. Buy Price
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="hidden md:table-cell px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   24Hs Price Change
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="hidden md:table-cell px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   24Hs % Change
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   Total Invested
                 </th>
-                <th className="px-4 py-2 text-sm text-gray-700 dark:text-gray-500">
+                <th className="px-1 md:px-4 py-2 text-xs md:text-sm text-gray-700 dark:text-gray-500">
                   Avg .Gain/Loss
                 </th>
               </tr>
@@ -122,13 +122,13 @@ const DataTransactionTable = ({
                         "$ 0.00"
                       )}
                     </td>
-                    <td className="px-1 xl:px-4 text-center xl:text-left py-2 font-semibold">
+                    <td className="hidden md:table-cell px-1 xl:px-4 text-center xl:text-left py-2 font-semibold">
                       <p className="text-sm xl:text-base">
                         {amount?.toFixed(2)}
                       </p>
                     </td>
                     <td
-                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
+                      className={`hidden md:table-cell px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         (currentValue ?? 0) <
                         (Number.isFinite(
                           averagePricesResult?.[transaction.crypto]?.average
@@ -152,7 +152,7 @@ const DataTransactionTable = ({
                       ).toFixed(2)}
                     </td>
                     <td
-                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
+                      className={`hidden md:table-cell px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         profitValue?.[transaction.crypto] !== undefined &&
                         profitValue?.[transaction.crypto] < 0
                           ? "text-red-500 dark:text-red-400 text-sm xl:text-base"
@@ -165,7 +165,7 @@ const DataTransactionTable = ({
                         : "0.00"}
                     </td>
                     <td
-                      className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
+                      className={`hidden md:table-cell px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         percentageValue?.[transaction.crypto] !== undefined &&
                         percentageValue?.[transaction.crypto] < 0
                           ? "text-red-500 dark:text-red-400 text-sm xl:text-base"
@@ -177,6 +177,7 @@ const DataTransactionTable = ({
                         : "0.00"}{" "}
                       %
                     </td>
+                    {/* Total Invested */}
                     <td
                       className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         totalInvested < 0
@@ -186,6 +187,7 @@ const DataTransactionTable = ({
                     >
                       $ {Math.abs(totalInvested).toFixed(2)}
                     </td>
+                    {/* Gain Loss */}
                     <td
                       className={`px-1 xl:px-4 text-center xl:text-left py-2 font-semibold ${
                         finalProfit < 0

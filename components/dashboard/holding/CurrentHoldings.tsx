@@ -55,11 +55,11 @@ export function CurrentHoldings() {
       <CardContent>
         <ScrollArea className="h-[12rem]">
           {dataUserId && dataUserId.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 lg:grid-cols-2 gap-4">
               {sortedCryptos.map((crypto, index) => (
                 <div
                   key={index}
-                  className="flex gap-2 justify-between items-center p-3 border border-gray-200 dark:border-none bg-white dark:bg-gray-700/90 rounded-xl"
+                  className="flex gap-2 justify-between items-center p-2 md:p-3 border border-gray-200 dark:border-none bg-white dark:bg-gray-700/90 rounded-xl"
                 >
                   <div className="flex items-center">
                     <div className="flex items-center">
@@ -69,10 +69,10 @@ export function CurrentHoldings() {
                         height={30}
                         alt={crypto}
                       />
-                      <p className="text-sm dark:text-gray-500 text-gray-700">{crypto}</p>
                     </div>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex flex-col items-center">
+                      <p className="text-xs dark:text-gray-500 text-gray-700">{crypto}</p>
                     <p className="text-gray-700 dark:text-white font-semibold text-sm">
                       {percentages[crypto].toFixed(2)}%
                     </p>
