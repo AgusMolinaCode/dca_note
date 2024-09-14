@@ -6,13 +6,13 @@ const MULTIPLE_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemulti`;
 
 const MULTIPLE_FULL_SEARCH_URL = `https://min-api.cryptocompare.com/data/pricemultifull`;
 
-export const LOAD_TRANSACTIONS = `https://dca-note.vercel.app/api/transactions`;
+export const LOAD_TRANSACTIONS = `/api/transactions`;
 
-export const LOAD_VALUES = `https://dca-note.vercel.app/api/values`;
+export const LOAD_VALUES = `/api/values`;
 
-const LOAD_USERS = `https://dca-note.vercel.app/api/users`;
+const LOAD_USERS = `/api/users`;
 
-export const LOAD_NOTES = `https://dca-note.vercel.app/api/notes`;
+export const LOAD_NOTES = `/api/notes`;
 
 export const getCryptos = async (): Promise<CryptoListResult> => {
   return new Promise<void>((resolve) => {
