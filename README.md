@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧮 DCA-Note 📊
 
-## Getting Started
+![Captura de pantalla 2024-09-14 173516](https://github.com/user-attachments/assets/91f9afa9-9f78-42f6-ad06-06f51a0b8c8b)
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*Una plataforma interactiva para realizar seguimiento de inversiones en criptomonedas con estrategia DCA (Dollar-Cost Averaging).*
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tecnologías Utilizadas
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Frontend**: [Next.js](https://nextjs.org) para una aplicación rápida y escalable.
+- **Estilos**: [Tailwind CSS](https://tailwindcss.com) para un diseño moderno y responsive.
+- **Backend y Base de Datos**: [PostgreSQL](https://www.postgresql.org) como base de datos para almacenar la información de los activos y usuarios.
+- **Despliegue**: [Railway](https://railway.app) para facilitar el despliegue en la nube y manejo de infraestructura.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📋 Funcionalidades Principales
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Seguimiento de Criptomonedas**: Visualiza el rendimiento de tus criptomonedas a través de gráficos actualizados en tiempo real.
+- **Historial de Inversión**: Agrega y monitorea tus compras de criptos, con cálculo de precios promedios de compra y ganancias/pérdidas realizadas o no realizadas.
+- **Soporte para Múltiples Activos**: Añade diversas criptos como ETH, SOL, BCH y más, con un balance general que muestra la rentabilidad total de tu portafolio.
+- **Gráficos Interactivos**: Análisis visual de los precios del mercado con la API de [TradingView](https://www.tradingview.com/).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🚀 Instalación y Uso
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clona el repositorio:
+    ```bash
+    git clone https://github.com/tu-usuario/dca-note.git
+    ```
+2. Instala las dependencias:
+    ```bash
+    cd dca-note
+    npm install
+    ```
+3. Configura la base de datos:
+    - Crea una base de datos PostgreSQL y añade los detalles de conexión en el archivo `.env`.
+    ```bash
+    DATABASE_URL=postgresql://usuario:contraseña@localhost:5432/tu_base_de_datos
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Inicia el proyecto en modo desarrollo:
+    ```bash
+    npm run dev
+    ```
+
+5. Despliega en Railway (opcional):
+    - Sube tu proyecto a Railway conectando tu repositorio y configurando las variables de entorno necesarias.
+
+---
+
+## 🖼️ Vista Previa
+
+![DCA-Note](./path_to_your_image.png)
+
+---
+
+## 🤝 Contribuciones
+
+¡Las contribuciones son bienvenidas! Si encuentras algún bug o tienes sugerencias para mejorar, no dudes en abrir un *issue* o un *pull request*.
+
+---
+
+## 🔗 Links Importantes
+
+- [Demo](https://dca-note-demo.railway.app)
+- [Documentación API](./API_DOCS.md)
+- [TradingView API](https://www.tradingview.com/rest-api-spec)
