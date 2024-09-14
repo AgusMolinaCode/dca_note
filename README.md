@@ -25,38 +25,6 @@
 
 ---
 
-## 🚀 Instalación y Uso
-
-1. Clona el repositorio:
-    ```bash
-    git clone https://github.com/tu-usuario/dca-note.git
-    ```
-2. Instala las dependencias:
-    ```bash
-    cd dca-note
-    npm install
-    ```
-3. Configura la base de datos:
-    - Crea una base de datos PostgreSQL y añade los detalles de conexión en el archivo `.env`.
-    ```bash
-    DATABASE_URL=postgresql://usuario:contraseña@localhost:5432/tu_base_de_datos
-    ```
-
-4. Inicia el proyecto en modo desarrollo:
-    ```bash
-    npm run dev
-    ```
-
-5. Despliega en Railway (opcional):
-    - Sube tu proyecto a Railway conectando tu repositorio y configurando las variables de entorno necesarias.
-
----
-
-## 🖼️ Vista Previa
-
-![DCA-Note](./path_to_your_image.png)
-
----
 
 ## 🤝 Contribuciones
 
@@ -67,5 +35,4 @@
 ## 🔗 Links Importantes
 
 - [Demo](https://dca-note-demo.railway.app)
-- [Documentación API](./API_DOCS.md)
 - [TradingView API](https://www.tradingview.com/rest-api-spec)
