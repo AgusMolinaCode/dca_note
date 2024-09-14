@@ -219,11 +219,11 @@ const SellAssetModal: React.FC<SellAssetModalProps> = ({
           {amount <= 0 || transaction.crypto === "USDT" ? null : (
             <Button type="submit" className="px-1">
               {result > 0 ? (
-                <p className="text-green-500 dark:text-green-400 font-bold hover:bg-black/80 duration-200  py-1 px-2 rounded-md">
+                <p className="text-green-500 dark:text-green-400 font-bold hover:bg-black/80 duration-200 text-xs md:text-base  py-1 md:px-2 rounded-md">
                   TP
                 </p>
               ) : (
-                <p className="text-red-500 dark:text-red-400 font-bold hover:bg-black/80 duration-200  py-1 px-2 rounded-md">
+                <p className="text-red-500 dark:text-red-400 font-bold hover:bg-black/80 duration-200 text-xs md:text-base  py-1 md:px-2 rounded-md">
                   SL
                 </p>
               )}

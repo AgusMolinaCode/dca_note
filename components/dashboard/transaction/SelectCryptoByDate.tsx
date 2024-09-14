@@ -17,7 +17,7 @@ interface SelectCryptoByDateProps {
 const SelectCryptoByDate: React.FC<SelectCryptoByDateProps> = ({ uniqueDates, handleDateChange }) => {
   return (
     <Select onValueChange={handleDateChange} >
-      <SelectTrigger className="w-[124px] border-gray-400 dark:text-gray-400 text-gray-500">
+      <SelectTrigger className="w-full md:w-[124px] border-gray-400 dark:text-gray-400 text-gray-500">
         <SelectValue placeholder="Select a date" />
       </SelectTrigger>
       <SelectContent>

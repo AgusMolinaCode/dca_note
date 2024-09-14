@@ -145,26 +145,32 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
   return (
     <div>
       <div className="overflow-x-auto px-2 pb-2">
-        <div className="flex justify-between items-center px-2 p-4">
-          <h2 className="text-lg font-semibold text-gray-500">
+          <h2 className="text-md md:text-lg font-semibold text-gray-500 p-4 px-2">
             Recent Transactions
           </h2>
+        <div className="flex justify-center sm:justify-between items-center px-2 p-4">
 
           <div className="flex gap-2">
             <RadioGroup
               onValueChange={handleFilterChange}
-              className="flex gap-4"
+              className="grid sm:flex gap-4"
               defaultValue="default"
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="default" id="r1" />
-                <Label className="text-gray-700 dark:text-gray-500" htmlFor="r1">
+                <Label
+                  className="text-gray-700 dark:text-gray-500"
+                  htmlFor="r1"
+                >
                   Default
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="profit" id="r2" />
-                <Label className="text-green-500 dark:text-green-400" htmlFor="r2">
+                <Label
+                  className="text-green-500 dark:text-green-400"
+                  htmlFor="r2"
+                >
                   Profit
                 </Label>
               </div>
@@ -176,69 +182,71 @@ const RecentTransactions: React.FC<DataTransactionProps> = ({ data }) => {
               </div>
             </RadioGroup>
 
-            <SelectCryptoByDate
-              uniqueDates={uniqueDates}
-              handleDateChange={handleDateChange}
-            />
+            <div className="grid sm:flex gap-2">
+              <SelectCryptoByDate
+                uniqueDates={uniqueDates}
+                handleDateChange={handleDateChange}
+              />
 
-            <Input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearch}
-              placeholder="Search crypto"
-              className="w-[124px] rounded-xl border-gray-400"
-            />
+              <Input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search crypto"
+                className="w-full md:w-[124px] rounded-xl border-gray-400"
+              />
+            </div>
           </div>
         </div>
 
         <div>
-        {selectedDate === "All" ? (
-          Object.keys(paginatedGroupedTransactions).length > 0 ? (
-            Object.keys(paginatedGroupedTransactions).map((date) => (
-              <div key={date}>
-                <h3 className="text-lg font-semibold mt-2 dark:text-gray-100 text-gray-500 border-t border-gray-700">
-                  {date}
-                </h3>
-                <table className="table-auto w-full">
-                  <TransactionTableHead />
+          {selectedDate === "All" ? (
+            Object.keys(paginatedGroupedTransactions).length > 0 ? (
+              Object.keys(paginatedGroupedTransactions).map((date) => (
+                <div key={date}>
+                  <h3 className="text-lg font-semibold mt-2 dark:text-gray-100 text-gray-500 border-t border-gray-700">
+                    {date}
+                  </h3>
+                  <table className="table-auto w-full">
+                    <TransactionTableHead />
 
-                  <TransactionTableBody
-                    groupedFilteredTransactions={paginatedGroupedTransactions}
-                    value={value}
-                    date={date}
-                  />
-                </table>
+                    <TransactionTableBody
+                      groupedFilteredTransactions={paginatedGroupedTransactions}
+                      value={value}
+                      date={date}
+                    />
+                  </table>
+                </div>
+              ))
+            ) : (
+              <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center mt-4">
+                <p className="text-center text-gray-500">
+                  No recent transactions loaded yet.
+                </p>
               </div>
-            ))
+            )
+          ) : selectedDate && paginatedGroupedTransactions[selectedDate] ? (
+            <div>
+              <h3 className="text-lg font-semibold mt-2 dark:text-gray-100 text-gray-500 border-t border-gray-700">
+                {selectedDate}
+              </h3>
+              <table className="table-auto w-full">
+                <TransactionTableHead />
+
+                <TransactionTableBody
+                  groupedFilteredTransactions={paginatedGroupedTransactions}
+                  value={value}
+                  date={selectedDate}
+                />
+              </table>
+            </div>
           ) : (
             <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center mt-4">
               <p className="text-center text-gray-500">
                 No recent transactions loaded yet.
               </p>
             </div>
-          )
-        ) : selectedDate && paginatedGroupedTransactions[selectedDate] ? (
-          <div>
-            <h3 className="text-lg font-semibold mt-2 dark:text-gray-100 text-gray-500 border-t border-gray-700">
-              {selectedDate}
-            </h3>
-            <table className="table-auto w-full">
-              <TransactionTableHead />
-
-              <TransactionTableBody
-                groupedFilteredTransactions={paginatedGroupedTransactions}
-                value={value}
-                date={selectedDate}
-              />
-            </table>
-          </div>
-        ) : (
-          <div className="mx-auto aspect-square w-full max-w-[300px] flex items-center justify-center mt-4">
-            <p className="text-center text-gray-500">
-              No recent transactions loaded yet.
-            </p>
-          </div>
-        )}
+          )}
         </div>
 
         <div className="flex justify-center items-center mt-4">

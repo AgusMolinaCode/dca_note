@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { CircleDollarSignIcon, Edit } from "lucide-react";
+import { CircleDollarSignIcon, Edit, Ellipsis } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -35,7 +35,7 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
         return (
           <tr key={transaction.id}>
             <td>
-              <div className="flex justify-start mx-auto items-center gap-1 py-2">
+              <div className="flex justify-center md:justify-start mx-auto items-center gap-1 py-2">
                 <div className="">
                   {transaction.imageUrl === "/images/usdt.png" ? (
                     <Image
@@ -43,7 +43,7 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                       alt={`${transaction.crypto} sell`}
                       width={32}
                       height={32}
-                      className="rounded-full bg-zinc-900"
+                      className="rounded-full hidden md:flex bg-zinc-900"
                     />
                   ) : (
                     <Image
@@ -51,12 +51,12 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                       alt={transaction.crypto}
                       width={32}
                       height={32}
-                      className="rounded-full bg-zinc-900 p-[3px]"
+                      className="rounded-full hidden md:flex bg-zinc-900 p-[3px]"
                     />
                   )}
                 </div>
-                <div className="flex flex-wrap justify-center mx-auto">
-                  <p className="md:px-4 md:py-2 text-md font-semibold  text-gray-700 dark:text-gray-500">
+                <div className="grid xl:flex justify-center md:justify-start">
+                  <p className="px-1 md:py-2 text-sm xl:text-base font-semibold  text-gray-700 dark:text-gray-500">
                     {transaction.crypto}
                   </p>
                   {transaction.imageUrl === "/images/usdt.png" ? (
@@ -71,12 +71,12 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                 </div>
               </div>
             </td>
-            <td className="px-4 py-2 font-semibold w-[8rem]">
+            <td className="px-1 text-sm xl:text-base py-2 font-semibold w-[8rem] text-center md:text-left hidden sm:table-cell">
               {transaction.amount.toFixed(2)}
             </td>
-            <td className="px-4 py-2 font-semibold w-[8rem]">
-              <div className="flex gap-2 items-center justify-start">
-                <p>${transaction.price.toFixed(2)}</p>
+            <td className="px-1 py-2 font-semibold w-[8rem] hidden sm:table-cell">
+              <div className="grid xl:flex xl:gap-2 items-center justify-center md:justify-start">
+                <p className="text-sm xl:text-base text-center">${transaction.price.toFixed(2)}</p>
                 <p>
                   {transaction.imageUrl === "/images/usdt.png" ? (
                     <span className="text-gray-700 dark:text-gray-300 text-[0.60rem] bg-red-400/75 dark:bg-red-400/20 py-[0.15rem] px-2 rounded-xl">
@@ -90,13 +90,13 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                 </p>
               </div>
             </td>
-            <td className="px-4 py-2 font-semibold w-[8rem]">
-              <div className="flex gap-2 items-center justify-start">
-                <p>${value[transaction.crypto]?.toFixed(2)}</p>
+            <td className="px-1  py-2 font-semibold w-[8rem]">
+              <div className="flex gap-2 items-center justify-center md:justify-start">
+                <p className="text-sm xl:text-base">${value[transaction.crypto]?.toFixed(2)}</p>
               </div>
             </td>
             <td
-              className={`px-4 py-2 font-semibold w-[8rem] ${
+              className={`px-1 py-2 font-semibold w-[8rem] ${
                 transaction.imageUrl === "/images/usdt.png"
                   ? sellResult > 0
                     ? "text-green-500 dark:text-green-400"
@@ -106,8 +106,8 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                   : "text-red-500 dark:text-red-400"
               }`}
             >
-              <div className="flex gap-2 items-center justify-start">
-                <p>
+              <div className="grid xl:flex xl:gap-2 items-center justify-center md:justify-start">
+                <p className="text-sm xl:text-base">
                   {transaction.imageUrl === "/images/usdt.png"
                     ? sellResult?.toFixed(2)
                     : result?.toFixed(2)}
@@ -147,7 +147,7 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
               </HoverCard>
               {transaction.imageUrl === "/images/usdt.png" ? (
                 <Button disabled className="px-1">
-                  <Edit size={24} />
+                  <Edit size={16} />
                 </Button>
               ) : (
                 <HoverCard closeDelay={10} openDelay={10}>
@@ -160,6 +160,7 @@ const TransactionTableBody: React.FC<TransactionTableBodyProps> = ({
                 </HoverCard>
               )}
             </td>
+           
           </tr>
         );
       })}

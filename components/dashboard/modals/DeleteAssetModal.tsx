@@ -46,7 +46,7 @@ const DeleteAssetModal: React.FC<DeleteAssetModalProps> = ({ transaction }) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="px-1">
-          <Trash2 size={24} className="hover:text-red-400 duration-300" />
+          <Trash2 size={16} className="hover:text-red-400 duration-300" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-gray-800">

@@ -116,7 +116,7 @@ const EditAssetModal: React.FC<EditAssetModalProps> = ({ transaction }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="px-1">
-            <Edit size={24} className="hover:text-blue-400 duration-300" />
+            <Edit size={16} className="hover:text-blue-400 duration-300" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-gray-800">
