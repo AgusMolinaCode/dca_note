@@ -20,7 +20,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-const ADD_USERS_URL = `http://localhost:3000/api/users`;
+const ADD_USERS_URL = `https://dca-note.vercel.app/api/users`;
 
 export default function NicknameDialogModal() {
   const queryClient = useQueryClient();
