@@ -23,9 +23,9 @@ const AdvancedChart = () => {
               <CurrentHoldings />
             </div>
 
-            <div className=" dark:bg-gray-800 bg-white shadow-md border dark:border-none border-gray-200 w-full lg:w-[260px] flex justify-center mx-auto px-2 rounded-xl p-4 mt-4">
+            {/* <div className=" dark:bg-gray-800 bg-white shadow-md border dark:border-none border-gray-200 w-full lg:w-[260px] flex justify-center mx-auto px-2 rounded-xl p-4 mt-4">
               <CurrentNotes />
-            </div>
+            </div> */}
           </div>
         </div>
 
