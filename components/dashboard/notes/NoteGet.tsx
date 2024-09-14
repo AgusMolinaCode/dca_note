@@ -54,12 +54,10 @@ const NoteGet = () => {
     <div>
       <div className="flex justify-between items-center pb-2">
         <h1 className="text-lg font-semibold text-gray-500">Notes</h1>
-        {dataUserId && dataUserId.length > 0 && (
-          <p className="text-xs text-gray-500">
-            {/* {dataUserId.length} notes found */}
-            <NoteAddModal />
-          </p>
-        )}
+
+        <p className="text-xs text-gray-500">
+          <NoteAddModal />
+        </p>
       </div>
 
       {dataUserId?.map((note) => (
