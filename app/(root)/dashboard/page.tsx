@@ -53,17 +53,14 @@ export default async function Page() {
         </div>
         <footer className="w-full p-4 ">
           <div className="border-t border-t-gray-700 px-[2rem] lg:px-[10rem]">
-            <div className="flex justify-between items-center pt-[2rem]">
+            <div className="grid gap-3 md:flex justify-between items-center pt-[2rem]">
               <div>
                 <p className="text-gray-500 text-sm">
                   © {new Date().getFullYear()} Crypto DCA. All rights reserved.
                 </p>
               </div>
               <div>
-                <p className="text-gray-500">
-
-                Developed by Agustin Molina
-                </p>
+                <p className="text-gray-500 text-sm">Developed by Agustin Molina</p>
               </div>
               <div className="flex gap-4">
                 <Link
